@@ -18,9 +18,9 @@ Converts image to nonogram
 
 ## Rules of commits
 * Commit message consists of a subject line (≤ 50 characters) and body text (optional)
-* The subject line: start with "#issue_number"(if it exists) followed by verb in past form starting with capital letter and don't end with dot
+* The subject line: start with `#issue_number`(for example: `#1`) followed by verb in past form starting with capital letter and don't end with dot
 * The title and body text are separated with empty line
-* The body text can contain several lines, each started with '-', altogether representing the list of changes: what and why (not how)
+* The body text can contain several lines, each started with `-` and capital letter, altogether representing the list of changes: what and why (not how)
 
 ## Coding standard
 ### File and package names
@@ -40,8 +40,8 @@ Converts image to nonogram
 * Any operator should be surrounded with spaces
 
 ## Development team
-* Maxim Smolskiy - teamlead
-* Mikhail Nakhatovich - techlead
-* Pavel Melnik
-* Nikita Sukhanov
-* Ilya Surikov
+* [Maxim Smolskiy](https://github.com/MaximSmolskiy) - **teamlead**
+* [Mikhail Nakhatovich](https://github.com/MikhailNakhatovich) - **techlead**
+* [Pavel Melnik](https://github.com/PawelMelnik)
+* [Nikita Sukhanov](https://github.com/NikitaSukhanov)
+* [Ilya Surikov](https://github.com/Chopikov)
