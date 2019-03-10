@@ -6,6 +6,16 @@ Android mobile application for converting images to black and white nonogram wit
 * Application converts selected image to a nonogram of selected size, which has a single logical solution (a person can solve it independently without using brute force algorithm)
 * User can save nonogram and its miniature
 
+No analogues were found among mobile applications.
+
+Advantages over analogues (sites):
+* Does not require internet (works offline)
+* Better functionality:
+  * User can take a photo directly in the application
+  * User can crop selected image
+  * Check for the existence and uniqueness of a logical solution of nonogram
+  * In addition to nonogram, user can save its miniature
+
 ## Table Of Contents
 
 <!---toc start-->
