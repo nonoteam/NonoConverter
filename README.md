@@ -1,5 +1,10 @@
 ﻿# NonoConverter
-Converts image to nonogram
+Android mobile application for converting images to nonogram with the following functionality:
+* User can select an image from the gallery or take a photo directly in the application
+* User can crop selected image
+* User can select size of nonogram
+* Application converts selected image to a nonogram of selected size, which has a single logical solution (a person can solve it independently without using brute force algorithm)
+* User can download nonogram, its solution and its miniature
 
 ## Table Of Contents
 
