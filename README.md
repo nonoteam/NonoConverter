@@ -14,7 +14,7 @@ Converts image to nonogram
     * [hotfix](#hotfix)
     * [release](#release)
   * [Rules of commits](#rules-of-commits)
-  * [Coding standard](http://github.com/nonoteam/NonoConverter/docs/CodingStandard.md)
+  * [Coding standard](http://github.com/nonoteam/NonoConverter/CodingStandard.md)
   * [Development team](#development-team)
 
 <!---toc end-->
