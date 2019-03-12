@@ -8,13 +8,13 @@ Android mobile application for converting images to black-and-white nonogram wit
 
 No analogues were found among mobile applications.
 
-Advantages over analogues (sites):
-* Does not require internet (works offline)
-* Better functionality:
-  * User can take a photo directly in the application
+Advantages over web analogues:
+* Does not require internet connection (works offline)
+* Allows to take a photo directly in the application
+* Unique features:
   * User can crop selected image
   * Check for the existence and uniqueness of a logical solution of nonogram
-  * In addition to nonogram, user can save its miniature
+  * In addition to nonogram, user can save its thumbnail
 
 ## Table Of Contents
 
