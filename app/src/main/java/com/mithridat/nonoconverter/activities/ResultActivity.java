@@ -38,6 +38,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.miHome:
+                createDialogHomeReturn();
                 return true;
             case android.R.id.home:
                 return true;
@@ -50,11 +51,31 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.dlg_done_title);
         builder.setIcon(R.drawable.ic_done);
-        builder.setPositiveButton(R.string.dlg_done_ok, new OnClickListener() {
+        builder.setPositiveButton(android.R.string.ok, new OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
         });
+        builder.create().show();
+    }
+
+    private void createDialogHomeReturn() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.dlg_home_return_title);
+        builder.setIcon(R.drawable.ic_info);
+        builder.setMessage(R.string.dlg_home_return_message);
+        builder.setPositiveButton(R.string.dlg_home_return_pos,
+                new OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        builder.setNegativeButton(android.R.string.cancel,
+                new OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
         builder.create().show();
     }
 
