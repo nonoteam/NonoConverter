@@ -68,12 +68,7 @@ public class EditImageActivity extends AppCompatActivity implements View.OnClick
                     }
                 });
 
-        AlertDialog alertDialog = builder.create();
-
-        alertDialog.show();
-        Window windowDialog = alertDialog.getWindow();
-        if (windowDialog != null)
-            windowDialog.setLayout(800,650);
+        builder.create().show();
     }
 
 }
