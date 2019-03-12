@@ -149,6 +149,10 @@ public class EditImageActivity extends AppCompatActivity implements View.OnClick
             activity.progressDialog.dismiss();
             Intent intent = new Intent(activity, ResultActivity.class);
             activity.startActivity(intent);
+            activity.overridePendingTransition(
+                R.anim.slide_in_left,
+                R.anim.slide_out_left
+            );
         }
     }
 
