@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">NonoConverter</string>
     <string name="edit_image_activity_name">Editing</string>
+    <string name="mi_convert">Convert</string>
     <string name="btn_crop">Crop</string>
     <string name="btn_columns">Columns</string>
     <string name="img_edit_desc">Convertible image</string>
