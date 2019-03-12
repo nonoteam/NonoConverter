@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#8190A5</color>
     <color name="colorAccent">#47525E</color>
 
-    <color name="colorButtonTabText">#8492A6</color>
+    <color name="colorText">#8492A6</color>
     <color name="colorButtonTabBackground">#C9D6E6</color>
     <color name="colorEditImageActivityBackground">#52565B</color>
 </resources>
