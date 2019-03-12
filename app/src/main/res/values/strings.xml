@@ -11,6 +11,7 @@
     <string name="tv_rows">Rows</string>
 
     <string name="result_activity_name">Result</string>
+    <string name="mi_home">Home</string>
     <string name="btn_save_thumbnail">Save thumbnail</string>
     <string name="btn_save_nonogram">Save nonogram</string>
     <string name="dlg_done_title">Done</string>
