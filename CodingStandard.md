@@ -1,11 +1,39 @@
 # Coding standard
 ## File and package names
 * Only lowercase letters are used in package names
+
+
+    ```java
+    package company.common;
+    ```
 * Class names must be nouns and the first letters of all words must be uppercase
+
+
+    ```java
+    public class BuildingList {
+    // implementation
+    }
+    ```
 ## Names of methods, variables
 * The names of the methods should be verbs, the first letter should be lowercase, the first letters of the inner words should be uppercase
+
+
+    ```java
+    void buildList() {
+    // implementation
+    }
+    ```
 * Variable names should begin with a lowercase letter, the first letters of the inner words should be uppercase
+
+
+    ```java
+    int myListSize = 5;
+    ```
 * Constant names are composed of all uppercase letters separated by the underscore character
+
+    ```java
+    final int MY_LIST_MAX_SIZE = 10; 
+    ```
 ## Line length, line breaks
 * The length of the line should not exceed 80 characters
 * If the length of the expression exceeds the length of the line, it must be split into several lines
