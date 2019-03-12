@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">NonoConverter</string>
+
     <string name="edit_image_activity_name">Editing</string>
     <string name="mi_convert">Convert</string>
     <string name="btn_crop">Crop</string>
@@ -8,4 +9,9 @@
     <string name="dlg_columns_title">Columns and rows</string>
     <string name="tv_columns">Columns</string>
     <string name="tv_rows">Rows</string>
+
+    <string name="result_activity_name">Result</string>
+    <string name="btn_save_thumbnail">Save thumbnail</string>
+    <string name="btn_save_nonogram">Save nonogram</string>
+
 </resources>
