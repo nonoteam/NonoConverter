@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/mi_convert"
+        android:id="@+id/miConvert"
         android:title="@string/mi_convert"
         app:showAsAction="always">
     </item>
