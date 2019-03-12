@@ -41,6 +41,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 createDialogHomeReturn();
                 return true;
             case android.R.id.home:
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -68,6 +69,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        onBackPressed();
                     }
                 });
         builder.setNegativeButton(android.R.string.cancel,
