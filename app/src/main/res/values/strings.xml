@@ -15,6 +15,11 @@
     <string name="btn_save_thumbnail">Save thumbnail</string>
     <string name="btn_save_nonogram">Save nonogram</string>
     <string name="dlg_done_title">Done</string>
-    <string name="dlg_done_ok">OK</string>
+    <string name="dlg_home_return_title">Return home</string>
+    <string name="dlg_home_return_message">Are you sure that you want to return home?
+        Nonogram will be lost if you don\'t save it.</string>
+    <string name="dlg_home_return_pos">RETURN</string>
+
+
 
 </resources>
