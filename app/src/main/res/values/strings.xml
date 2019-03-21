@@ -21,6 +21,8 @@
         Nonogram will be lost if you don\'t save it.</string>
     <string name="dlg_home_return_pos">RETURN</string>
 
-
+    <string name="action_load_image">Load Image</string>
+    <string name="action_open_about">About</string>
+    <string name="action_open_help">Help</string>
 
 </resources>
