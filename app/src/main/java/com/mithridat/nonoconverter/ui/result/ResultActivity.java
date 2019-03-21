@@ -1,4 +1,4 @@
-package com.mithridat.nonoconverter.activities;
+package com.mithridat.nonoconverter.ui.result;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
