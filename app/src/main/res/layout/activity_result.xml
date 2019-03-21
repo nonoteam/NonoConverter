@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/result_background"
-    tools:context=".activities.ResultActivity">
+    android:background="@drawable/img_background"
+    tools:context=".ui.result.ResultActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"

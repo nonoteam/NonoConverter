@@ -1,4 +1,4 @@
-package com.mithridat.nonoconverter.activities;
+package com.mithridat.nonoconverter.ui.editimage;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mithridat.nonoconverter.R;
+import com.mithridat.nonoconverter.ui.result.ResultActivity;
 
 import java.util.concurrent.TimeUnit;
 
