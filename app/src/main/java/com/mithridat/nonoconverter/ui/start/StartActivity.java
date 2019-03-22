@@ -26,7 +26,7 @@ public class StartActivity extends AppCompatActivity implements OnClickListener 
         findViewById(R.id.button_about).setOnClickListener(this);
         findViewById(R.id.button_help).setOnClickListener(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tbToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_start);
         setSupportActionBar(toolbar);
     }
 
