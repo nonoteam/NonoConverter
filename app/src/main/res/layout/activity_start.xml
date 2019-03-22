@@ -26,51 +26,19 @@
 
         <Button
             android:id="@+id/button_load_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@color/colorRiverBed"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="@string/action_load_image"
-            android:textAllCaps="true"
-            android:textColor="@color/colorWhite" />
+            style="@style/AppTheme.Button.Start"
+            android:text="@string/action_load_image" />
 
         <Button
             android:id="@+id/button_about"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@color/colorRiverBed"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="@string/action_open_about"
-            android:textAllCaps="true"
-            android:textColor="@color/colorWhite" />
+            style="@style/AppTheme.Button.Start"
+            android:text="@string/action_open_about" />
 
         <Button
             android:id="@+id/button_help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            style="@style/AppTheme.Button.Start"
             android:layout_marginBottom="128dp"
-            android:background="@color/colorRiverBed"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="@string/action_open_help"
-            android:textAllCaps="true"
-            android:textColor="@color/colorWhite" />
+            android:text="@string/action_open_help" />
 
     </LinearLayout>
 
