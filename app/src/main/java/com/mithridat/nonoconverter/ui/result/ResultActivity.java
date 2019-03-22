@@ -5,12 +5,15 @@ import android.content.DialogInterface.OnClickListener;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.mithridat.nonoconverter.R;
+import com.mithridat.nonoconverter.ui.start.StartActivity;
 
 public class ResultActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -69,7 +72,12 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        onBackPressed();
+                        Intent intent = new Intent(ResultActivity.this,
+                                StartActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right,
+                                R.anim.slide_out_right);
                     }
                 });
         builder.setNegativeButton(android.R.string.cancel,
