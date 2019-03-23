@@ -6,11 +6,11 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/dlgColumnsTitle"
+        android:id="@+id/text_view_dialog_columns_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="12dp"
-        android:text="@string/dlg_columns_title"
+        android:text="@string/title_dialog_columns"
         android:textAlignment="center"
         android:gravity="center"
         android:textColor="@color/colorAccent"
@@ -26,13 +26,13 @@
         android:paddingRight="15dp">
 
         <TextView
-            android:id="@+id/tvColumns"
+            android:id="@+id/text_view_columns"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/tv_columns" />
+            android:text="@string/edit_image_columns" />
 
         <EditText
-            android:id="@+id/etColumns"
+            android:id="@+id/edit_text_columns"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -42,13 +42,13 @@
             tools:ignore="Autofill,LabelFor" />
 
         <TextView
-            android:id="@+id/tvRows"
+            android:id="@+id/text_view_rows"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/tv_rows" />
+            android:text="@string/edit_image_rows" />
 
         <EditText
-            android:id="@+id/etRows"
+            android:id="@+id/edit_text_rows"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"

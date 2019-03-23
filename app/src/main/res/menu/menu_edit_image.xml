@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/miConvert"
-        android:title="@string/mi_convert"
+        android:title="@string/action_convert"
         app:showAsAction="always">
     </item>
 
