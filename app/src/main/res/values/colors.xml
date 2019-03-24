@@ -10,6 +10,6 @@
     <color name="colorRiverBed">#47525E</color>
     <color name="colorWhite">#FFFFFF</color>
 
-    <color name="colorText">#8492A6</color>
-    <color name="colorButtonTabBackground">#C9D6E6</color>
+    <color name="colorSlateGrey">#8492A6</color>
+    <color name="colorLightGreyAzure">#C9D6E6</color>
 </resources>
