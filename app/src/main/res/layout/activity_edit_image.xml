@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorEditImageActivityBackground"
+    android:background="@color/colorBrightGrey"
     tools:context=".ui.editimage.EditImageActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linear_layout_edit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorText"
+        android:background="@color/colorLightGrey"
         android:gravity="bottom"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,13 +26,13 @@
             android:layout_marginEnd="1dp"
             android:layout_marginRight="1dp"
             android:layout_weight="1"
-            android:background="@color/colorButtonTabBackground"
+            android:background="@color/colorLightBlue"
             android:drawableTop="@drawable/ic_crop_rotate"
             android:drawablePadding="5dp"
             android:paddingTop="8dp"
             android:paddingBottom="5dp"
             android:text="@string/action_open_crop"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorLightGrey"
             android:textSize="14sp"
             tools:ignore="ButtonStyle" />
 
@@ -42,13 +43,13 @@
             android:layout_marginStart="1dp"
             android:layout_marginLeft="1dp"
             android:layout_weight="1"
-            android:background="@color/colorButtonTabBackground"
+            android:background="@color/colorLightBlue"
             android:drawableTop="@drawable/ic_grid"
             android:drawablePadding="5dp"
             android:paddingTop="8dp"
             android:paddingBottom="5dp"
             android:text="@string/action_open_columns"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorLightGrey"
             android:textSize="14sp"
             tools:ignore="ButtonStyle" />
     </LinearLayout>
@@ -57,8 +58,8 @@
         android:id="@+id/image_view_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/img_edit_desc"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        android:contentDescription="@string/image_view_edit_description"
+        app:layout_constraintBottom_toTopOf="@+id/linear_layout_edit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/panda_original" />

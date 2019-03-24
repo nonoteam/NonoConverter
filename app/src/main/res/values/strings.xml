@@ -5,11 +5,13 @@
     <string name="action_convert">Convert</string>
     <string name="action_open_crop">Crop</string>
     <string name="action_open_columns">Columns</string>
-    <string name="img_edit_desc">Convertible image</string>
+    <string name="image_view_edit_description">Convertible image</string>
     <string name="title_dialog_columns">Columns and rows</string>
     <string name="edit_image_columns">Columns</string>
     <string name="edit_image_rows">Rows</string>
     <string name="msg_process_image">Processing image…</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_change">Change</string>
 
     <string name="result_activity_name">Result</string>
     <string name="mi_home">Home</string>
