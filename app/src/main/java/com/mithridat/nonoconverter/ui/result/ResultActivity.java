@@ -16,10 +16,9 @@ import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.ui.start.StartActivity;
 
 /**
- * Class handling result activity
+ * Class for handling result activity
  */
-public class ResultActivity extends AppCompatActivity
-        implements View.OnClickListener {
+public class ResultActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +56,10 @@ public class ResultActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.slide_in_right,
+                R.anim.slide_out_right);
     }
 
     @Override
@@ -84,10 +85,10 @@ public class ResultActivity extends AppCompatActivity
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.title_dialog_done);
-        builder.setIcon(R.drawable.ic_done);
-        builder.setPositiveButton(android.R.string.ok, listener);
-        builder.create().show();
+        builder.setTitle(R.string.title_dialog_done)
+                .setIcon(R.drawable.ic_done)
+                .setPositiveButton(android.R.string.ok, listener)
+                .create().show();
     }
 
     /**
@@ -114,10 +115,10 @@ public class ResultActivity extends AppCompatActivity
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.title_dialog_home_return);
-        builder.setIcon(R.drawable.ic_info);
-        builder.setMessage(R.string.msg_home_return);
-        builder.setPositiveButton(R.string.action_return, listenerReturn);
-        builder.setNegativeButton(android.R.string.cancel, listenerCancel);
-        builder.create().show();
+        builder.setIcon(R.drawable.ic_info)
+                .setMessage(R.string.msg_home_return)
+                .setPositiveButton(R.string.action_return, listenerReturn)
+                .setNegativeButton(android.R.string.cancel, listenerCancel)
+                .create().show();
     }
 }
