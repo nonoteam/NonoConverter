@@ -30,6 +30,7 @@ Advantages over web analogues:
     * [release](#release)
   * [Rules of commits](#rules-of-commits)
   * [Coding standard](http://github.com/nonoteam/NonoConverter/blob/master/CodingStandard.md)
+  * [Installation instruction](#installation-instruction)
   * [Development team](#development-team)
 
 <!---toc end-->
@@ -63,6 +64,10 @@ For example:
 - Moved coding standard to individual file
 - Added examples of code in CodingStandard.md
 ```
+
+## Installation instruction
+* Download the apk file to your device from [here](https://github.com/nonoteam/NonoConverter/releases)
+* Install it
 
 ## Development team
 * [Maxim Smolskiy](https://github.com/MaximSmolskiy) - **teamlead**
