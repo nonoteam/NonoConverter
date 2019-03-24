@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,10 +9,10 @@
     tools:context=".ui.result.ResultActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linear_layout_result_buttons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorText"
+        android:background="@color/colorSlateGrey"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,39 +20,39 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/btnSaveThumb"
+            android:id="@+id/button_save_thumb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="1dp"
             android:layout_marginRight="1dp"
             android:layout_weight="1"
-            android:background="@color/colorButtonTabBackground"
+            android:background="@color/colorLightGreyAzure"
             android:drawableTop="@drawable/ic_insert_photo"
-            android:text="@string/btn_save_thumbnail"
-            android:textColor="@color/colorText"
+            android:text="@string/action_save_thumbnail"
+            android:textColor="@color/colorSlateGrey"
             tools:ignore="ButtonStyle" />
 
         <Button
-            android:id="@+id/btnSaveNon"
+            android:id="@+id/button_save_nng"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
             android:layout_marginLeft="1dp"
             android:layout_weight="1"
-            android:background="@color/colorButtonTabBackground"
+            android:background="@color/colorLightGreyAzure"
             android:drawableTop="@drawable/ic_grid"
-            android:text="@string/btn_save_nonogram"
-            android:textColor="@color/colorText"
+            android:text="@string/action_save_nonogram"
+            android:textColor="@color/colorSlateGrey"
             tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/ivResult"
+        android:id="@+id/image_view_result"
         android:layout_width="350dp"
         android:layout_height="300dp"
         android:background="@drawable/panda_thumbnail"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/linear_layout_result_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
