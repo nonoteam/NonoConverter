@@ -12,7 +12,7 @@
         android:id="@+id/linear_layout_result_buttons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorSlateGrey"
+        android:background="@color/colorLightGrey"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,10 +26,10 @@
             android:layout_marginEnd="1dp"
             android:layout_marginRight="1dp"
             android:layout_weight="1"
-            android:background="@color/colorLightGreyAzure"
+            android:background="@color/colorLightBlue"
             android:drawableTop="@drawable/ic_insert_photo"
             android:text="@string/action_save_thumbnail"
-            android:textColor="@color/colorSlateGrey"
+            android:textColor="@color/colorLightGrey"
             tools:ignore="ButtonStyle" />
 
         <Button
@@ -39,10 +39,10 @@
             android:layout_marginStart="1dp"
             android:layout_marginLeft="1dp"
             android:layout_weight="1"
-            android:background="@color/colorLightGreyAzure"
+            android:background="@color/colorLightBlue"
             android:drawableTop="@drawable/ic_grid"
             android:text="@string/action_save_nonogram"
-            android:textColor="@color/colorSlateGrey"
+            android:textColor="@color/colorLightGrey"
             tools:ignore="ButtonStyle" />
 
     </LinearLayout>
