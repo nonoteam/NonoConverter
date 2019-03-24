@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="number"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorLightGrey"
             android:textSize="15sp"
             tools:ignore="Autofill,LabelFor" />
 
@@ -54,7 +54,7 @@
             android:ems="10"
             android:focusable="false"
             android:inputType="number"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorLightGrey"
             android:textSize="15sp"
             tools:ignore="Autofill,LabelFor" />
 

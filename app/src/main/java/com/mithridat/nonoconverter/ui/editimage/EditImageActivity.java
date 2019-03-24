@@ -43,15 +43,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         if (_atConvert != null && !_atConvert.isCancelled()
                 && _atConvert.getStatus() == AsyncTask.Status.RUNNING) {
             _atConvert.link(this);
-            _pdLoading.show();
-            _pdLoading.setOnCancelListener(_diCancelListener);
+            pdShow();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_edit_image, menu);
+        getMenuInflater().inflate(R.menu.edit_image, menu);
         setTitle(R.string.title_edit_image_activity);
         return true;
     }
@@ -59,9 +58,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.miConvert:
-                _pdLoading.show();
-                _pdLoading.setOnCancelListener(_diCancelListener);
+            case R.id.menu_convert:
+                pdShow();
                 _atConvert = new AsyncTaskConvertImage();
                 _atConvert.link(this);
                 _atConvert.execute();
@@ -100,7 +98,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     /**
-     * Provides cancellation of asynch task execution when the dialog is cancelled
+     * Provides cancellation of async task execution when the dialog is cancelled
      */
     OnCancelListener _diCancelListener = new OnCancelListener() {
         @Override
@@ -110,6 +108,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     };
 
     /**
+     * Show progress dialog and listen if it is cancelled
+     */
+    private void pdShow() {
+        _pdLoading.show();
+        _pdLoading.setOnCancelListener(_diCancelListener);
+    }
+
+    /**
      * Create dialog for choosing number of columns or rows
      */
     private void createDialogColumns() {
@@ -117,12 +123,12 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         LayoutInflater inflater = LayoutInflater.from(this);
 
         builder.setView(inflater.inflate(R.layout.dialog_columns, null))
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 })
-                .setPositiveButton("Change",
+                .setPositiveButton(R.string.action_change,
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -133,6 +139,9 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 .show();
     }
 
+    /**
+     * Inner class for async converting image in background.
+     */
     static class AsyncTaskConvertImage extends AsyncTask<Void, Void, Void> {
         private EditImageActivity _activity;
 
@@ -161,6 +170,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
 
         /**
          * Get link to EditImageActivity
+         *
+         * @param act - activity which link we get
          */
         void link(EditImageActivity act) {
             _activity = act;
