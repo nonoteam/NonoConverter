@@ -88,7 +88,8 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         builder.setTitle(R.string.title_dialog_done)
                 .setIcon(R.drawable.ic_done)
                 .setPositiveButton(android.R.string.ok, listener)
-                .create().show();
+                .create()
+                .show();
     }
 
     /**
@@ -119,6 +120,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 .setMessage(R.string.msg_home_return)
                 .setPositiveButton(R.string.action_return, listenerReturn)
                 .setNegativeButton(android.R.string.cancel, listenerCancel)
-                .create().show();
+                .create()
+                .show();
     }
 }
