@@ -22,7 +22,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Class for the editing image activity.
  */
-public class EditImageActivity extends AppCompatActivity implements OnClickListener {
+public class EditImageActivity extends AppCompatActivity
+        implements OnClickListener {
     ProgressDialog _pdLoading;
     AsyncTaskConvertImage _atConvert = null;
 
@@ -43,7 +44,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         if (_atConvert != null && !_atConvert.isCancelled()
                 && _atConvert.getStatus() == AsyncTask.Status.RUNNING) {
             _atConvert.link(this);
-            pdShow();
+            showPd();
         }
     }
 
@@ -59,7 +60,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_convert:
-                pdShow();
+                showPd();
                 _atConvert = new AsyncTaskConvertImage();
                 _atConvert.link(this);
                 _atConvert.execute();
@@ -98,7 +99,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     /**
-     * Provides cancellation of async task execution when the dialog is cancelled
+     * Provides cancellation of async task execution
+     * when the dialog is cancelled
      */
     OnCancelListener _diCancelListener = new OnCancelListener() {
         @Override
@@ -108,9 +110,9 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     };
 
     /**
-     * Show progress dialog and listen if it is cancelled
+     * Show progress dialog
      */
-    private void pdShow() {
+    private void showPd() {
         _pdLoading.show();
         _pdLoading.setOnCancelListener(_diCancelListener);
     }
@@ -123,7 +125,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         LayoutInflater inflater = LayoutInflater.from(this);
 
         builder.setView(inflater.inflate(R.layout.dialog_columns, null))
-                .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
