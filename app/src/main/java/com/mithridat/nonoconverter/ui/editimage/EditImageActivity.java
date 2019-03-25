@@ -5,27 +5,58 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
 import com.mithridat.nonoconverter.R;
+import com.mithridat.nonoconverter.ui.ActivitiesConstants;
+import com.mithridat.nonoconverter.ui.imagepicker.ImageUpload;
 import com.mithridat.nonoconverter.ui.result.ResultActivity;
+import com.nguyenhoanglam.imagepicker.model.Config;
+import com.nguyenhoanglam.imagepicker.model.Image;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Class for the editing image activity.
  */
-public class EditImageActivity extends AppCompatActivity
-        implements OnClickListener {
+public class EditImageActivity extends AppCompatActivity implements OnClickListener {
+
+    /**
+     * Progress dialog for showing processing of the converting
+     */
     ProgressDialog _pdLoading;
+
+    /**
+     * Async task where image will be converted
+     */
     AsyncTaskConvertImage _atConvert = null;
+
+    /**
+     * Image from gallery/camera
+     */
+    Bitmap _bmpImage = null;
+
+    /**
+     * Current image in ImageView
+     */
+    Bitmap _bmpCurrentImage = null;
+
+    /**
+     * ImageView in the activity
+     */
+    ImageView _ivImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +65,7 @@ public class EditImageActivity extends AppCompatActivity
 
         findViewById(R.id.button_crop).setOnClickListener(this);
         findViewById(R.id.button_columns).setOnClickListener(this);
+        _ivImage = (ImageView) findViewById(R.id.image_view_edit);
 
         _pdLoading = new ProgressDialog(this);
         _pdLoading.setMessage(
@@ -46,6 +78,12 @@ public class EditImageActivity extends AppCompatActivity
             _atConvert.link(this);
             showPd();
         }
+
+        if (_bmpImage == null) {
+            String path =
+                    getIntent().getStringExtra(ActivitiesConstants.EX_IMAGE_PATH);
+            setImageFromPath(path);
+        }
     }
 
     @Override
@@ -53,12 +91,19 @@ public class EditImageActivity extends AppCompatActivity
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.edit_image, menu);
         setTitle(R.string.title_edit_image_activity);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
             case R.id.menu_convert:
                 showPd();
                 _atConvert = new AsyncTaskConvertImage();
@@ -85,8 +130,8 @@ public class EditImageActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        ImageUpload.startImagePicker(this,
+                ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE);
         overridePendingTransition(R.anim.slide_in_right,
                 R.anim.slide_out_right);
     }
@@ -96,6 +141,28 @@ public class EditImageActivity extends AppCompatActivity
         super.onRetainCustomNonConfigurationInstance();
         if (_atConvert != null) _atConvert.unLink();
         return _atConvert;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE
+                && resultCode == RESULT_CANCELED) {
+            super.onBackPressed();
+            finish();
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+        }
+        if (requestCode == ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE
+                && resultCode == RESULT_OK
+                && data != null) {
+            ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+
+            if (images.size() > 0) {
+                String path = images.get(0).getPath();
+                setImageFromPath(path);
+            }
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -143,9 +210,24 @@ public class EditImageActivity extends AppCompatActivity
     }
 
     /**
+     * Method for upload image from path
+     *
+     * @param path - path of image
+     */
+    private void setImageFromPath(String path) {
+        _bmpImage = ImageUpload.getBitmapFromPath(path);
+        _bmpCurrentImage = _bmpImage;
+        _ivImage.setImageBitmap(_bmpCurrentImage);
+    }
+
+    /**
      * Inner class for async converting image in background.
      */
     static class AsyncTaskConvertImage extends AsyncTask<Void, Void, Void> {
+
+        /**
+         * Reference to activity
+         */
         private EditImageActivity _activity;
 
         @Override

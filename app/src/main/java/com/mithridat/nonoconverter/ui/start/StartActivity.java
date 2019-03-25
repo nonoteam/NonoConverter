@@ -10,7 +10,13 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 import com.mithridat.nonoconverter.R;
+import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 import com.mithridat.nonoconverter.ui.editimage.EditImageActivity;
+import com.mithridat.nonoconverter.ui.imagepicker.ImageUpload;
+import com.nguyenhoanglam.imagepicker.model.Config;
+import com.nguyenhoanglam.imagepicker.model.Image;
+
+import java.util.ArrayList;
 
 /**
  * Class for the launcher activity. This is the first thing users see of our app.
@@ -32,10 +38,11 @@ public class StartActivity extends AppCompatActivity implements OnClickListener 
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
             case R.id.button_load_image:
-                Intent intent = new Intent(this, EditImageActivity.class);
-                startActivity(intent);
+                ImageUpload.startImagePicker(this,
+                        ActivitiesConstants.RC_PICK_IMAGE_START);
                 overridePendingTransition(R.anim.slide_in_left,
                         R.anim.slide_out_left);
                 break;
@@ -54,6 +61,27 @@ public class StartActivity extends AppCompatActivity implements OnClickListener 
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ActivitiesConstants.RC_PICK_IMAGE_START
+                && resultCode == RESULT_OK
+                && data != null) {
+            ArrayList<Image> images =
+                    data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+
+            if (images.size() > 0)
+            {
+                Intent intent = new Intent(this, EditImageActivity.class);
+                intent.putExtra(ActivitiesConstants.EX_IMAGE_PATH,
+                        images.get(0).getPath());
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left,
+                        R.anim.slide_out_left);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }
