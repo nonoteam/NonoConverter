@@ -48,8 +48,8 @@ public class StartActivity extends AppCompatActivity implements OnClickListener 
                         R.anim.slide_out_left);
                 break;
             case R.id.button_about:
-                Intent intentAbout = new Intent(this, AboutActivity.class);
-                startActivity(intentAbout);
+                intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left,
                         R.anim.slide_out_left);
                 break;
