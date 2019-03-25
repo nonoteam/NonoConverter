@@ -77,7 +77,7 @@ For example:
   ```
   git clone https://github.com/nonoteam/NonoConverter.git
   ```
-* Upload project
+* Open project and build
 
 ## Development team
 * [Maxim Smolskiy](https://github.com/MaximSmolskiy) - **teamlead**
