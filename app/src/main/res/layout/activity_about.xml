@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorLightBlue"
-    tools:context=".ui.start.StartActivity">
+    tools:context=".ui.about.AboutActivity">
 
     <TextView
         android:id="@+id/text_view_contact"
@@ -18,14 +18,14 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:gravity="center"
         android:text="@string/msg_contact"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/linear_layout_about"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_description"
-        app:layout_constraintVertical_bias="0.118"
-        android:gravity="center"/>
+        app:layout_constraintVertical_bias="0.148" />
 
     <TextView
         android:id="@+id/text_view_app_name"
@@ -43,8 +43,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linear_layout_about"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_about"
+        app:layout_constraintVertical_bias="0.966" />
 
     <TextView
         android:id="@+id/text_view_version"
@@ -78,7 +78,7 @@
         app:layout_constraintVertical_bias="0.22" />
 
     <include
-        android:id="@+id/toolbar_start"
+        android:id="@+id/toolbar_about"
         layout="@layout/toolbar"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
@@ -87,26 +87,13 @@
         android:id="@+id/image_view_logo"
         android:layout_width="207dp"
         android:layout_height="157dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="416dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linear_layout_about"
-        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_about"
+        app:layout_constraintVertical_bias="0.851"
         app:srcCompat="@drawable/panda_thumbnail" />
-
-    <LinearLayout
-        android:id="@+id/linear_layout_about"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_start"
-        app:layout_constraintVertical_bias="0.0">
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
