@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
+import com.mithridat.nonoconverter.ui.about.AboutActivity;
 import com.mithridat.nonoconverter.ui.editimage.EditImageActivity;
 import com.mithridat.nonoconverter.ui.imagepicker.ImageUpload;
 import com.nguyenhoanglam.imagepicker.model.Config;
@@ -47,10 +48,10 @@ public class StartActivity extends AppCompatActivity implements OnClickListener 
                         R.anim.slide_out_left);
                 break;
             case R.id.button_about:
-                Toast.makeText(this,
-                        "Open 'about' screen",
-                        Toast.LENGTH_LONG)
-                        .show();
+                Intent intentAbout = new Intent(this, AboutActivity.class);
+                startActivity(intentAbout);
+                overridePendingTransition(R.anim.slide_in_left,
+                        R.anim.slide_out_left);
                 break;
             case R.id.button_help:
                 Toast.makeText(this,
