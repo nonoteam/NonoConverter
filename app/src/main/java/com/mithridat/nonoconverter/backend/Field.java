@@ -17,6 +17,7 @@ class Field {
 
     /**
      * Constructor by the field sizes
+     * 
      * @param rows - number of field rows
      * @param cols - number of field columns
      */
@@ -28,6 +29,7 @@ class Field {
 
     /**
      * Method for getting number of field rows
+     *
      * @return number of field rows
      */
     public int getRows() {
@@ -36,6 +38,7 @@ class Field {
 
     /**
      * Method for getting number of field columns
+     *
      * @return number of field columns
      */
     public int getCols() {
@@ -44,6 +47,7 @@ class Field {
 
     /**
      * Method for getting field cell color with coordinates (i,j)
+     *
      * @param i - field cell row number
      * @param j - field cell column number
      * @return field cell color with coordinates (i,j)
@@ -54,6 +58,7 @@ class Field {
 
     /**
      * Method for setting field cell color with coordinates (i,j)
+     *
      * @param i - field cell row number
      * @param j - field cell column number
      * @param col - color
