@@ -79,7 +79,7 @@ public class NonogramDrawer extends SurfaceView implements SurfaceHolder.Callbac
     }
 
     /**
-     *
+     * function for getting device width
      * @param context current context
      * @return current device screen width
      */
@@ -92,7 +92,7 @@ public class NonogramDrawer extends SurfaceView implements SurfaceHolder.Callbac
     }
 
     /**
-     *
+     * function for getting device height
      * @param context current context
      * @return current device screen height
      */

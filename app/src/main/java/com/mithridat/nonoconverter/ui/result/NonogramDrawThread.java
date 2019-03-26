@@ -12,15 +12,38 @@ import com.mithridat.nonoconverter.backend.Field;
 public class NonogramDrawThread extends Thread {
 
     /**
-     * width of the lines in nonorgam grid
+     * Width of the lines in nonorgam grid
      */
     public final int LINES_WIDTH = 3;
 
+    /**
+     * flag, marking if thread is now running
+     */
     private boolean _isRunning = false;
+
+    /**
+     * surface holder
+     */
     private SurfaceHolder _surfaceHolder;
+
+    /**
+     * brush, containing painting parameters
+     */
     private Paint _painter;
+
+    /**
+     * background image for surface view
+     */
     private Drawable _background = null;
+
+    /**
+     * nonogram as Field backend class
+     */
     private Field _nonogram = null;
+
+    /**
+     * size of cells in screen coordinates
+     */
     private int _cellSize = 0;
 
     public NonogramDrawThread(SurfaceHolder surfaceHolder) {
@@ -63,7 +86,7 @@ public class NonogramDrawThread extends Thread {
     /**
      * Set size of the cells in nonogram
      *
-     * @param size of cells in screen coordinates
+     * @param size size of cells in screen coordinates
      */
     public void setCellSize(int size) {
         _cellSize = size;
@@ -112,7 +135,8 @@ public class NonogramDrawThread extends Thread {
 
         // horizontal lines
         for (int i = 0; i <= rows; i++) {
-            canvas.drawLine(startX, startY + i * _cellSize,
+            canvas.drawLine(startX,
+                    startY + i * _cellSize,
                     stopX,
                     startY + i * _cellSize,
                     _painter);
