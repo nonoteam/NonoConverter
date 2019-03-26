@@ -15,7 +15,7 @@ class Nonogram {
     /**
      * Constructor by the nonogram field
      *
-     * @param field - nonogram field
+     * @param fieldNono - nonogram field
      */
     Nonogram(Field fieldNono) {
 
