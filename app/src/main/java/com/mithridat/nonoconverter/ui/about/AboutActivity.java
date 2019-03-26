@@ -11,8 +11,8 @@ import android.view.MenuItem;
 import com.mithridat.nonoconverter.R;
 
 /**
- * Class for the about activity. This is a screen that gives the user information about the
- * application
+ * Class for the about activity. This is a screen that gives the user
+ * information about the application
  */
 public class AboutActivity extends AppCompatActivity {
 
