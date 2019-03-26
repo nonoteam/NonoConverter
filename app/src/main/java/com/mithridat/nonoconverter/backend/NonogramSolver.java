@@ -52,7 +52,7 @@ class NonogramSolver {
      *         false, otherwise
      */
     public boolean solve() {
-
+        return true;
     }
 
     /**
@@ -69,7 +69,7 @@ class NonogramSolver {
      *         false, otherwise
      */
     private boolean check() {
-
+        return true;
     }
 
     /**
@@ -82,7 +82,7 @@ class NonogramSolver {
      *         false, otherwise
      */
     boolean applySimpleBoxes(int ind, int type) {
-
+        return false;
     }
 
     /**
@@ -95,7 +95,7 @@ class NonogramSolver {
      *         false, otherwise
      */
     boolean applySimpleSpaces(int ind, int type) {
-
+        return false;
     }
 
     /**
@@ -108,7 +108,7 @@ class NonogramSolver {
      *         false, otherwise
      */
     boolean applyForcing(int ind, int type) {
-
+        return false;
     }
 
     /**
@@ -121,7 +121,7 @@ class NonogramSolver {
      *         false, otherwise
      */
     boolean applyGlue(int ind, int type) {
-
+        return false;
     }
 
     /**
@@ -134,7 +134,7 @@ class NonogramSolver {
      *         false, otherwise
      */
     boolean applyJoiningAndSplitting(int ind, int type) {
-
+        return false;
     }
 
     /**
@@ -147,7 +147,7 @@ class NonogramSolver {
      *         false, otherwise
      */
     boolean applyPunctuating(int ind, int type) {
-
+        return false;
     }
 
     /**
@@ -160,7 +160,7 @@ class NonogramSolver {
      *         false, otherwise
      */
     boolean applyMercury(int ind, int type) {
-
+        return false;
     }
 
 }
