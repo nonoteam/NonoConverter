@@ -30,15 +30,15 @@ class NonogramSolver {
     private Field _field;
 
     /**
-     * Async task
+     * Async task of image converting
      */
     private AsyncTask<Void, Void, Field> _asyncTask;
 
     /**
-     * Constructor by the nonogram and async task
+     * Constructor by the nonogram and async task of image converting
      *
      * @param nono - nonogram
-     * @param asyncTask - async task
+     * @param asyncTask - async task of image converting
      */
     NonogramSolver(Nonogram nono, AsyncTask<Void, Void, Field> asyncTask) {
         _nono = nono;
@@ -55,9 +55,9 @@ class NonogramSolver {
     }
 
     /**
-     * Method for setting async task
+     * Method for setting async task of image converting
      *
-     * @param asyncTask - async task
+     * @param asyncTask - async task of image converting
      */
     public void setAsyncTask(AsyncTask<Void, Void, Field> asyncTask) {
         _asyncTask = asyncTask;
