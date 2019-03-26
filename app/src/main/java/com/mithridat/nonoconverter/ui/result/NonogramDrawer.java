@@ -12,7 +12,14 @@ import com.mithridat.nonoconverter.backend.Field;
 
 public class NonogramDrawer extends SurfaceView implements SurfaceHolder.Callback {
 
+    /**
+     *  thread for drawing nonogram
+     */
     private NonogramDrawThread _nngDrawThread;
+
+    /**
+     * minimal horizontal and vertical indents from screen borders
+     */
     private int _minMarginHor = 50;
     private int _minMarginVer = 250;
 
@@ -44,24 +51,38 @@ public class NonogramDrawer extends SurfaceView implements SurfaceHolder.Callbac
         threadShutdown();
     }
 
+    /**
+     * Calculate layout parameters and cell size
+     * Set calculated parameters in drawing tread
+     * @param nonogramField nonogram as Field backend class
+     */
     public void setNonogramField(Field nonogramField) {
-        int cellSizeHor = (getDeviceWidth(getContext()) - 2 * _minMarginHor)
-                / nonogramField.getCols();
-        int cellSizeVer = (getDeviceHeight(getContext()) - 2 * _minMarginVer)
-                / nonogramField.getRows();
+        int cellSizeHor =
+                (getDeviceWidth(getContext()) - 2 * _minMarginHor)
+                        / nonogramField.getCols();
+        int cellSizeVer =
+                (getDeviceHeight(getContext()) - 2 * _minMarginVer)
+                        / nonogramField.getRows();
         int cellSize = Math.min(cellSizeHor, cellSizeVer);
 
         ViewGroup.LayoutParams params = this.getLayoutParams();
-        params.width = cellSize * nonogramField.getCols()
-                + 2 * _nngDrawThread.LINES_WIDTH;
-        params.height = cellSize * nonogramField.getRows()
-                + 2 * _nngDrawThread.LINES_WIDTH;
+        params.width =
+                cellSize * nonogramField.getCols()
+                        + 2 * _nngDrawThread.LINES_WIDTH;
+        params.height =
+                cellSize * nonogramField.getRows()
+                        + 2 * _nngDrawThread.LINES_WIDTH;
         setLayoutParams(params);
 
         _nngDrawThread.setNonogramField(nonogramField);
         _nngDrawThread.setCellSize(cellSize);
     }
 
+    /**
+     *
+     * @param context current context
+     * @return current device screen width
+     */
     public static int getDeviceWidth(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
@@ -70,6 +91,11 @@ public class NonogramDrawer extends SurfaceView implements SurfaceHolder.Callbac
         return width;
     }
 
+    /**
+     *
+     * @param context current context
+     * @return current device screen height
+     */
     public static int getDeviceHeight(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
@@ -78,6 +104,9 @@ public class NonogramDrawer extends SurfaceView implements SurfaceHolder.Callbac
         return height;
     }
 
+    /**
+     * Stop the drawing thread and wait until it finishes work
+     */
     private void threadShutdown() {
         _nngDrawThread.shutdown();
         while (true) {

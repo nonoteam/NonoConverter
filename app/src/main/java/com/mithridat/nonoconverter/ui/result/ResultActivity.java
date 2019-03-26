@@ -29,7 +29,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_result);
         findViewById(R.id.button_save_thumb).setOnClickListener(this);
         findViewById(R.id.button_save_nng).setOnClickListener(this);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_start));
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_result));
         NonogramDrawer nonogramDrawer = findViewById(R.id.nonogram_drawer);
         Field field = getIntent()
                 .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);

@@ -11,6 +11,9 @@ import com.mithridat.nonoconverter.backend.Field;
 
 public class NonogramDrawThread extends Thread {
 
+    /**
+     * width of the lines in nonorgam grid
+     */
     public final int LINES_WIDTH = 3;
 
     private boolean _isRunning = false;
@@ -41,28 +44,54 @@ public class NonogramDrawThread extends Thread {
         }
     }
 
+    /**
+     * Stop the tread
+     */
     public void shutdown() {
         _isRunning = false;
     }
 
+    /**
+     * Set nonogram
+     *
+     * @param nonogramField nonogram as Field backend class
+     */
     public void setNonogramField(Field nonogramField) {
         _nonogram = nonogramField;
     }
 
+    /**
+     * Set size of the cells in nonogram
+     *
+     * @param size of cells in screen coordinates
+     */
     public void setCellSize(int size) {
         _cellSize = size;
     }
 
+    /**
+     * Set background image for surface view
+     *
+     * @param background drawable object for background
+     */
     public void setBackground(Drawable background) {
         _background = background;
     }
 
+    /**
+     * Set lines width, style and color for painter
+     */
     private void setPainterParams() {
         _painter.setStyle(Paint.Style.FILL);
         _painter.setStrokeWidth(LINES_WIDTH);
         _painter.setColor(Color.BLACK);
     }
 
+    /**
+     * Function for drawing nonogram
+     *
+     * @param canvas canvas received by surface holder
+     */
     private void drawNng(Canvas canvas) {
         if (_nonogram == null)
             return;
@@ -83,14 +112,19 @@ public class NonogramDrawThread extends Thread {
 
         // horizontal lines
         for (int i = 0; i <= rows; i++) {
-            canvas.drawLine(startX, startY + i * _cellSize, stopX,
-                    startY + i * _cellSize, _painter);
+            canvas.drawLine(startX, startY + i * _cellSize,
+                    stopX,
+                    startY + i * _cellSize,
+                    _painter);
         }
 
         //vertical lines
         for (int i = 0; i <= columns; i++) {
-            canvas.drawLine(startX + i * _cellSize, startY,
-                    startX + i * _cellSize, stopY, _painter);
+            canvas.drawLine(startX + i * _cellSize,
+                    startY,
+                    startX + i * _cellSize,
+                    stopY,
+                    _painter);
         }
 
         //filled cells
