@@ -13,7 +13,9 @@
             android:name=".ui.imagepicker.ImagePickerActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.result.ResultActivity" />
+        <activity
+            android:name=".ui.result.ResultActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.editimage.EditImageActivity" />
         <activity
             android:name=".ui.start.StartActivity"
