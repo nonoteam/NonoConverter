@@ -51,7 +51,7 @@
         android:id="@+id/image_view_result"
         android:layout_width="350dp"
         android:layout_height="300dp"
-        android:background="@drawable/panda_thumbnail"
+        android:background="@drawable/img_panda_thumbnail"
         app:layout_constraintBottom_toTopOf="@+id/linear_layout_result_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
