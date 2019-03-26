@@ -8,6 +8,11 @@ import java.util.ArrayList;
 class NonogramSolver {
 
     /**
+     * Constants for argument type in nonogram solving algorithms
+     */
+    private static final int ROW = 0, COL = 1;
+
+    /**
      * Show what numbers are ready
      */
     private ArrayList<Boolean> _left, _top;
@@ -71,7 +76,8 @@ class NonogramSolver {
      * Implementation of simple boxes algorithm
      *
      * @param ind - index of row or column
-     * @param type - row or column
+     * @param type - ROW, if row
+     *               COL, if column
      * @return true, if any cell was filled
      *         false, otherwise
      */
@@ -83,7 +89,8 @@ class NonogramSolver {
      * Implementation of simple spaces algorithm
      *
      * @param ind - index of row or column
-     * @param type - row or column
+     * @param type - ROW, if row
+     *               COL, if column
      * @return true, if any cell was filled
      *         false, otherwise
      */
@@ -95,7 +102,8 @@ class NonogramSolver {
      * Implementation of forcing algorithm
      *
      * @param ind - index of row or column
-     * @param type - row or column
+     * @param type - ROW, if row
+     *               COL, if column
      * @return true, if any cell was filled
      *         false, otherwise
      */
@@ -107,7 +115,8 @@ class NonogramSolver {
      * Implementation of glue algorithm
      *
      * @param ind - index of row or column
-     * @param type - row or column
+     * @param type - ROW, if row
+     *               COL, if column
      * @return true, if any cell was filled
      *         false, otherwise
      */
@@ -119,7 +128,8 @@ class NonogramSolver {
      * Implementation of joining and splitting algorithm
      *
      * @param ind - index of row or column
-     * @param type - row or column
+     * @param type - ROW, if row
+     *               COL, if column
      * @return true, if any cell was filled
      *         false, otherwise
      */
@@ -131,7 +141,8 @@ class NonogramSolver {
      * Implementation of punctuating algorithm
      *
      * @param ind - index of row or column
-     * @param type - row or column
+     * @param type - ROW, if row
+     *               COL, if column
      * @return true, if any cell was filled
      *         false, otherwise
      */
@@ -143,7 +154,8 @@ class NonogramSolver {
      * Implementation of mercury algorithm
      *
      * @param ind - index of row or column
-     * @param type - row or column
+     * @param type - ROW, if row
+     *               COL, if column
      * @return true, if any cell was filled
      *         false, otherwise
      */

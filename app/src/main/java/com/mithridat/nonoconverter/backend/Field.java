@@ -23,6 +23,11 @@ class Field {
      */
     Field(int rows, int cols) {
         _field = new int[rows][cols];
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < cols; j++) {
+                _field[i][j] = Colors.WHITE;
+            }
+        }
         _rows = rows;
         _cols = cols;
     }
