@@ -3,6 +3,7 @@ package com.mithridat.nonoconverter.ui.result;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -13,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mithridat.nonoconverter.R;
+import com.mithridat.nonoconverter.backend.Field;
+import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 import com.mithridat.nonoconverter.ui.start.StartActivity;
 
 /**
@@ -26,6 +29,13 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_result);
         findViewById(R.id.button_save_thumb).setOnClickListener(this);
         findViewById(R.id.button_save_nng).setOnClickListener(this);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_start));
+        NonogramDrawer nonogramDrawer = findViewById(R.id.nonogram_drawer);
+        Field field = getIntent()
+                .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);
+        if (nonogramDrawer != null) {
+            nonogramDrawer.setNonogramField(field);
+        }
     }
 
     @Override
@@ -96,7 +106,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
      * Create home-return dialog
      */
     private void createDialogHomeReturn() {
-        OnClickListener listenerReturn =  new OnClickListener() {
+        OnClickListener listenerReturn = new OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
                 Intent intent = new Intent(ResultActivity.this,
