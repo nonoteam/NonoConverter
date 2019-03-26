@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Field storage class
  */
-class Field implements Parcelable {
+public class Field implements Parcelable {
 
     /**
      * Field сolor matrix
