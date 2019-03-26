@@ -9,7 +9,7 @@
     tools:context=".ui.result.ResultActivity">
 
     <include
-        android:id="@+id/toolbar_start"
+        android:id="@+id/toolbar_result"
         layout="@layout/toolbar"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
