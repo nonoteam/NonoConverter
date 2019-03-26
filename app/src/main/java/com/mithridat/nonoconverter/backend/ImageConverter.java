@@ -25,7 +25,7 @@ class ImageConverter {
      * @param bmp - color image
      * @return black-and-white image
      */
-    public static  Bitmap getBlackWhite(Bitmap bmp) {
+    public static Bitmap getBlackWhite(Bitmap bmp) {
 
     }
 
@@ -50,7 +50,7 @@ class ImageConverter {
      *         false, otherwise
      */
     private static boolean isHaveSolution(Field thumb) {
-
+        return true;
     }
 
 }
