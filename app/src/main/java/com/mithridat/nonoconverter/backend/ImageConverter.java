@@ -8,14 +8,14 @@ import android.graphics.Bitmap;
 class ImageConverter {
 
     /**
-     * Method for getting field from image
+     * Method for converting image into nonogram field
      *
      * @param bmp - image
-     * @param rows - number of field rows
-     * @param cols - number of field columns
-     * @return field
+     * @param rows - number of nonogram field rows
+     * @param cols - number of nonogram field columns
+     * @return nonogram field
      */
-    static public Field getField(Bitmap bmp, int rows, int cols) {
+    public static Field convertImage(Bitmap bmp, int rows, int cols) {
 
     }
 
@@ -25,7 +25,7 @@ class ImageConverter {
      * @param bmp - color image
      * @return black-and-white image
      */
-    static public Bitmap getBlackWhite(Bitmap bmp) {
+    public static  Bitmap getBlackWhite(Bitmap bmp) {
 
     }
 
@@ -38,18 +38,19 @@ class ImageConverter {
      * @param p - fill parameter
      * @return thumbnail
      */
-    static private Field getThumbnail(Bitmap bmp, int rows, int cols, int p) {
+    private static Field getThumbnail(Bitmap bmp, int rows, int cols, int p) {
 
     }
 
     /**
      * Method for checking nonogram solvability
      *
-     * @param thu - thumbnail
+     * @param thumb - thumbnail
      * @return true, if nonogram has solution
      *         false, otherwise
      */
-    static private boolean isHaveSolution(Field thu) {
+    private static boolean isHaveSolution(Field thumb) {
 
     }
+
 }

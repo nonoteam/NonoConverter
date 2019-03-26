@@ -13,11 +13,11 @@ class Nonogram {
     private ArrayList<Integer>[] _left, _top;
 
     /**
-     * Constructor by the field
+     * Constructor by the nonogram field
      *
-     * @param field - field
+     * @param field - nonogram field
      */
-    Nonogram(Field field) {
+    Nonogram(Field fieldNono) {
 
     }
 
