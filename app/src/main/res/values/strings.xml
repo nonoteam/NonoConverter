@@ -1,5 +1,5 @@
 <resources>
-    <string name="title_app">NonoConverter</string>
+    <string name="app_name">NonoConverter</string>
 
     <string name="title_edit_image_activity">Editing</string>
     <string name="action_convert">Convert</string>

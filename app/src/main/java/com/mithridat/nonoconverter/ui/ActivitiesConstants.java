@@ -20,4 +20,9 @@ public class ActivitiesConstants {
      */
     public static final String EX_IMAGE_PATH = "ImagePath";
 
+    /**
+     * Name of extra for putting nonogram field of image in intent.
+     */
+    public static final String EX_NONO_FIELD = "NonoField";
+
 }

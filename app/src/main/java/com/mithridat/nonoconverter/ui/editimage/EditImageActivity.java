@@ -19,11 +19,17 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.mithridat.nonoconverter.R;
+import com.mithridat.nonoconverter.backend.Field;
+import com.mithridat.nonoconverter.backend.ImageConverter;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 import com.mithridat.nonoconverter.ui.imagepicker.ImageUpload;
 import com.mithridat.nonoconverter.ui.result.ResultActivity;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
+
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -83,6 +89,17 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             String path =
                     getIntent().getStringExtra(ActivitiesConstants.EX_IMAGE_PATH);
             setImageFromPath(path);
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            // Handle error
+        } else {
+            _baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
 
@@ -177,6 +194,20 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     };
 
     /**
+     * Callback for OpenCVLoader
+     */
+    private BaseLoaderCallback _baseLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                default:
+                    super.onManagerConnected(status);
+                    break;
+            }
+        }
+    };
+
+    /**
      * Show progress dialog
      */
     private void showPd() {
@@ -223,7 +254,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Inner class for async converting image in background.
      */
-    static class AsyncTaskConvertImage extends AsyncTask<Void, Void, Void> {
+    static class AsyncTaskConvertImage extends AsyncTask<Void, Void, Field> {
 
         /**
          * Reference to activity
@@ -231,23 +262,24 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         private EditImageActivity _activity;
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Field doInBackground(Void... params) {
             try {
-                for (int i = 0; i < 5; ++i) {
-                    if (isCancelled()) return null;
-                    TimeUnit.SECONDS.sleep(1);
-                }
-            } catch (InterruptedException e) {
+                return ImageConverter.convertImage(_activity._bmpCurrentImage,
+                        45,
+                        35,
+                        this);
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Field result) {
             if (isCancelled()) return;
             _activity._pdLoading.dismiss();
             Intent intent = new Intent(_activity, ResultActivity.class);
+            intent.putExtra(ActivitiesConstants.EX_NONO_FIELD, result);
             _activity.startActivity(intent);
             _activity.overridePendingTransition(R.anim.slide_in_left,
                     R.anim.slide_out_left);

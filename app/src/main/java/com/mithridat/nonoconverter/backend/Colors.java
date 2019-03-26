@@ -6,8 +6,13 @@ package com.mithridat.nonoconverter.backend;
 class Colors {
 
     /**
-     * White and black colors
+     * White color
      */
-    public static final int WHITE = 0xFFFFFF, BLACK = 0x000000;
+    public static final int WHITE = 0xFFFFFFFF;
+
+    /**
+     * Black color
+     */
+    public static final int BLACK = 0xFF000000;
 
 }
