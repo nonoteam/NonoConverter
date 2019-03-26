@@ -11,7 +11,8 @@ import android.view.MenuItem;
 import com.mithridat.nonoconverter.R;
 
 /**
- * Class for the launcher activity. This is the first thing users see of our app.
+ * Class for the about activity. This is a screen that gives the user information about the
+ * application
  */
 public class AboutActivity extends AppCompatActivity {
 
