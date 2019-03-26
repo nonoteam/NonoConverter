@@ -1,5 +1,7 @@
 package com.mithridat.nonoconverter.backend;
 
+import android.os.AsyncTask;
+
 import java.util.ArrayList;
 
 /**
@@ -28,12 +30,19 @@ class NonogramSolver {
     private Field _field;
 
     /**
-     * Constructor by the nonogram
+     * Async task
+     */
+    private AsyncTask<Void, Void, Field> _asyncTask;
+
+    /**
+     * Constructor by the nonogram and async task
      *
      * @param nono - nonogram
+     * @param asyncTask - async task
      */
-    NonogramSolver(Nonogram nono) {
+    NonogramSolver(Nonogram nono, AsyncTask<Void, Void, Field> asyncTask) {
         _nono = nono;
+        _asyncTask = asyncTask;
     }
 
     /**
@@ -46,13 +55,25 @@ class NonogramSolver {
     }
 
     /**
+     * Method for setting async task
+     *
+     * @param asyncTask - async task
+     */
+    public void setAsyncTask(AsyncTask<Void, Void, Field> asyncTask) {
+        _asyncTask = asyncTask;
+    }
+
+    /**
      * Method for solving nonogram
      *
      * @return true, if solution was founded
      *         false, otherwise
      */
     public boolean solve() {
-        return true;
+        if(!_asyncTask.isCancelled()) {
+            return true;
+        }
+        return false;
     }
 
     /**
