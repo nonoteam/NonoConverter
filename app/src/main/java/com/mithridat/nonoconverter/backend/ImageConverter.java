@@ -1,6 +1,7 @@
 package com.mithridat.nonoconverter.backend;
 
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 
 /**
  * Image converting class
@@ -13,10 +14,18 @@ class ImageConverter {
      * @param bmp - image
      * @param rows - number of nonogram field rows
      * @param cols - number of nonogram field columns
+     * @param asyncTask - async task of image converting
      * @return nonogram field
      */
-    public static Field convertImage(Bitmap bmp, int rows, int cols) {
+    public static Field convertImage(Bitmap bmp,
+                                     int rows,
+                                     int cols,
+                                     AsyncTask<Void, Void, Field> asyncTask)
+    {
+        if(!asyncTask.isCancelled()) {
 
+        }
+        return null;
     }
 
     /**
