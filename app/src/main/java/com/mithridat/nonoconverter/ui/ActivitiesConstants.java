@@ -25,4 +25,9 @@ public class ActivitiesConstants {
      */
     public static final String EX_NONO_FIELD = "NonoField";
 
+    /**
+     * Name of extra for putting id of needed help section in intent.
+     */
+    public static final String EX_HELP_SECTION_ID = "HelpSectionID";
+
 }
