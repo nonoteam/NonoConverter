@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".ui.help.HelpActivity">
+
+    <TextView
+        style="@style/AppTheme.TextView.Help.Top"
+        android:text="@string/title_help_info" />
+
+    <LinearLayout
+        style="@style/AppTheme.LinearLayout.Help">
+
+        <TextView
+            style="@style/AppTheme.TextView.Help.Info"
+            android:text="@string/help_info_load_image" />
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/AppTheme.TextView.Help.Separate"
+        android:text="@string/title_help_beginning" />
+
+    <LinearLayout
+        style="@style/AppTheme.LinearLayout.Help">
+
+        <TextView
+            style="@style/AppTheme.TextView.Help"
+            android:text="@string/help_beginning_load_image" />
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/AppTheme.TextView.Help.Separate"
+        android:text="@string/title_help_image_picker" />
+
+    <LinearLayout
+        style="@style/AppTheme.LinearLayout.Help">
+
+        <TextView
+            style="@style/AppTheme.TextView.Help"
+            android:text="@string/help_image_picker" />
+
+    </LinearLayout>
+
+</LinearLayout>

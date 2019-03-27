@@ -1,26 +1,117 @@
 <resources>
     <string name="app_name">NonoConverter</string>
 
-    <string name="edit_image_activity_name">Editing</string>
-    <string name="mi_convert">Convert</string>
-    <string name="btn_crop">Crop</string>
-    <string name="btn_columns">Columns</string>
-    <string name="img_edit_desc">Convertible image</string>
-    <string name="dlg_columns_title">Columns and rows</string>
-    <string name="tv_columns">Columns</string>
-    <string name="tv_rows">Rows</string>
-    <string name="pd_process_image">Processing image...</string>
+    <string name="title_edit_image_activity">Editing</string>
+    <string name="action_convert">Convert</string>
+    <string name="action_open_crop">Crop</string>
+    <string name="action_open_columns">Columns</string>
+    <string name="edit_image_view_description">Convertible image</string>
+    <string name="title_dialog_columns">Columns and rows</string>
+    <string name="edit_image_columns">Columns</string>
+    <string name="edit_image_rows">Rows</string>
+    <string name="msg_process_image">Processing image…</string>
+    <string name="action_change">Change</string>
 
-    <string name="result_activity_name">Result</string>
-    <string name="mi_home">Home</string>
-    <string name="btn_save_thumbnail">Save thumbnail</string>
-    <string name="btn_save_nonogram">Save nonogram</string>
-    <string name="dlg_done_title">Done</string>
-    <string name="dlg_home_return_title">Return home</string>
-    <string name="dlg_home_return_message">Are you sure that you want to return home?
+    <string name="title_result_activity">Result</string>
+    <string name="action_save_thumbnail">Save thumbnail</string>
+    <string name="action_save_nonogram">Save nonogram</string>
+    <string name="action_home_return">Home</string>
+    <string name="title_dialog_home_return">Return home</string>
+    <string name="msg_home_return">Are you sure that you want to return home?
         Nonogram will be lost if you don\'t save it.</string>
-    <string name="dlg_home_return_pos">RETURN</string>
+    <string name="action_return">RETURN</string>
+    <string name="title_dialog_done">Done</string>
 
+    <string name="action_load_image">Load Image</string>
+    <string name="action_open_about">About</string>
+    <string name="action_open_help">Help</string>
 
+    <string name="msg_description">Android mobile application for converting images to
+       black-and-white nonogram\n
+       - Select an image from the gallery or take a photo\n
+       - You can crop selected image\n
+       - Select size of nonogram\n
+       - Application converts selected image to a nonogram, which has a single
+       logical solution\n
+       - Save nonogram and its thumbnail
+    </string>
+    <string name="msg_version">Version: 0.2.0</string>
+    <string name="title_about_activity">About</string>
+    <string name="msg_contact">If you have any questions,\nplease contact us:\n
+       nonoconverter@gmail.com</string>
+
+    <string name="title_help">Help</string>
+    <string name="title_help_info">Information</string>
+    <string name="help_info">The process of converting pictures into Japanese
+        Crossword is divided into three sections, presented below. To read
+        more about each of them, you must click on the icon on the
+        left. On each screen (except the main screen), it is possible to go
+        back by clicking on the standard \'back\' button in the navigation
+        bar or on the \'back\' button in the upper left corner on
+        the action bar.</string>
+    <string name="title_help_sections">Sections</string>
+    <string name="title_help_section_load_image">Load image</string>
+    <string name="title_help_section_edit_image">Edit image</string>
+    <string name="title_help_section_result">Result</string>
+    <string name="help_section_load_image">Upload images from the gallery and
+        receive photos from the camera.</string>
+    <string name="help_section_edit_image">Rotation, flipping, and cropping
+        of a picture. Setting the sizes of the crossword.</string>
+    <string name="help_section_result">Viewing and saving the result.</string>
+    <string name="help_info_load_image">Before the picture is converted into
+        a Japanese Crossword, it needs to be uploaded.</string>
+    <string name="title_help_beginning">Beginning</string>
+    <string name="help_beginning_load_image">To load an image into the
+        application, you need to click on the \'LOAD IMAGE\' button on the
+        main screen, then you will go to the screen to select an image.</string>
+    <string name="title_help_image_picker">Image picker</string>
+    <string name="help_image_picker">All images on the device are presented
+        in the form of folders in which they are located. When you
+        click on a particular folder, all the images that are in it appear.
+        When you click on a specific image, it is loaded into the
+        application.\n\nAlso available to receive a photo from the camera. To
+        do this, in the upper right corner on the action bar you need to
+        click on the camera icon and the camera will open. After that, you
+        can take a picture.\n\nAfter selecting an image from the gallery or
+        photo, you will be taken to the screen to process the loaded image.
+    </string>
+    <string name="help_info_edit_image">After loading the image, it can be
+        cropped or rotated 90 degrees. To convert an image into the Japanese
+        Crossword, you need to set the dimensions of the crossword.</string>
+    <string name="help_crop">To crop, rotate and flip the image, click on the
+        \'CROP\' button in the lower left corner.\n\nYou can rotate the image
+        90, 180 and 270 degrees and flip the image vertically. To do this,
+        click on the icons at the bottom.\n\nYou can crop the image by selecting
+        the desired rectangle. To fixate your choice, you need to click on the
+        check mark in the upper right corner on the action bar</string>
+    <string name="help_columns">To set the size of the crossword, click on
+        the \'COLUMNS\' button in the lower right corner.\n\nYou can view an
+        approximate result. There is a slider that provides a choice of the
+        number of columns at the bottom of the screen. The number of rows is
+        calculated automatically. There is the selected image for conversion
+        in the center of the screen, over of which a grid is drawn. To
+        fixate your choice, you need to click on the check mark in the upper
+        right corner on the action bar.</string>
+    <string name="help_convert">After you have configured everything you need
+        to click on \'Convert\' in the upper right corner on the action bar.
+        After that, a pop-up window will appear informing you that the
+        conversion has begun. You have the opportunity to click on the
+        standard \'back\' button in the navigation bar or click on any place
+        around the window to cancel the conversion.</string>
+    <string name="help_info_result">After converting the image into the
+        Japanese Crossword, you can see the result and save it.</string>
+    <string name="help_save_thumbnail">You can save the result as a
+        thumbnail. The image size in pixels is equal to the size of the
+        crossword puzzle. To do this, click on the button \'SAVE THUMBNAIL\'
+        in the lower left corner.</string>
+    <string name="help_save_nonogram">You can save the result in the form of
+        an unsolved Japanese Crossword. To do this, click on the button
+        \'SAVE NONOGRAM\' in the lower right corner.</string>
+    <string name="help_view_result">You can look at the resulting crossword
+        puzzle. In the center of the screen is a solved Japanese Crossword.
+        It can be moved and increased or decreased.</string>
+    <string name="help_home_return">A quick return to the initial screen is
+        available. Just click on the house icon in the upper right corner
+        on the action bar.</string>
 
 </resources>

@@ -30,6 +30,8 @@ Advantages over web analogues:
     * [release](#release)
   * [Rules of commits](#rules-of-commits)
   * [Coding standard](http://github.com/nonoteam/NonoConverter/blob/master/CodingStandard.md)
+  * [Installation instruction](#installation-instruction)
+  * [Installation instruction for developers](#installation-instruction-for-developers)
   * [Development team](#development-team)
 
 <!---toc end-->
@@ -63,6 +65,19 @@ For example:
 - Moved coding standard to individual file
 - Added examples of code in CodingStandard.md
 ```
+
+## Installation instruction
+* Download the apk file to your device from [here](https://github.com/nonoteam/NonoConverter/releases)
+* Install it
+
+## Installation instruction for developers
+* Install on the PC Android Studio + Android Sdk according to the instruction on the site  
+  https://developer.android.com/studio/index.html
+* Clone project from git server:
+  ```
+  git clone https://github.com/nonoteam/NonoConverter.git
+  ```
+* Open project and build
 
 ## Development team
 * [Maxim Smolskiy](https://github.com/MaximSmolskiy) - **teamlead**

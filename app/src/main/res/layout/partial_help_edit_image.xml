@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".ui.help.HelpActivity">
+
+    <TextView
+        style="@style/AppTheme.TextView.Help.Top"
+        android:text="@string/title_help_info" />
+
+    <LinearLayout
+        style="@style/AppTheme.LinearLayout.Help">
+
+        <TextView
+            style="@style/AppTheme.TextView.Help.Info"
+            android:text="@string/help_info_edit_image" />
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/AppTheme.TextView.Help.Separate"
+        android:text="@string/action_open_crop" />
+
+    <LinearLayout
+        style="@style/AppTheme.LinearLayout.Help">
+
+        <TextView
+            style="@style/AppTheme.TextView.Help"
+            android:text="@string/help_crop" />
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/AppTheme.TextView.Help.Separate"
+        android:text="@string/action_open_columns" />
+
+    <LinearLayout
+        style="@style/AppTheme.LinearLayout.Help">
+
+        <TextView
+            style="@style/AppTheme.TextView.Help"
+            android:text="@string/help_columns" />
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/AppTheme.TextView.Help.Separate"
+        android:text="@string/action_convert" />
+
+    <LinearLayout
+        style="@style/AppTheme.LinearLayout.Help">
+
+        <TextView
+            style="@style/AppTheme.TextView.Help"
+            android:text="@string/help_convert" />
+
+    </LinearLayout>
+
+</LinearLayout>
