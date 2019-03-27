@@ -8,60 +8,19 @@
     android:background="@color/colorBrightGrey"
     tools:context=".ui.editimage.EditImageActivity">
 
-    <LinearLayout
-        android:id="@+id/linear_layout_edit"
+    <include
+        android:id="@+id/toolbar_edit"
+        layout="@layout/toolbar"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <FrameLayout
+        android:id="@+id/fragment_layout_edit"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorLightGrey"
-        android:gravity="bottom"
-        android:orientation="horizontal"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <Button
-            android:id="@+id/button_crop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_weight="1"
-            android:background="@color/colorLightBlue"
-            android:drawableTop="@drawable/ic_crop_rotate"
-            android:drawablePadding="5dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="5dp"
-            android:text="@string/action_open_crop"
-            android:textColor="@color/colorLightGrey"
-            android:textSize="14sp"
-            tools:ignore="ButtonStyle" />
-
-        <Button
-            android:id="@+id/button_columns"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="1dp"
-            android:layout_marginLeft="1dp"
-            android:layout_weight="1"
-            android:background="@color/colorLightBlue"
-            android:drawableTop="@drawable/ic_grid"
-            android:drawablePadding="5dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="5dp"
-            android:text="@string/action_open_columns"
-            android:textColor="@color/colorLightGrey"
-            android:textSize="14sp"
-            tools:ignore="ButtonStyle" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/image_view_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/edit_image_view_description"
-        app:layout_constraintBottom_toTopOf="@+id/linear_layout_edit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img_panda_original" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_edit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

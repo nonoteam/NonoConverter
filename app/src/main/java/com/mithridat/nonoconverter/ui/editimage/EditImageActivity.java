@@ -11,6 +11,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +35,6 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Class for the editing image activity.
@@ -50,11 +52,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     AsyncTaskConvertImage _atConvert = null;
 
     /**
-     * Image from gallery/camera
-     */
-    Bitmap _bmpImage = null;
-
-    /**
      * Current image in ImageView
      */
     Bitmap _bmpCurrentImage = null;
@@ -64,14 +61,41 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      */
     ImageView _ivImage;
 
+    /**
+     * Main fragment of the EditImageActivity
+     */
+    FragmentMain _fragmentMain;
+
+    /**
+     * Columns fragment of the EditImageActivity
+     */
+    FragmentColumns _fragmentColumns;
+
+    /**
+     * Fragment manager of the EditImageActivity
+     */
+    FragmentTransaction _fragmentTransaction;
+
+    /**
+     * Tag for fragment columns
+     */
+    static final String _fragmentColumnsTag = "_fragmentColumns";
+
+    /**
+     * Tag for fragment main
+     */
+    static final String _fragmentMainTag = "_fragmentMain";
+
+    int _rows = 45;
+    int _columns = 35;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_image);
 
-        findViewById(R.id.button_crop).setOnClickListener(this);
-        findViewById(R.id.button_columns).setOnClickListener(this);
-        _ivImage = (ImageView) findViewById(R.id.image_view_edit);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_edit);
+        setSupportActionBar(toolbar);
 
         _pdLoading = new ProgressDialog(this);
         _pdLoading.setMessage(
@@ -85,11 +109,43 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             showPd();
         }
 
-        if (_bmpImage == null) {
+        if (_bmpCurrentImage == null) {
             String path =
                     getIntent().getStringExtra(ActivitiesConstants.EX_IMAGE_PATH);
             setImageFromPath(path);
         }
+
+        if (!checkColumns())
+        {
+            _fragmentColumns = new FragmentColumns();
+        }
+        else
+        {
+            _fragmentColumns =
+                    (FragmentColumns) getSupportFragmentManager()
+                            .findFragmentByTag(_fragmentColumnsTag);
+        }
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            _fragmentMain = new FragmentMain();
+            _fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            _fragmentTransaction.add(R.id.fragment_layout_edit, _fragmentMain, _fragmentMainTag);
+            _fragmentTransaction.addToBackStack(null);
+            _fragmentTransaction.commit();
+        }
+    }
+
+    /**
+     * Check if columns fragment exists
+     * @return true if existing
+     */
+    public boolean checkColumns()
+    {
+        FragmentColumns myFragment1 = (FragmentColumns) getSupportFragmentManager()
+                .findFragmentByTag(_fragmentColumnsTag);
+        if (myFragment1 != null) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -106,7 +162,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.edit_image, menu);
         setTitle(R.string.title_edit_image_activity);
 
         ActionBar actionBar = getSupportActionBar();
@@ -127,6 +182,10 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 _atConvert.link(this);
                 _atConvert.execute();
                 return true;
+            case R.id.menu_done:
+
+                getSupportFragmentManager().popBackStack();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -136,21 +195,62 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.button_crop:
+
                 break;
             case R.id.button_columns:
-                createDialogColumns();
+                EditImageActivity editImageActivity = (EditImageActivity)this;
+                editImageActivity.changeFragment(2);
+                checkColumns();
                 break;
             default:
                 break;
         }
     }
 
+    void setSizes(int rows, int columns) {
+        _rows = rows;
+        _columns = columns;
+    }
+
+    /**
+     * Change current fragment to the _count_columns'th fragment
+     * @param count index of the fragment
+     */
+    public void changeFragment(int count)
+    {
+        switch (count)
+        {
+            case 1:
+                _fragmentTransaction.replace(R.id.fragment_layout_edit, _fragmentMain);
+                break;
+            case 2:
+                _fragmentTransaction =  getSupportFragmentManager().beginTransaction();
+                _fragmentTransaction
+                        .replace(R.id.fragment_layout_edit,
+                                _fragmentColumns,
+                                _fragmentColumnsTag);
+                _fragmentTransaction.addToBackStack(null);
+                _fragmentTransaction.commit();
+            case 3:
+                break;
+        }
+
+
+    }
+
     @Override
     public void onBackPressed() {
-        ImageUpload.startImagePicker(this,
-                ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE);
-        overridePendingTransition(R.anim.slide_in_right,
-                R.anim.slide_out_right);
+        int count_fragments = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (count_fragments == 1) {
+            ImageUpload.startImagePicker(this,
+                    ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE);
+            overridePendingTransition(R.anim.slide_in_right,
+                    R.anim.slide_out_right);
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
+
     }
 
     @Override
@@ -246,9 +346,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * @param path - path of image
      */
     private void setImageFromPath(String path) {
-        _bmpImage = ImageUpload.getBitmapFromPath(path);
-        _bmpCurrentImage = _bmpImage;
-        _ivImage.setImageBitmap(_bmpCurrentImage);
+        _bmpCurrentImage = ImageUpload.getBitmapFromPath(path);
+        //_ivImage.setImageBitmap(_bmpCurrentImage);
     }
 
     /**
@@ -265,8 +364,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         protected Field doInBackground(Void... params) {
             try {
                 return ImageConverter.convertImage(_activity._bmpCurrentImage,
-                        45,
-                        35,
+                        _activity._rows,
+                        _activity._columns,
                         this);
             } catch (NullPointerException e) {
                 e.printStackTrace();
