@@ -16,7 +16,9 @@
         <activity
             android:name=".ui.result.ResultActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.editimage.EditImageActivity" />
+        <activity
+            android:name=".ui.editimage.EditImageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.start.StartActivity"
             android:theme="@style/AppTheme.NoActionBar">
