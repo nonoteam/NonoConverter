@@ -35,7 +35,7 @@
        logical solution\n
        - Save nonogram and its thumbnail
     </string>
-    <string name="msg_version">Version: 0.1.0</string>
+    <string name="msg_version">Version: 0.2.0</string>
     <string name="title_about_activity">About</string>
     <string name="msg_contact">If you have any questions,\nplease contact us:\n
        nonoconverter@gmail.com</string>
