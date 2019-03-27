@@ -347,7 +347,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      */
     private void setImageFromPath(String path) {
         _bmpCurrentImage = ImageUpload.getBitmapFromPath(path);
-        //_ivImage.setImageBitmap(_bmpCurrentImage);
     }
 
     /**

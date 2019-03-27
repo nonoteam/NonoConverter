@@ -40,4 +40,78 @@
     <string name="msg_contact">If you have any questions,\nplease contact us:\n
        nonoconverter@gmail.com</string>
 
+    <string name="title_help">Help</string>
+    <string name="title_help_info">Information</string>
+    <string name="help_info">The process of converting pictures into Japanese
+        Crossword is divided into three sections, presented below. To read
+        more about each of them, you must click on the icon on the
+        left. On each screen (except the main screen), it is possible to go
+        back by clicking on the standard \'back\' button in the navigation
+        bar or on the \'back\' button in the upper left corner on
+        the action bar.</string>
+    <string name="title_help_sections">Sections</string>
+    <string name="title_help_section_load_image">Load image</string>
+    <string name="title_help_section_edit_image">Edit image</string>
+    <string name="title_help_section_result">Result</string>
+    <string name="help_section_load_image">Upload images from the gallery and
+        receive photos from the camera.</string>
+    <string name="help_section_edit_image">Rotation, flipping, and cropping
+        of a picture. Setting the sizes of the crossword.</string>
+    <string name="help_section_result">Viewing and saving the result.</string>
+    <string name="help_info_load_image">Before the picture is converted into
+        a Japanese Crossword, it needs to be uploaded.</string>
+    <string name="title_help_beginning">Beginning</string>
+    <string name="help_beginning_load_image">To load an image into the
+        application, you need to click on the \'LOAD IMAGE\' button on the
+        main screen, then you will go to the screen to select an image.</string>
+    <string name="title_help_image_picker">Image picker</string>
+    <string name="help_image_picker">All images on the device are presented
+        in the form of folders in which they are located. When you
+        click on a particular folder, all the images that are in it appear.
+        When you click on a specific image, it is loaded into the
+        application.\n\nAlso available to receive a photo from the camera. To
+        do this, in the upper right corner on the action bar you need to
+        click on the camera icon and the camera will open. After that, you
+        can take a picture.\n\nAfter selecting an image from the gallery or
+        photo, you will be taken to the screen to process the loaded image.
+    </string>
+    <string name="help_info_edit_image">After loading the image, it can be
+        cropped or rotated 90 degrees. To convert an image into the Japanese
+        Crossword, you need to set the dimensions of the crossword.</string>
+    <string name="help_crop">To crop, rotate and flip the image, click on the
+        \'CROP\' button in the lower left corner.\n\nYou can rotate the image
+        90, 180 and 270 degrees and flip the image vertically. To do this,
+        click on the icons at the bottom.\n\nYou can crop the image by selecting
+        the desired rectangle. To fixate your choice, you need to click on the
+        check mark in the upper right corner on the action bar</string>
+    <string name="help_columns">To set the size of the crossword, click on
+        the \'COLUMNS\' button in the lower right corner.\n\nYou can view an
+        approximate result. There is a slider that provides a choice of the
+        number of columns at the bottom of the screen. The number of rows is
+        calculated automatically. There is the selected image for conversion
+        in the center of the screen, over of which a grid is drawn. To
+        fixate your choice, you need to click on the check mark in the upper
+        right corner on the action bar.</string>
+    <string name="help_convert">After you have configured everything you need
+        to click on \'Convert\' in the upper right corner on the action bar.
+        After that, a pop-up window will appear informing you that the
+        conversion has begun. You have the opportunity to click on the
+        standard \'back\' button in the navigation bar or click on any place
+        around the window to cancel the conversion.</string>
+    <string name="help_info_result">After converting the image into the
+        Japanese Crossword, you can see the result and save it.</string>
+    <string name="help_save_thumbnail">You can save the result as a
+        thumbnail. The image size in pixels is equal to the size of the
+        crossword puzzle. To do this, click on the button \'SAVE THUMBNAIL\'
+        in the lower left corner.</string>
+    <string name="help_save_nonogram">You can save the result in the form of
+        an unsolved Japanese Crossword. To do this, click on the button
+        \'SAVE NONOGRAM\' in the lower right corner.</string>
+    <string name="help_view_result">You can look at the resulting crossword
+        puzzle. In the center of the screen is a solved Japanese Crossword.
+        It can be moved and increased or decreased.</string>
+    <string name="help_home_return">A quick return to the initial screen is
+        available. Just click on the house icon in the upper right corner
+        on the action bar.</string>
+
 </resources>

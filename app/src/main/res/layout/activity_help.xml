@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.help.HelpActivity">
+
+    <include
+        android:id="@+id/toolbar_help"
+        layout="@layout/toolbar"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_help">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/linear_layout_help"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/AppTheme.TextView.Help.Top"
+                    android:text="@string/title_help_info" />
+
+                <TextView
+                    style="@style/AppTheme.TextView.Help.Info"
+                    android:text="@string/help_info" />
+
+                <TextView
+                    style="@style/AppTheme.TextView.Help.Separate"
+                    android:text="@string/title_help_sections" />
+
+                <LinearLayout
+                    style="@style/AppTheme.LinearLayout.Help">
+
+                    <Button
+                        android:id="@+id/button_help_load_image"
+                        style="@style/AppTheme.Button.Help"
+                        android:drawableTop="@drawable/ic_insert_photo"
+                        android:text="@string/title_help_section_load_image" />
+
+                    <TextView
+                        style="@style/AppTheme.TextView.Help.Section"
+                        android:text="@string/help_section_load_image" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/AppTheme.LinearLayout.Help">
+
+                    <Button
+                        android:id="@+id/button_help_edit_image"
+                        style="@style/AppTheme.Button.Help"
+                        android:drawableTop="@drawable/ic_crop_rotate"
+                        android:text="@string/title_help_section_edit_image" />
+
+                    <TextView
+                        style="@style/AppTheme.TextView.Help.Section"
+                        android:text="@string/help_section_edit_image" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/AppTheme.LinearLayout.Help">
+
+                    <Button
+                        android:id="@+id/button_help_result"
+                        style="@style/AppTheme.Button.Help"
+                        android:drawableTop="@drawable/ic_grid"
+                        android:text="@string/title_help_section_result" />
+
+                    <TextView
+                        style="@style/AppTheme.TextView.Help.Section"
+                        android:text="@string/help_section_result" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

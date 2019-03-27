@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 import com.mithridat.nonoconverter.ui.about.AboutActivity;
 import com.mithridat.nonoconverter.ui.editimage.EditImageActivity;
+import com.mithridat.nonoconverter.ui.help.HelpActivity;
 import com.mithridat.nonoconverter.ui.imagepicker.ImageUpload;
 import com.nguyenhoanglam.imagepicker.model.Config;
 import com.nguyenhoanglam.imagepicker.model.Image;
@@ -54,10 +54,10 @@ public class StartActivity extends AppCompatActivity implements OnClickListener 
                         R.anim.slide_out_left);
                 break;
             case R.id.button_help:
-                Toast.makeText(this,
-                        "Open 'help' screen",
-                        Toast.LENGTH_LONG)
-                        .show();
+                intent = new Intent(this, HelpActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left,
+                        R.anim.slide_out_left);
                 break;
             default:
                 break;
