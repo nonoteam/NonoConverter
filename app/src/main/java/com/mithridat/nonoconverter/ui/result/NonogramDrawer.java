@@ -1,85 +1,139 @@
 package com.mithridat.nonoconverter.ui.result;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Display;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.mithridat.nonoconverter.backend.Field;
 
-public class NonogramDrawer extends SurfaceView implements SurfaceHolder.Callback {
+
+public class NonogramDrawer extends View {
 
     /**
-     *  thread for drawing nonogram
+     * Brush, containing painting parameters.
      */
-    private NonogramDrawThread _nngDrawThread;
+    private Paint _painter;
 
     /**
-     * minimal horizontal and vertical indents from screen borders
+     * Background image for view.
      */
-    private int _minMarginHor = 50;
-    private int _minMarginVer = 250;
+    private Drawable _background = null;
+
+    /**
+     * Nonogram as Field backend class.
+     */
+    private Field _nonogram = null;
+
+    /**
+     * Width of the lines in grid.
+     */
+    private int _linesWidth = 3;
+
+    /**
+     * Size of cells in screen coordinates.
+     */
+    private int _cellSize = 0;
+
+    /**
+     * Minimal horizontal and vertical indents from screen borders.
+     */
+    private int _minMarginHor = 0;
+    private int _minMarginVer = 0;
 
     public NonogramDrawer(Context context) {
         super(context);
-        _nngDrawThread = new NonogramDrawThread(getHolder());
-        getHolder().addCallback(this);
+        _painter = new Paint();
+        _painter.setStyle(Paint.Style.FILL);
+        _painter.setStrokeWidth(_linesWidth);
+        _painter.setColor(Color.BLACK);
     }
 
     public NonogramDrawer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        _nngDrawThread = new NonogramDrawThread(getHolder());
-        getHolder().addCallback(this);
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        _nngDrawThread.start();
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
-        //resize
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        threadShutdown();
+        _painter = new Paint();
+        _painter.setStyle(Paint.Style.FILL);
+        _painter.setStrokeWidth(_linesWidth);
+        _painter.setColor(Color.BLACK);
     }
 
     /**
-     * Calculate layout parameters and cell size
-     * Set calculated parameters in drawing tread
+     * Set nonogram, recalculate metrics and redraw view.
+     *
      * @param nonogramField nonogram as Field backend class
      */
     public void setNonogramField(Field nonogramField) {
-        int cellSizeHor =
-                (getDeviceWidth(getContext()) - 2 * _minMarginHor)
-                        / nonogramField.getCols();
-        int cellSizeVer =
-                (getDeviceHeight(getContext()) - 2 * _minMarginVer)
-                        / nonogramField.getRows();
-        int cellSize = Math.min(cellSizeHor, cellSizeVer);
-
-        ViewGroup.LayoutParams params = this.getLayoutParams();
-        params.width =
-                cellSize * nonogramField.getCols()
-                        + 2 * _nngDrawThread.LINES_WIDTH;
-        params.height =
-                cellSize * nonogramField.getRows()
-                        + 2 * _nngDrawThread.LINES_WIDTH;
-        setLayoutParams(params);
-
-        _nngDrawThread.setNonogramField(nonogramField);
-        _nngDrawThread.setCellSize(cellSize);
+        _nonogram = nonogramField;
+        recalculateSizes();
+        invalidate();
     }
 
     /**
-     * function for getting device width
+     * Set minimal vertical margin, recalculate metrics and redraw view.
+     *
+     * @param marginVer vertical margin
+     */
+    public void setMarginVer(int marginVer) {
+        _minMarginVer = marginVer;
+        recalculateSizes();
+        invalidate();
+    }
+
+    /**
+     * Set minimal horizontal margin, recalculate metrics and redraw view.
+     *
+     * @param marginHor horizontal margin
+     */
+    public void setMarginHor(int marginHor) {
+        _minMarginHor = marginHor;
+        recalculateSizes();
+        invalidate();
+    }
+
+    /**
+     * Set background image and redraw view.
+     *
+     * @param background drawable object for background
+     */
+    public void setBackground(Drawable background) {
+        _background = background;
+        invalidate();
+    }
+
+    /**
+     * Recalculate cell size, height and width of view.
+     * Called if nonogram or margins has changed.
+     */
+    private void recalculateSizes() {
+        if (_nonogram == null)
+            return;
+
+        int cellSizeHor =
+                (getDeviceWidth(getContext()) - 2 * _minMarginHor)
+                        / _nonogram.getCols();
+        int cellSizeVer =
+                (getDeviceHeight(getContext()) - 2 * _minMarginVer)
+                        / _nonogram.getRows();
+        _cellSize = Math.min(cellSizeHor, cellSizeVer);
+
+        ViewGroup.LayoutParams params = this.getLayoutParams();
+        params.width =
+                _cellSize * _nonogram.getCols() + _linesWidth;
+        params.height =
+                _cellSize * _nonogram.getRows() + _linesWidth;
+        setLayoutParams(params);
+    }
+
+    /**
+     * Function for getting device width.
+     *
      * @param context current context
      * @return current device screen width
      */
@@ -87,12 +141,12 @@ public class NonogramDrawer extends SurfaceView implements SurfaceHolder.Callbac
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
-        int width = display.getWidth();
-        return width;
+        return display.getWidth();
     }
 
     /**
-     * function for getting device height
+     * Function for getting device height.
+     *
      * @param context current context
      * @return current device screen height
      */
@@ -100,21 +154,71 @@ public class NonogramDrawer extends SurfaceView implements SurfaceHolder.Callbac
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
-        int height = display.getHeight();
-        return height;
+        return display.getHeight();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (canvas == null)
+            return;
+        canvas.drawColor(Color.WHITE);
+        drawNng(canvas);
     }
 
     /**
-     * Stop the drawing thread and wait until it finishes work
+     * Function for drawing nonogram.
+     *
+     * @param canvas canvas received in 'onDraw'
      */
-    private void threadShutdown() {
-        _nngDrawThread.shutdown();
-        while (true) {
-            try {
-                _nngDrawThread.join();
-                break;
-            } catch (InterruptedException e) {
-                //exception here means that drawing thread is still running
+    private void drawNng(Canvas canvas) {
+        if (_nonogram == null)
+            return;
+        /*
+        "Magical" constants like '10' or '8'
+        are the results of the empirical selection.
+         */
+        int columns = _nonogram.getCols();
+        int rows = _nonogram.getRows();
+        int cellGap = _linesWidth + (_cellSize - _linesWidth) / 10;
+        int startX = _linesWidth / 2;
+        int startY = _linesWidth / 2;
+        int stopX = startX + _cellSize * columns;
+        int stopY = startY + _cellSize * rows;
+        int radius = _cellSize / 8 + 1;
+        _painter.setColor(Color.BLACK);
+
+        //background, if present
+        if (_background != null)
+            _background.draw(canvas);
+
+        // horizontal lines
+        for (int i = 0; i <= rows; i++) {
+            canvas.drawLine(startX,
+                    startY + i * _cellSize,
+                    stopX,
+                    startY + i * _cellSize,
+                    _painter);
+        }
+
+        //vertical lines
+        for (int i = 0; i <= columns; i++) {
+            canvas.drawLine(startX + i * _cellSize,
+                    startY,
+                    startX + i * _cellSize,
+                    stopY,
+                    _painter);
+        }
+
+        //filled cells
+        RectF rect = new RectF();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                rect.left = startX + j * _cellSize + cellGap;
+                rect.top = startY + i * _cellSize + cellGap;
+                rect.right = rect.left + _cellSize - 2 * cellGap;
+                rect.bottom = rect.top + _cellSize - 2 * cellGap;
+                _painter.setColor(_nonogram.getColor(i, j));
+                canvas.drawRoundRect(rect, radius, radius, _painter);
             }
         }
     }
