@@ -1,38 +1,35 @@
-package com.mithridat.nonoconverter.backend;
+package com.mithridat.nonoconverter.backend.solver;
 
 import android.os.AsyncTask;
+
+import com.mithridat.nonoconverter.backend.Field;
 
 import java.util.ArrayList;
 
 /**
  * Nonogram solving class
  */
-class NonogramSolver {
-
-    /**
-     * Constants for argument type in nonogram solving algorithms
-     */
-    private static final int ROW = 0, COL = 1;
+public class NonogramSolver {
 
     /**
      * Show what numbers are ready
      */
-    private ArrayList<Boolean> _left, _top;
+    boolean[][] _left, _top;
 
     /**
      * Nonogram
      */
-    private Nonogram _nono;
+    Nonogram _nono;
 
     /**
      * Field
      */
-    private Field _field;
+    Field _field;
 
     /**
      * Async task of image converting
      */
-    private AsyncTask<Void, Void, Field> _asyncTask;
+    AsyncTask<Void, Void, Field> _asyncTask;
 
     /**
      * Constructor by the nonogram and async task of image converting
@@ -40,7 +37,7 @@ class NonogramSolver {
      * @param nono - nonogram
      * @param asyncTask - async task of image converting
      */
-    NonogramSolver(Nonogram nono, AsyncTask<Void, Void, Field> asyncTask) {
+    public NonogramSolver(Nonogram nono, AsyncTask<Void, Void, Field> asyncTask) {
         _nono = nono;
         _asyncTask = asyncTask;
     }
@@ -79,7 +76,7 @@ class NonogramSolver {
     /**
      * Method for initialising class fields before solution start
      */
-    private void init() {
+    void init() {
 
     }
 
@@ -89,8 +86,23 @@ class NonogramSolver {
      * @return true, if solution is correct
      *         false, otherwise
      */
-    private boolean check() {
+    boolean check() {
         return true;
+    }
+
+    /**
+     * Method for getting workspace in row or column:
+     * - each row contains start position and next to last position
+     * of cell and number blocks
+     * - one row - one block
+     *
+     * @param ind - index of row or column
+     * @param type - ROW, if row
+     *               COL, if column
+     * @return workspace
+     */
+    int[][] getWorkspace(int ind, int type) {
+        return null;
     }
 
     /**
@@ -146,7 +158,7 @@ class NonogramSolver {
     }
 
     /**
-     * Implementation of joining and splitting algorithm
+     * Implementation of joining algorithm
      *
      * @param ind - index of row or column
      * @param type - ROW, if row
@@ -154,7 +166,20 @@ class NonogramSolver {
      * @return true, if any cell was filled
      *         false, otherwise
      */
-    boolean applyJoiningAndSplitting(int ind, int type) {
+    boolean applyJoining(int ind, int type) {
+        return false;
+    }
+
+    /**
+     * Implementation of splitting algorithm
+     *
+     * @param ind - index of row or column
+     * @param type - ROW, if row
+     *               COL, if column
+     * @return true, if any cell was filled
+     *         false, otherwise
+     */
+    boolean applySplitting(int ind, int type) {
         return false;
     }
 
@@ -172,7 +197,7 @@ class NonogramSolver {
     }
 
     /**
-     * Implementation of mercury algorithm
+     * Implementation of dual position algorithm
      *
      * @param ind - index of row or column
      * @param type - ROW, if row
@@ -180,7 +205,7 @@ class NonogramSolver {
      * @return true, if any cell was filled
      *         false, otherwise
      */
-    boolean applyMercury(int ind, int type) {
+    boolean applyDualPosition(int ind, int type) {
         return false;
     }
 
