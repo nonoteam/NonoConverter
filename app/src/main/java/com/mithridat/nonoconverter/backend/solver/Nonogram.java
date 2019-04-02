@@ -53,6 +53,28 @@ public class Nonogram {
     }
 
     /**
+     * Method for getting number of columns
+     * in left nonogram grid row with number i
+     *
+     * @param i - row number
+     * @return number of columns
+     */
+    int getLeftRowsLength(int i) {
+        return _left[i].length;
+    }
+
+    /**
+     * Method for getting number of rows
+     * in top nonogram grid column with number i
+     *
+     * @param i - column number
+     * @return number of rows
+     */
+    int getTopColsLength(int i) {
+        return _top[i].length;
+    }
+
+    /**
      * Method for getting left nonogram grid cell
      * with row number i and column number j
      *

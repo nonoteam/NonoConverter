@@ -33,7 +33,7 @@ public class Field implements Parcelable {
         _field = new int[rows][cols];
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < cols; j++) {
-                _field[i][j] = Colors.WHITE;
+                _field[i][j] = Colors.EMPTY;
             }
         }
         _rows = rows;
@@ -128,10 +128,11 @@ public class Field implements Parcelable {
     }
 
     /**
-     * Method for getting index of first cell with another color in row or column
+     * Method for getting index of first cell with another color
+     * (current color - the color of cell with index = pos) in row or column
      *
      * @param ind - index of row or column
-     * @param pos - start position, the search begins with the next cell
+     * @param pos - position, the search begins with the next cell
      * @param dir - direction, +1 or -1
      * @param type - ROW, if row
      *               COL, if column
