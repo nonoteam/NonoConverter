@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.View;
@@ -14,18 +13,15 @@ import android.view.WindowManager;
 
 import com.mithridat.nonoconverter.backend.Field;
 
-
+/**
+ * Class for drawing nonogram.
+ */
 public class NonogramDrawer extends View {
 
     /**
      * Brush, containing painting parameters.
      */
     private Paint _painter;
-
-    /**
-     * Background image for view.
-     */
-    private Drawable _background = null;
 
     /**
      * Nonogram as Field backend class.
@@ -50,14 +46,18 @@ public class NonogramDrawer extends View {
 
     public NonogramDrawer(Context context) {
         super(context);
-        _painter = new Paint();
-        _painter.setStyle(Paint.Style.FILL);
-        _painter.setStrokeWidth(_linesWidth);
-        _painter.setColor(Color.BLACK);
+        painterInit();
     }
 
     public NonogramDrawer(Context context, AttributeSet attrs) {
         super(context, attrs);
+        painterInit();
+    }
+
+    /**
+     * Set initial painter parameters.
+     */
+    private void painterInit() {
         _painter = new Paint();
         _painter.setStyle(Paint.Style.FILL);
         _painter.setStrokeWidth(_linesWidth);
@@ -69,7 +69,7 @@ public class NonogramDrawer extends View {
      *
      * @param nonogramField nonogram as Field backend class
      */
-    public void setNonogramField(Field nonogramField) {
+    void setNonogramField(Field nonogramField) {
         _nonogram = nonogramField;
         recalculateSizes();
         invalidate();
@@ -80,7 +80,7 @@ public class NonogramDrawer extends View {
      *
      * @param marginVer vertical margin
      */
-    public void setMarginVer(int marginVer) {
+    void setMarginVer(int marginVer) {
         _minMarginVer = marginVer;
         recalculateSizes();
         invalidate();
@@ -91,19 +91,9 @@ public class NonogramDrawer extends View {
      *
      * @param marginHor horizontal margin
      */
-    public void setMarginHor(int marginHor) {
+    void setMarginHor(int marginHor) {
         _minMarginHor = marginHor;
         recalculateSizes();
-        invalidate();
-    }
-
-    /**
-     * Set background image and redraw view.
-     *
-     * @param background drawable object for background
-     */
-    public void setBackground(Drawable background) {
-        _background = background;
         invalidate();
     }
 
@@ -112,8 +102,7 @@ public class NonogramDrawer extends View {
      * Called if nonogram or margins has changed.
      */
     private void recalculateSizes() {
-        if (_nonogram == null)
-            return;
+        if (_nonogram == null) return;
 
         int cellSizeHor =
                 (getDeviceWidth(getContext()) - 2 * _minMarginHor)
@@ -159,8 +148,8 @@ public class NonogramDrawer extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (canvas == null)
-            return;
+        super.onDraw(canvas);
+        if (canvas == null) return;
         canvas.drawColor(Color.WHITE);
         drawNng(canvas);
     }
@@ -171,8 +160,7 @@ public class NonogramDrawer extends View {
      * @param canvas canvas received in 'onDraw'
      */
     private void drawNng(Canvas canvas) {
-        if (_nonogram == null)
-            return;
+        if (_nonogram == null) return;
         /*
         "Magical" constants like '10' or '8'
         are the results of the empirical selection.
@@ -186,10 +174,6 @@ public class NonogramDrawer extends View {
         int stopY = startY + _cellSize * rows;
         int radius = _cellSize / 8 + 1;
         _painter.setColor(Color.BLACK);
-
-        //background, if present
-        if (_background != null)
-            _background.draw(canvas);
 
         // horizontal lines
         for (int i = 0; i <= rows; i++) {
