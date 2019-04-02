@@ -54,14 +54,12 @@ public class NonogramDrawer extends View {
         painterInit();
     }
 
-    /**
-     * Set initial painter parameters.
-     */
-    private void painterInit() {
-        _painter = new Paint();
-        _painter.setStyle(Paint.Style.FILL);
-        _painter.setStrokeWidth(_linesWidth);
-        _painter.setColor(Color.BLACK);
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (canvas == null) return;
+        canvas.drawColor(Color.WHITE);
+        drawNng(canvas);
     }
 
     /**
@@ -95,6 +93,16 @@ public class NonogramDrawer extends View {
         _minMarginHor = marginHor;
         recalculateSizes();
         invalidate();
+    }
+
+    /**
+     * Set initial painter parameters.
+     */
+    private void painterInit() {
+        _painter = new Paint();
+        _painter.setStyle(Paint.Style.FILL);
+        _painter.setStrokeWidth(_linesWidth);
+        _painter.setColor(Color.BLACK);
     }
 
     /**
@@ -144,14 +152,6 @@ public class NonogramDrawer extends View {
                 .getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         return display.getHeight();
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (canvas == null) return;
-        canvas.drawColor(Color.WHITE);
-        drawNng(canvas);
     }
 
     /**
