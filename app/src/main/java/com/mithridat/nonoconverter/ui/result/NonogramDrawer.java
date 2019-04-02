@@ -126,7 +126,7 @@ public class NonogramDrawer extends View {
      * @param context current context
      * @return current device screen width
      */
-    public static int getDeviceWidth(Context context) {
+    private static int getDeviceWidth(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -139,7 +139,7 @@ public class NonogramDrawer extends View {
      * @param context current context
      * @return current device screen height
      */
-    public static int getDeviceHeight(Context context) {
+    private static int getDeviceHeight(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
