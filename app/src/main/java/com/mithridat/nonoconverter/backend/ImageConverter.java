@@ -43,7 +43,7 @@ public class ImageConverter {
     public static Bitmap getBlackWhite(Bitmap bmp) {
         Mat imageMat = new Mat();
         Utils.bitmapToMat(bmp, imageMat);
-        Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_RGB2GRAY);
         Imgproc.GaussianBlur(imageMat, imageMat, new Size(5, 5), 0);
         Imgproc.threshold(imageMat, imageMat, 0, 255, Imgproc.THRESH_OTSU);
 
@@ -83,17 +83,6 @@ public class ImageConverter {
             }
         }
         return field;
-    }
-
-    /**
-     * Method for checking nonogram solvability
-     *
-     * @param thumb - thumbnail
-     * @return true, if nonogram has solution
-     *         false, otherwise
-     */
-    private static boolean isHaveSolution(Field thumb) {
-        return true;
     }
 
 }

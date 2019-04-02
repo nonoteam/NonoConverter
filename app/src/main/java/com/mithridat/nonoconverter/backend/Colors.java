@@ -3,7 +3,7 @@ package com.mithridat.nonoconverter.backend;
 /**
  * Colors storage class
  */
-class Colors {
+public class Colors {
 
     /**
      * White color
@@ -14,5 +14,10 @@ class Colors {
      * Black color
      */
     public static final int BLACK = 0xFF000000;
+
+    /**
+     * Empty cell
+     */
+    public static final int EMPTY = -1;
 
 }

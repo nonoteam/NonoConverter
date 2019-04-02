@@ -9,6 +9,11 @@ import android.os.Parcelable;
 public class Field implements Parcelable {
 
     /**
+     * Constants for argument type - row or column
+     */
+    public static final int ROW = 0, COL = 1;
+
+    /**
      * Field сolor matrix
      */
     private int[][] _field;
@@ -24,7 +29,7 @@ public class Field implements Parcelable {
      * @param rows - number of field rows
      * @param cols - number of field columns
      */
-    Field(int rows, int cols) {
+    public Field(int rows, int cols) {
         _field = new int[rows][cols];
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < cols; j++) {
@@ -120,6 +125,20 @@ public class Field implements Parcelable {
      */
     public void setColor(int i, int j, int col) {
         _field[i][j] = col;
+    }
+
+    /**
+     * Method for getting index of first cell with another color in row or column
+     *
+     * @param ind - index of row or column
+     * @param pos - start position, the search begins with the next cell
+     * @param dir - direction, +1 or -1
+     * @param type - ROW, if row
+     *               COL, if column
+     * @return index of first cell with another color in row or column
+     */
+    public int getAntoherColorIndex(int ind, int pos, int dir, int type) {
+        return 0;
     }
 
 }
