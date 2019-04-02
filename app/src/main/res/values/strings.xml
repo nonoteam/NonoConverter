@@ -20,7 +20,9 @@
     <string name="msg_home_return">Are you sure that you want to return home?
         Nonogram will be lost if you don\'t save it.</string>
     <string name="action_return">RETURN</string>
+    <string name="action_cancel">CANCEL</string>
     <string name="title_dialog_done">Done</string>
+    <string name="action_ok">OK</string>
 
     <string name="action_load_image">Load Image</string>
     <string name="action_open_about">About</string>

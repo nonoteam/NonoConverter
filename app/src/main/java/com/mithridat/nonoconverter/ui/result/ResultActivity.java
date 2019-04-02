@@ -99,7 +99,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.title_dialog_done)
                 .setIcon(R.drawable.ic_done)
-                .setPositiveButton(android.R.string.ok, listener)
+                .setPositiveButton(R.string.action_ok, listener)
                 .create()
                 .show();
     }
@@ -131,7 +131,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 .setIcon(R.drawable.ic_info)
                 .setMessage(R.string.msg_home_return)
                 .setPositiveButton(R.string.action_return, listenerReturn)
-                .setNegativeButton(android.R.string.cancel, listenerCancel)
+                .setNegativeButton(R.string.action_cancel, listenerCancel)
                 .create()
                 .show();
     }
