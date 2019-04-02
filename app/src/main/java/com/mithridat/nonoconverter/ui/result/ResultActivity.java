@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.backend.Field;
@@ -35,6 +36,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 getIntent()
                         .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);
         if (nonogramDrawer != null) {
+            nonogramMarginSet(nonogramDrawer);
             nonogramDrawer.setNonogramField(field);
         }
     }
@@ -126,12 +128,38 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.title_dialog_home_return);
-        builder.setIcon(R.drawable.ic_info)
+        builder.setTitle(R.string.title_dialog_home_return)
+                .setIcon(R.drawable.ic_info)
                 .setMessage(R.string.msg_home_return)
                 .setPositiveButton(R.string.action_return, listenerReturn)
                 .setNegativeButton(android.R.string.cancel, listenerCancel)
                 .create()
                 .show();
+    }
+
+    /**
+     * Calculate margins according to the toolbar and button layout sizes
+     * and set them for nonogram drawer.
+     *
+     * @param nonogramDrawer instance of NonogramDrawer
+     */
+    private void nonogramMarginSet(NonogramDrawer nonogramDrawer) {
+        int marginVer = -50;
+        int marginHor = 50;
+        if (nonogramDrawer == null)
+            return;
+
+        Toolbar toolbar = findViewById(R.id.toolbar_result);
+        if (toolbar != null) {
+            toolbar.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            marginVer += toolbar.getMeasuredHeight();
+        }
+        LinearLayout layout = findViewById(R.id.linear_layout_result_buttons);
+        if (layout != null) {
+            layout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            marginVer += layout.getMeasuredHeight();
+        }
+        nonogramDrawer.setMarginHor(marginHor);
+        nonogramDrawer.setMarginVer(marginVer);
     }
 }
