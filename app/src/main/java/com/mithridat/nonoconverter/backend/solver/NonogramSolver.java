@@ -92,7 +92,8 @@ public class NonogramSolver {
 
     /**
      * Method for getting workspace in row or column:
-     * - each row contains start position and next to last position
+     * - each row of result matrix contains start position and
+     * next to last position
      * of cell and number blocks
      * - one row - one block
      *
