@@ -48,8 +48,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         setTitle(R.string.title_result_activity);
 
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
         return true;
     }
 
@@ -146,8 +145,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
     private void nonogramMarginSet(NonogramDrawer nonogramDrawer) {
         int marginVer = -50;
         int marginHor = 50;
-        if (nonogramDrawer == null)
-            return;
+        if (nonogramDrawer == null) return;
 
         Toolbar toolbar = findViewById(R.id.toolbar_result);
         if (toolbar != null) {
