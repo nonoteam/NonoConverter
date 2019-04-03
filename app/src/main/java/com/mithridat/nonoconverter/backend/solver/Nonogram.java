@@ -1,8 +1,10 @@
 package com.mithridat.nonoconverter.backend.solver;
 
+import androidx.annotation.NonNull;
+import com.mithridat.nonoconverter.backend.Colors;
 import com.mithridat.nonoconverter.backend.Field;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Nonogram storage class
@@ -12,15 +14,21 @@ public class Nonogram {
     /**
      * Left and top nonogram grids
      */
-    int[][] _left, _top;
+    private int[][] _left, _top;
 
     /**
      * Constructor by the nonogram field
      *
      * @param fieldNono - nonogram field
      */
-    public Nonogram(Field fieldNono) {
+    public Nonogram(@NonNull Field fieldNono) {
+        int w = fieldNono.getCols(), h = fieldNono.getRows();
 
+        _left = new int[h][];
+        _top = new int[w][];
+
+        fillNonogramGrid(_left, Field.ROW, h, w, fieldNono);
+        fillNonogramGrid(_top, Field.COL, w, h, fieldNono);
     }
 
     /**
@@ -30,8 +38,9 @@ public class Nonogram {
      * @return true, if nonograms are equal
      *         false, otherwise
      */
-    boolean isEqual(Nonogram nono) {
-        return false;
+    boolean isEqual(@NonNull Nonogram nono) {
+        return Arrays.deepEquals(_left, nono._left)
+                & Arrays.deepEquals(_top, nono._top);
     }
 
     /**
@@ -96,6 +105,39 @@ public class Nonogram {
      */
     int getTopColValue(int i, int j) {
         return _top[i][j];
+    }
+
+    /**
+     * Method for filling one of the two grids from field
+     *
+     * @param grid - grid for filling
+     * @param type - ROW, if _left
+     *               COL, if _top
+     * @param outLim - limit for counter in outer loop
+     * @param inLim - limit for counter in inner loop
+     * @param field - nonogram field
+     */
+    private static void fillNonogramGrid(int[][] grid,
+                                         int type,
+                                         int outLim,
+                                         int inLim,
+                                         Field field) {
+        for (int i = 0; i < outLim; ++i) {
+            grid[i] = new int[0];
+            for (int j = 0, k, length = 0; j < inLim; ) {
+                k = field.getAntoherColorIndex(i, j, 1, type);
+                int color = type == Field.ROW ? field.getColor(i, j)
+                        : field.getColor(j, i);
+                if (color == Colors.BLACK) {
+                    int[] tmp = new int[length + 1];
+                    System.arraycopy(grid[i], 0, tmp, 0, length);
+                    tmp[length] = k - j;
+                    length++;
+                    grid[i] = tmp;
+                }
+                j = k;
+            }
+        }
     }
 
 }
