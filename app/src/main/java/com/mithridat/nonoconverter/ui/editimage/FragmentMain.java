@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 
 import com.mithridat.nonoconverter.R;
 
-
 /**
  * Class for the main fragment
  */
@@ -26,20 +25,20 @@ public class FragmentMain extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View _viewMainFragment = inflater.inflate(R.layout.fragment_main, null);
+        View viewMainFragment = inflater.inflate(R.layout.fragment_main, null);
 
-        _viewMainFragment
+        viewMainFragment
                 .findViewById(R.id.button_crop)
                 .setOnClickListener((View.OnClickListener) getActivity());
-        _viewMainFragment
+        viewMainFragment
                 .findViewById(R.id.button_columns)
                 .setOnClickListener((View.OnClickListener) getActivity());
 
         EditImageActivity editImageActivity = (EditImageActivity)getActivity();
-        ImageView ivMain = (ImageView)_viewMainFragment.findViewById(R.id.image_view_main);
-        ivMain.setImageBitmap(editImageActivity._bmpCurrentImage);
+        ImageView ivMain = viewMainFragment.findViewById(R.id.image_view_main);
+        if (editImageActivity != null) ivMain.setImageBitmap(editImageActivity._bmpCurrentImage);
 
-        return _viewMainFragment;
+        return viewMainFragment;
     }
 
     @Override
