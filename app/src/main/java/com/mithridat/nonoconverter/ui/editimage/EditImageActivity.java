@@ -1,11 +1,11 @@
 package com.mithridat.nonoconverter.ui.editimage;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,12 +33,48 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 /**
  * Class for the editing image activity.
  */
 public class EditImageActivity extends AppCompatActivity implements OnClickListener {
+
+    /**
+     * Tag for fragment columns
+     */
+    private static final String _FRAGMENT_COLUMNS_TAG = "_fragmentColumns";
+
+    /**
+     * Tag for fragment main
+     */
+    private static final String _FRAGMENT_MAIN_TAG = "_fragmentMain";
+
+    /**
+     * Tag for fragment columns
+     */
+    private static final String _COUNT_COLUMNS_TAG = "_countColumns";
+
+    /**
+     * Tag for fragment main
+     */
+    private static final String _COUNT_ROWS_TAG = "_countRows";
+
+    /**
+     * Tag for fragment columns
+     */
+    private static final String _IS_SELECTED_COLUMNS_TAG = "_isSelectedColumns";
+
+    /**
+     * Tag for fragment main
+     */
+    private static final String _BMP_CURRENT_IMAGE_TAG = "_bmpCurrentImage";
+
+    /**
+     * Tag for fragment convert dialog
+     */
+    private static final String _DIALOG_CONVERT_TAG = "fragmentConvertDialog";
 
     /**
      * Progress dialog for showing processing of the converting
@@ -57,11 +92,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     Bitmap _bmpCurrentImage = null;
 
     /**
-     * ImageView in the activity
-     */
-    ImageView _ivImage;
-
-    /**
      * Main fragment of the EditImageActivity
      */
     FragmentMain _fragmentMain;
@@ -77,24 +107,31 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     FragmentTransaction _fragmentTransaction;
 
     /**
-     * Tag for fragment columns
+     * Flag for starting convert
      */
-    static final String _fragmentColumnsTag = "_fragmentColumns";
+    boolean _isSelectedColumns = false;
 
     /**
-     * Tag for fragment main
+     * Rows count
      */
-    static final String _fragmentMainTag = "_fragmentMain";
+    int _rows = 0;
 
-    int _rows = 45;
-    int _columns = 35;
+    /**
+     * Columns count
+     */
+    int _columns = 0;
+
+    /**
+     * Convert dialog fragment
+     */
+    FragmentConvertDialog fragmentConvertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_image);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_edit);
+        Toolbar toolbar = findViewById(R.id.toolbar_edit);
         setSupportActionBar(toolbar);
 
         _pdLoading = new ProgressDialog(this);
@@ -115,58 +152,78 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             setImageFromPath(path);
         }
 
-        if (!checkColumns())
-        {
-            _fragmentColumns = new FragmentColumns();
+        if (savedInstanceState != null) {
+            _columns = savedInstanceState.getInt(_COUNT_COLUMNS_TAG, 0);
+            _rows = savedInstanceState.getInt(_COUNT_ROWS_TAG, 0);
+            _isSelectedColumns = savedInstanceState
+                    .getInt(_IS_SELECTED_COLUMNS_TAG, 0) != 0;
+            byte[] byteArray = savedInstanceState.getByteArray(_BMP_CURRENT_IMAGE_TAG);
+            if (byteArray != null)
+                _bmpCurrentImage =
+                        BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         }
-        else
-        {
+
+        if (!checkColumns()) {
+            _fragmentColumns = new FragmentColumns();
+        } else {
             _fragmentColumns =
                     (FragmentColumns) getSupportFragmentManager()
-                            .findFragmentByTag(_fragmentColumnsTag);
+                            .findFragmentByTag(_FRAGMENT_COLUMNS_TAG);
         }
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             _fragmentMain = new FragmentMain();
             _fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            _fragmentTransaction.add(R.id.fragment_layout_edit, _fragmentMain, _fragmentMainTag);
+            _fragmentTransaction.add(R.id.fragment_layout_edit, _fragmentMain, _FRAGMENT_MAIN_TAG);
             _fragmentTransaction.addToBackStack(null);
             _fragmentTransaction.commit();
         }
-    }
-
-    /**
-     * Check if columns fragment exists
-     * @return true if existing
-     */
-    public boolean checkColumns()
-    {
-        FragmentColumns myFragment1 = (FragmentColumns) getSupportFragmentManager()
-                .findFragmentByTag(_fragmentColumnsTag);
-        if (myFragment1 != null) {
-            return true;
-        }
-        return false;
+        fragmentConvertDialog = new FragmentConvertDialog();
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
             // Handle error
         } else {
             _baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
+        _fragmentMain =
+                (FragmentMain) getSupportFragmentManager()
+                        .findFragmentByTag(_FRAGMENT_MAIN_TAG);
+        if (_fragmentMain != null && _fragmentMain.getView()!= null) {
+            ((ImageView)_fragmentMain
+                    .getView()
+                    .findViewById(R.id.image_view_main))
+                    .setImageBitmap(_bmpCurrentImage);
+        }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(_COUNT_COLUMNS_TAG, _columns);
+        outState.putInt(_COUNT_ROWS_TAG, _rows);
+
+        if (_isSelectedColumns) {
+            outState.putInt(_IS_SELECTED_COLUMNS_TAG, 1);
+        } else {
+            outState.putInt(_IS_SELECTED_COLUMNS_TAG, 0);
+        }
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        _bmpCurrentImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        outState.putByteArray(_BMP_CURRENT_IMAGE_TAG, byteArray);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         setTitle(R.string.title_edit_image_activity);
-
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
         return true;
     }
 
@@ -177,14 +234,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 onBackPressed();
                 return true;
             case R.id.menu_convert:
-                showPd();
-                _atConvert = new AsyncTaskConvertImage();
-                _atConvert.link(this);
-                _atConvert.execute();
-                return true;
-            case R.id.menu_done:
-
-                getSupportFragmentManager().popBackStack();
+                if (!_isSelectedColumns) {
+                    fragmentConvertDialog.show(getSupportFragmentManager(), _DIALOG_CONVERT_TAG);
+                } else {
+                    showPd();
+                    _atConvert = new AsyncTaskConvertImage();
+                    _atConvert.link(this);
+                    _atConvert.execute();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -195,10 +252,10 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.button_crop:
-
+                //for Ilya
                 break;
             case R.id.button_columns:
-                EditImageActivity editImageActivity = (EditImageActivity)this;
+                EditImageActivity editImageActivity = this;
                 editImageActivity.changeFragment(2);
                 checkColumns();
                 break;
@@ -207,42 +264,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         }
     }
 
-    void setSizes(int rows, int columns) {
-        _rows = rows;
-        _columns = columns;
-    }
-
-    /**
-     * Change current fragment to the _count_columns'th fragment
-     * @param count index of the fragment
-     */
-    public void changeFragment(int count)
-    {
-        switch (count)
-        {
-            case 1:
-                _fragmentTransaction.replace(R.id.fragment_layout_edit, _fragmentMain);
-                break;
-            case 2:
-                _fragmentTransaction =  getSupportFragmentManager().beginTransaction();
-                _fragmentTransaction
-                        .replace(R.id.fragment_layout_edit,
-                                _fragmentColumns,
-                                _fragmentColumnsTag);
-                _fragmentTransaction.addToBackStack(null);
-                _fragmentTransaction.commit();
-            case 3:
-                break;
-        }
-
-
-    }
-
     @Override
     public void onBackPressed() {
-        int count_fragments = getSupportFragmentManager().getBackStackEntryCount();
+        int countFragments = getSupportFragmentManager().getBackStackEntryCount();
 
-        if (count_fragments == 1) {
+        if (countFragments == 1) {
+            _rows = 0;
+            _columns = 0;
+            _isSelectedColumns = false;
             ImageUpload.startImagePicker(this,
                     ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE);
             overridePendingTransition(R.anim.slide_in_right,
@@ -250,7 +279,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         } else {
             getSupportFragmentManager().popBackStack();
         }
-
     }
 
     @Override
@@ -277,9 +305,54 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 String path = images.get(0).getPath();
                 setImageFromPath(path);
             }
-
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * Check if columns fragment exists
+     *
+     * @return true if existing
+     */
+    public boolean checkColumns() {
+        FragmentColumns myFragment1 = (FragmentColumns) getSupportFragmentManager()
+                .findFragmentByTag(_FRAGMENT_COLUMNS_TAG);
+
+        return myFragment1 != null;
+    }
+
+    /**
+     * Set rows and columns count
+     *
+     * @param rows Rows count
+     * @param columns Columns count
+     */
+    void setSizes(int rows, int columns) {
+        _rows = rows;
+        _columns = columns;
+    }
+
+    /**
+     * Change current fragment to the _countColumns'th fragment
+     *
+     * @param count index of the fragment
+     */
+    public void changeFragment(int count) {
+        switch (count) {
+            case 1:
+                _fragmentTransaction.replace(R.id.fragment_layout_edit, _fragmentMain);
+                break;
+            case 2:
+                _fragmentTransaction =  getSupportFragmentManager().beginTransaction();
+                _fragmentTransaction
+                        .replace(R.id.fragment_layout_edit,
+                                _fragmentColumns,
+                                _FRAGMENT_COLUMNS_TAG);
+                _fragmentTransaction.addToBackStack(null);
+                _fragmentTransaction.commit();
+            case 3:
+                break;
+        }
     }
 
     /**
@@ -313,31 +386,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private void showPd() {
         _pdLoading.show();
         _pdLoading.setOnCancelListener(_diCancelListener);
-    }
-
-    /**
-     * Create dialog for choosing number of columns or rows
-     */
-    private void createDialogColumns() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        builder.setView(inflater.inflate(R.layout.dialog_columns, null))
-                .setNegativeButton(android.R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton(R.string.action_change,
-                        new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        //TODO: save columns and rows
-                    }
-                })
-                .create()
-                .show();
     }
 
     /**

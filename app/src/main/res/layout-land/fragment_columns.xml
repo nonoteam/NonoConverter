@@ -11,15 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.mithridat.nonoconverter.ui.editimage.Panel
-            android:id="@+id/panel"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/image_view_columns"
-            app:layout_constraintEnd_toEndOf="@+id/image_view_columns"
-            app:layout_constraintStart_toStartOf="@+id/image_view_columns"
-            app:layout_constraintTop_toTopOf="@+id/image_view_columns" />
-
         <ImageView
             android:id="@+id/image_view_columns"
             android:layout_width="0dp"
@@ -36,6 +27,15 @@
             app:layout_constraintVertical_bias="0.0" />
 
 
+        <com.mithridat.nonoconverter.ui.editimage.Panel
+            android:id="@+id/panel"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/image_view_columns"
+            app:layout_constraintEnd_toEndOf="@+id/image_view_columns"
+            app:layout_constraintStart_toStartOf="@+id/image_view_columns"
+            app:layout_constraintTop_toTopOf="@+id/image_view_columns" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="90dp"
@@ -48,7 +48,7 @@
                 android:id="@+id/text_view_Rows"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="90"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -60,6 +60,7 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="238dp"
                 android:layout_height="20dp"
+                android:layout_marginTop="8dp"
                 android:background="@android:color/holo_purple"
                 android:max="9"
                 android:progress="0"

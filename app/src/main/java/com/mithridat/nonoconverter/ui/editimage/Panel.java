@@ -1,18 +1,16 @@
 package com.mithridat.nonoconverter.ui.editimage;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
+import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.View;
 
 /**
  * Class for the drawing of grid
  */
-public class Panel extends SurfaceView implements SurfaceHolder.Callback {
+public class Panel extends View {
 
     /**
      * Width of view
@@ -27,27 +25,27 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * Start height of view
      */
-    public int _start_height;
+    public int _startHeight;
 
     /**
      * Start width of view
      */
-    public int _start_width;
+    public int _startWidth;
 
     /**
      * Count of rows
      */
-    public int _count_rows;
+    public int _countRows;
 
     /**
      * Count of columns
      */
-    public int _count_columns;
+    public int _countColumns;
 
     /**
-     * Thread for Panel
+     * Paint for this view
      */
-    public DrawThread _drawThread;
+    Paint _paint;
 
     /**
      * Constructor of class
@@ -58,78 +56,67 @@ public class Panel extends SurfaceView implements SurfaceHolder.Callback {
     public Panel(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setBackgroundColor(Color.TRANSPARENT);
-        this.setZOrderOnTop(true); //necessary
-        getHolder().setFormat(PixelFormat.TRANSPARENT);
-        getHolder().addCallback(this);
+        this.bringToFront();
+        _paint = new Paint();
+        _paint.setStyle(Paint.Style.STROKE);
+        _paint.setStrokeWidth(3);
+        _paint.setColor(Color.RED);
+    }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        drawGrid(canvas);
     }
 
     /**
      * Set sizes of class fields
      *
-     * @param start_height left top y
+     * @param startWidth left x
+     * @param startHeight left top y
      * @param width width of the grid in px
      * @param height height of the grid in px
-     * @param count_rows count rows rows of the grid
-     * @param count_columns count columns of the grid
+     * @param countRows count rows rows of the grid
+     * @param countColumns count columns of the grid
      */
-    public void setLengths(int start_width, int start_height, int width, int height, int count_rows, int count_columns)
-    {
+    public void setLengths
+    (int startWidth, int startHeight, int width, int height, int countRows, int countColumns) {
         _width = width;
         _height = height;
-        _start_height = start_height;
-        _start_width = start_width;
-        _count_rows = count_rows;
-        _count_columns = count_columns;
+        _startHeight = startHeight;
+        _startWidth = startWidth;
+        _countRows = countRows;
+        _countColumns = countColumns;
     }
 
     /**
      * Draw grid over the image
-     *
-     * @param start_height left top y
-     * @param width width of the grid in px
-     * @param height height of the grid in px
-     * @param count_rows count rows rows of the grid
-     * @param count_columns count columns of the grid
      */
-    public void doDraw(int start_width, int start_height, int width, int height, int count_rows, int count_columns) {
-        _drawThread.setRunning(false);
-        _drawThread._width = width;
-        _drawThread._height = height;
-        _drawThread._start_height = start_height;
-        _drawThread._start_width = start_width;
-        _drawThread._count_rows = count_rows;
-        _drawThread._count_columns = count_columns;
-        _drawThread.setRunning(true);
+    public void doDraw() {
+        this.invalidate();
     }
 
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        _drawThread = new DrawThread(getHolder());
-        _drawThread._width = _width;
-        _drawThread._height = _height;
-        _drawThread._start_height = _start_height;
-        _drawThread._start_width = _start_width;
-        _drawThread._count_rows = _count_rows;
-        _drawThread._count_columns = _count_columns;
-        _drawThread.setRunning(true);
-        _drawThread.start();
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        _drawThread.setRunning(false);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        return super.onTouchEvent(event);
+    /**
+     * Draw grid
+     *
+     * @param canvas I don't what is it but it's necessary
+     */
+    private void drawGrid(Canvas canvas) {
+        int height = _height / _countRows;
+        int width = _width / _countColumns;
+        for (int i = 0; i <= _width; i += width) {
+            canvas.drawLine(_startWidth + i,
+                    _startHeight,
+                    _startWidth + i,
+                    _startHeight + _height,
+                    _paint);
+        }
+        for (int i = 0; i <= _height; i += height) {
+            canvas.drawLine(_startWidth,
+                    _startHeight + i,
+                    _startWidth + _width,
+                    _startHeight + i,
+                    _paint);
+        }
     }
 }
 
