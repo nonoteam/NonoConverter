@@ -25,11 +25,17 @@ Advantages over web analogues:
   * [Git workflow](http://github.com/nonoteam/NonoConverter/blob/master/GIT_WORKFLOW.md)
   * [Rules of commits](http://github.com/nonoteam/NonoConverter/blob/master/RULES_OF_COMMITS.md)
   * [Coding standard](http://github.com/nonoteam/NonoConverter/blob/master/CODING_STANDARD.md)
+  * [Device requirements](#device-requirements)
   * [Installation instruction](#installation-instruction)
   * [Installation instruction for developers](#installation-instruction-for-developers)
   * [Development team](#development-team)
 
 <!---toc end-->
+
+## Device requirements
+* Android 5.0 or later
+* 80 MB Hard Disk Space or more
+* 512 МB of RAM or more 
 
 ## Installation instruction
 * Download the apk file to your device from [here](https://github.com/nonoteam/NonoConverter/releases)
