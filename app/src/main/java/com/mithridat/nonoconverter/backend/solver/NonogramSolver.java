@@ -37,7 +37,9 @@ public class NonogramSolver {
      * @param nono - nonogram
      * @param asyncTask - async task of image converting
      */
-    public NonogramSolver(Nonogram nono, AsyncTask<Void, Void, Field> asyncTask) {
+    public NonogramSolver(
+            Nonogram nono,
+            AsyncTask<Void, Void, Field> asyncTask) {
         _nono = nono;
         _asyncTask = asyncTask;
     }
