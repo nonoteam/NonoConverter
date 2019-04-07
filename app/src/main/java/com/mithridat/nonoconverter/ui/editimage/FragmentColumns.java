@@ -180,8 +180,8 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         boolean isSaved = false;
-        _vColumnsFragment = inflater.inflate(R.layout.fragment_columns,
-                null);
+        _vColumnsFragment =
+                inflater.inflate(R.layout.fragment_columns, null);
         _panel = _vColumnsFragment.findViewById(R.id.panel);
         _ivColumns = _vColumnsFragment.findViewById(R.id.image_view_columns);
         _sbColumns = _vColumnsFragment.findViewById(R.id.seek_bar_Rows);
@@ -305,8 +305,7 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
         int screenWidth = size.x;
         int screenHeight = size.y;
 
-        TypedArray styledAttributes = getContext().
-                getTheme()
+        TypedArray styledAttributes = getContext().getTheme()
                 .obtainStyledAttributes(
                 new int[] { android.R.attr.actionBarSize });
         int tb_height =
