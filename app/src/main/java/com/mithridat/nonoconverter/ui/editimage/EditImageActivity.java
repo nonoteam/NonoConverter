@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -33,7 +32,6 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -44,37 +42,37 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Tag for fragment columns
      */
-    private static final String _FRAGMENT_COLUMNS_TAG = "_fragmentColumns";
+    private static final String FRAGMENT_COLUMNS_TAG = "fragmentColumns";
 
     /**
      * Tag for fragment main
      */
-    private static final String _FRAGMENT_MAIN_TAG = "_fragmentMain";
+    private static final String FRAGMENT_MAIN_TAG = "fragmentMain";
 
     /**
      * Tag for fragment columns
      */
-    private static final String _COUNT_COLUMNS_TAG = "_countColumns";
+    private static final String COUNT_COLUMNS_TAG = "countColumns";
 
     /**
      * Tag for fragment main
      */
-    private static final String _COUNT_ROWS_TAG = "_countRows";
+    private static final String COUNT_ROWS_TAG = "countRows";
 
     /**
      * Tag for fragment columns
      */
-    private static final String _IS_SELECTED_COLUMNS_TAG = "_isSelectedColumns";
+    private static final String IS_SELECTED_COLUMNS_TAG = "isSelectedColumns";
 
     /**
      * Tag for fragment main
      */
-    private static final String _BMP_CURRENT_IMAGE_TAG = "_bmpCurrentImage";
+    private static final String BMP_CURRENT_IMAGE_TAG = "bmpCurrentImage";
 
     /**
      * Tag for fragment convert dialog
      */
-    private static final String _DIALOG_CONVERT_TAG = "fragmentConvertDialog";
+    private static final String DIALOG_CONVERT_TAG = "fragmentConvertDialog";
 
     /**
      * Progress dialog for showing processing of the converting
@@ -124,7 +122,12 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Convert dialog fragment
      */
-    FragmentConvertDialog fragmentConvertDialog;
+    FragmentConvertDialog _fragmentConvertDialog;
+
+    /**
+     * Path to current image
+     */
+    String _path = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,38 +149,40 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             showPd();
         }
 
-        if (_bmpCurrentImage == null) {
-            String path =
-                    getIntent().getStringExtra(ActivitiesConstants.EX_IMAGE_PATH);
-            setImageFromPath(path);
-        }
-
         if (savedInstanceState != null) {
-            _columns = savedInstanceState.getInt(_COUNT_COLUMNS_TAG, 0);
-            _rows = savedInstanceState.getInt(_COUNT_ROWS_TAG, 0);
+            _columns =
+                    savedInstanceState
+                            .getInt(COUNT_COLUMNS_TAG, 0);
+            _rows =
+                    savedInstanceState
+                            .getInt(COUNT_ROWS_TAG, 0);
             _isSelectedColumns = savedInstanceState
-                    .getInt(_IS_SELECTED_COLUMNS_TAG, 0) != 0;
-            byte[] byteArray = savedInstanceState.getByteArray(_BMP_CURRENT_IMAGE_TAG);
-            if (byteArray != null)
-                _bmpCurrentImage =
-                        BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                    .getByte(IS_SELECTED_COLUMNS_TAG, (byte) 0) != 0;
+            _path = savedInstanceState.getString(BMP_CURRENT_IMAGE_TAG);
+            setImageFromPath(_path);
+        } else if (_bmpCurrentImage == null) {
+            _path =
+                    getIntent()
+                            .getStringExtra(ActivitiesConstants.EX_IMAGE_PATH);
+            setImageFromPath(_path);
         }
-
         if (!checkColumns()) {
             _fragmentColumns = new FragmentColumns();
         } else {
             _fragmentColumns =
                     (FragmentColumns) getSupportFragmentManager()
-                            .findFragmentByTag(_FRAGMENT_COLUMNS_TAG);
+                            .findFragmentByTag(FRAGMENT_COLUMNS_TAG);
         }
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             _fragmentMain = new FragmentMain();
-            _fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            _fragmentTransaction.add(R.id.fragment_layout_edit, _fragmentMain, _FRAGMENT_MAIN_TAG);
+            _fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            _fragmentTransaction.add(R.id.fragment_layout_edit,
+                    _fragmentMain, FRAGMENT_MAIN_TAG);
             _fragmentTransaction.addToBackStack(null);
             _fragmentTransaction.commit();
         }
-        fragmentConvertDialog = new FragmentConvertDialog();
+        _fragmentConvertDialog = new FragmentConvertDialog();
     }
 
     @Override
@@ -186,14 +191,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         if (!OpenCVLoader.initDebug()) {
             // Handle error
         } else {
-            _baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+            _baseLoaderCallback
+                    .onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
         _fragmentMain =
                 (FragmentMain) getSupportFragmentManager()
-                        .findFragmentByTag(_FRAGMENT_MAIN_TAG);
+                        .findFragmentByTag(FRAGMENT_MAIN_TAG);
         if (_fragmentMain != null && _fragmentMain.getView()!= null) {
-            ((ImageView)_fragmentMain
-                    .getView()
+            ((ImageView)_fragmentMain.getView()
                     .findViewById(R.id.image_view_main))
                     .setImageBitmap(_bmpCurrentImage);
         }
@@ -202,19 +207,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(_COUNT_COLUMNS_TAG, _columns);
-        outState.putInt(_COUNT_ROWS_TAG, _rows);
-
-        if (_isSelectedColumns) {
-            outState.putInt(_IS_SELECTED_COLUMNS_TAG, 1);
-        } else {
-            outState.putInt(_IS_SELECTED_COLUMNS_TAG, 0);
-        }
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        _bmpCurrentImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        outState.putByteArray(_BMP_CURRENT_IMAGE_TAG, byteArray);
+        outState.putInt(COUNT_COLUMNS_TAG, _columns);
+        outState.putInt(COUNT_ROWS_TAG, _rows);
+        outState.putByte(IS_SELECTED_COLUMNS_TAG,
+                _isSelectedColumns ? (byte) 1 : (byte) 0);
+        outState.putString(BMP_CURRENT_IMAGE_TAG, _path);
     }
 
 
@@ -235,7 +232,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 return true;
             case R.id.menu_convert:
                 if (!_isSelectedColumns) {
-                    fragmentConvertDialog.show(getSupportFragmentManager(), _DIALOG_CONVERT_TAG);
+                    _fragmentConvertDialog.show(getSupportFragmentManager(), DIALOG_CONVERT_TAG);
                 } else {
                     showPd();
                     _atConvert = new AsyncTaskConvertImage();
@@ -255,8 +252,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 //for Ilya
                 break;
             case R.id.button_columns:
-                EditImageActivity editImageActivity = this;
-                editImageActivity.changeFragment(2);
+                changeFragment(2);
                 checkColumns();
                 break;
             default:
@@ -266,7 +262,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
 
     @Override
     public void onBackPressed() {
-        int countFragments = getSupportFragmentManager().getBackStackEntryCount();
+        int countFragments =
+                getSupportFragmentManager().getBackStackEntryCount();
 
         if (countFragments == 1) {
             _rows = 0;
@@ -289,21 +286,26 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(
+            int requestCode,
+            int resultCode,
+            Intent data) {
         if (requestCode == ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE
                 && resultCode == RESULT_CANCELED) {
             super.onBackPressed();
             finish();
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+            overridePendingTransition(R.anim.slide_in_right,
+                    R.anim.slide_out_right);
         }
         if (requestCode == ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE
                 && resultCode == RESULT_OK
                 && data != null) {
-            ArrayList<Image> images = data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
+            ArrayList<Image> images =
+                    data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
 
             if (images.size() > 0) {
-                String path = images.get(0).getPath();
-                setImageFromPath(path);
+                _path = images.get(0).getPath();
+                setImageFromPath(_path);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -315,8 +317,9 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * @return true if existing
      */
     public boolean checkColumns() {
-        FragmentColumns myFragment1 = (FragmentColumns) getSupportFragmentManager()
-                .findFragmentByTag(_FRAGMENT_COLUMNS_TAG);
+        FragmentColumns myFragment1 =
+                (FragmentColumns) getSupportFragmentManager()
+                .findFragmentByTag(FRAGMENT_COLUMNS_TAG);
 
         return myFragment1 != null;
     }
@@ -324,8 +327,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Set rows and columns count
      *
-     * @param rows Rows count
-     * @param columns Columns count
+     * @param rows - rows count
+     * @param columns - columns count
      */
     void setSizes(int rows, int columns) {
         _rows = rows;
@@ -335,19 +338,20 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Change current fragment to the _countColumns'th fragment
      *
-     * @param count index of the fragment
+     * @param count - index of the fragment
      */
     public void changeFragment(int count) {
         switch (count) {
             case 1:
-                _fragmentTransaction.replace(R.id.fragment_layout_edit, _fragmentMain);
+                _fragmentTransaction.replace(R.id.fragment_layout_edit,
+                        _fragmentMain);
                 break;
             case 2:
-                _fragmentTransaction =  getSupportFragmentManager().beginTransaction();
+                _fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
                 _fragmentTransaction
                         .replace(R.id.fragment_layout_edit,
-                                _fragmentColumns,
-                                _FRAGMENT_COLUMNS_TAG);
+                                _fragmentColumns, FRAGMENT_COLUMNS_TAG);
                 _fragmentTransaction.addToBackStack(null);
                 _fragmentTransaction.commit();
             case 3:
@@ -369,7 +373,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Callback for OpenCVLoader
      */
-    private BaseLoaderCallback _baseLoaderCallback = new BaseLoaderCallback(this) {
+    private BaseLoaderCallback _baseLoaderCallback =
+            new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
             switch (status) {
