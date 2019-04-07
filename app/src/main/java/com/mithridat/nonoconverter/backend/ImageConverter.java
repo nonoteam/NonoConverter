@@ -22,13 +22,14 @@ public class ImageConverter {
      * @param asyncTask - async task of image converting
      * @return nonogram field
      */
-    public static Field convertImage(Bitmap bmp,
-                                     int rows,
-                                     int cols,
-                                     AsyncTask<Void, Void, Field> asyncTask)
-    {
+    public static Field convertImage(
+            Bitmap bmp,
+            int rows,
+            int cols,
+            AsyncTask<Void, Void, Field> asyncTask) {
         if(!asyncTask.isCancelled()) {
-            Bitmap bw = getBlackWhite(bmp.copy(bmp.getConfig(), bmp.isMutable()));
+            Bitmap bw =
+                    getBlackWhite(bmp.copy(bmp.getConfig(), bmp.isMutable()));
             return getThumbnail(bw, rows, cols, 128);
         }
         return null;
