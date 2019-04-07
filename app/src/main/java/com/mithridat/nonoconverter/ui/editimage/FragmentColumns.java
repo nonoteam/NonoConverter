@@ -177,8 +177,10 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
         boolean isSaved = false;
         _vColumnsFragment =
                 inflater.inflate(R.layout.fragment_columns, null);
@@ -197,10 +199,7 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
                     0);
             _countRows = savedInstanceState.getInt(COUNT_ROWS_TAG,
                     0);
-            _tvRowsAndColumns.setText(String.format("%s%s%s",
-                    String.valueOf(_countColumns),
-                    COMMA,
-                    String.valueOf(_countRows)));
+            setTextViewRowsAndColumnsText();
             isSaved = true;
         }
 
@@ -236,12 +235,16 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
     public void onStopTrackingTouch(SeekBar seekBar) {
         _countColumns = (seekBar.getProgress() + 1) * 5;
         _countRows = _countColumns * _height / _width;
+        setTextViewRowsAndColumnsText();
+        showImage();
+        _panel.invalidate();
+    }
+
+    private void setTextViewRowsAndColumnsText() {
         _tvRowsAndColumns.setText(String.format("%s%s%s",
                 String.valueOf(_countColumns),
                 COMMA,
                 String.valueOf(_countRows)));
-        showImage();
-        _panel.invalidate();
     }
 
     /**
@@ -307,7 +310,7 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
 
         TypedArray styledAttributes = getContext().getTheme()
                 .obtainStyledAttributes(
-                new int[] { android.R.attr.actionBarSize });
+                        new int[] { android.R.attr.actionBarSize });
         int tb_height =
                 (int) styledAttributes.getDimension(0, 0);
         styledAttributes.recycle();
@@ -331,10 +334,7 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
             if (_countColumns == 0) _countColumns = 5;
 
             _countRows = (int)(_countColumns * _height * 1.0 / (_width * 1.0));
-            _tvRowsAndColumns.setText(String.format("%s%s%s",
-                    String.valueOf(_countColumns),
-                    COMMA,
-                    String.valueOf(_countRows)));
+            setTextViewRowsAndColumnsText();
         }
         _panel.setLengths(_startWidth,
                 _startHeight,

@@ -220,6 +220,15 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        setTitle(R.string.title_edit_image_activity);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+        return true;
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(COUNT_COLUMNS_TAG, _columns);
@@ -227,16 +236,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         outState.putByte(IS_SELECTED_COLUMNS_TAG,
                 _isSelectedColumns ? (byte) 1 : (byte) 0);
         outState.putString(BMP_CURRENT_IMAGE_TAG, _path);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        setTitle(R.string.title_edit_image_activity);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
-        return true;
     }
 
     @Override
@@ -268,7 +267,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 //for Ilya
                 break;
             case R.id.button_columns:
-                changeFragment(2);
+                changeFragment(FRAGMENT_COLUMNS);
                 checkColumns();
                 break;
             default:
@@ -328,17 +327,30 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     /**
-     * Check if columns fragment exists
-     *
-     * @return true if existing
+     * Provides cancellation of async task execution
+     * when the dialog is cancelled
      */
-    public boolean checkColumns() {
-        FragmentColumns myFragment1 =
-                (FragmentColumns) getSupportFragmentManager()
-                .findFragmentByTag(FRAGMENT_COLUMNS_TAG);
+    private OnCancelListener _diCancelListener = new OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialogInterface) {
+            if (_atConvert != null) _atConvert.cancel(true);
+        }
+    };
 
-        return myFragment1 != null;
-    }
+    /**
+     * Callback for OpenCVLoader
+     */
+    private BaseLoaderCallback _baseLoaderCallback =
+            new BaseLoaderCallback(this) {
+                @Override
+                public void onManagerConnected(int status) {
+                    switch (status) {
+                        default:
+                            super.onManagerConnected(status);
+                            break;
+                    }
+                }
+            };
 
     /**
      * Set rows and columns count
@@ -352,11 +364,24 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     /**
+     * Check if columns fragment exists
+     *
+     * @return true if existing
+     */
+     private boolean checkColumns() {
+        FragmentColumns myFragment1 =
+                (FragmentColumns) getSupportFragmentManager()
+                .findFragmentByTag(FRAGMENT_COLUMNS_TAG);
+
+        return myFragment1 != null;
+    }
+
+    /**
      * Change current fragment to the _countColumns'th fragment
      *
      * @param count - index of the fragment
      */
-    public void changeFragment(int count) {
+    private void changeFragment(int count) {
         switch (count) {
             case FRAGMENT_MAIN:
                 _fragmentTransaction.replace(R.id.fragment_layout_edit,
@@ -374,32 +399,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 break;
         }
     }
-
-    /**
-     * Provides cancellation of async task execution
-     * when the dialog is cancelled
-     */
-    OnCancelListener _diCancelListener = new OnCancelListener() {
-        @Override
-        public void onCancel(DialogInterface dialogInterface) {
-            if (_atConvert != null) _atConvert.cancel(true);
-        }
-    };
-
-    /**
-     * Callback for OpenCVLoader
-     */
-    private BaseLoaderCallback _baseLoaderCallback =
-            new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                default:
-                    super.onManagerConnected(status);
-                    break;
-            }
-        }
-    };
 
     /**
      * Show progress dialog
@@ -468,5 +467,4 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             _activity = null;
         }
     }
-
 }
