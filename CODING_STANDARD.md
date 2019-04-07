@@ -1,5 +1,42 @@
 # Coding standard
 
+## Table Of Contents
+
+<!---toc start-->
+
+* [Coding standard](#coding-standard)
+  * [Table Of Contents](#table-of-contents)
+  * [File naming](#file-naming)
+    * [Drawable files](#drawable-files)
+    * [Layout files](#layout-files)
+    * [Menu files](#menu-files)
+    * [Values files](#values-files)
+  * [Java language rules](#java-language-rules)
+    * [Don't ignore exceptions](#dont-ignore-exceptions)
+    * [Don't catch generic exception](#dont-catch-generic-exception)
+    * [Don't use finalizers](#dont-use-finalizers)
+    * [Fully qualify imports](#fully-qualify-imports)
+  * [Java style rules](#java-style-rules)
+    * [File and package names](#file-and-package-names)
+    * [Names of methods, variables](#names-of-methods-variables)
+    * [Comments](#comments)
+    * [Use spaces for indentation](#use-spaces-for-indentation)
+    * [Use standard brace style](#use-standard-brace-style)
+    * [Class member ordering](#class-member-ordering)
+    * [Line length limit](#line-length-limit)
+    * [Line-wrapping strategies](#line-wrapping-strategies)
+    * [The location of the blocks, operators, spaces, brackets](#the-location-of-the-blocks-operators-spaces-brackets)
+  * [XML style rules](#xml-style-rules)
+    * [Use self closing tags](#use-self-closing-tags)
+    * [Resources naming](#resources-naming)
+    * [ID naming](#id-naming)
+    * [Color naming](#color-naming)
+    * [Strings](#strings)
+    * [Styles and Themes](#styles-and-themes)
+    * [Attributes ordering](#attributes-ordering)
+
+<!---toc end-->
+
 ## File naming
 
 ### Drawable files
