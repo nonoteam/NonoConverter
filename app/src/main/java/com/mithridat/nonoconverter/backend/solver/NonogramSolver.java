@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import com.mithridat.nonoconverter.backend.Field;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Nonogram solving class
@@ -30,6 +30,12 @@ public class NonogramSolver {
      * Async task of image converting
      */
     AsyncTask<Void, Void, Field> _asyncTask;
+
+    /**
+     * Show rows and columns in which there were changes during
+     * the previous iteration of the nonogram solution
+     */
+    HashSet<Integer> _rows, _cols;
 
     /**
      * Constructor by the nonogram and async task of image converting
