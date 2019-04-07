@@ -240,6 +240,9 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
         _panel.invalidate();
     }
 
+    /**
+     * Set columns and rows count to the _tvRowsAndColumns
+     */
     private void setTextViewRowsAndColumnsText() {
         _tvRowsAndColumns.setText(String.format("%s%s%s",
                 String.valueOf(_countColumns),
@@ -300,7 +303,7 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
                 .getIdentifier(IDENTIFIER_NAME,
                         IDENTIFIER_DEF_TYPE,
                         IDENTIFIER_DEF_PACKAGE);
-        int status_bar_height =
+        int statusBarHeight =
                 getResources().getDimensionPixelSize(resourceId);
 
         Point size = new Point();
@@ -311,18 +314,18 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
         TypedArray styledAttributes = getContext().getTheme()
                 .obtainStyledAttributes(
                         new int[] { android.R.attr.actionBarSize });
-        int tb_height =
+        int tbHeight =
                 (int) styledAttributes.getDimension(0, 0);
         styledAttributes.recycle();
 
         if (!_isLandscape){
             _imageViewWidth = screenWidth;
-            _imageViewHeight = screenHeight - tb_height - status_bar_height
+            _imageViewHeight = screenHeight - tbHeight - statusBarHeight
                     - (int)(60 * metrics.density);
         }
         else {
             _imageViewWidth = (int)(screenWidth - 90 * metrics.density);
-            _imageViewHeight = screenHeight - tb_height - status_bar_height;
+            _imageViewHeight = screenHeight - tbHeight - statusBarHeight;
         }
 
         _isScreenWidth = isScreenWidth();
