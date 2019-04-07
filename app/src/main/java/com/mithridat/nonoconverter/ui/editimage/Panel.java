@@ -15,48 +15,48 @@ public class Panel extends View {
     /**
      * Width of view
      */
-    public int _width;
+    private int _width;
 
     /**
      * Height of view
      */
-    public int _height;
+    private int _height;
 
     /**
      * Start height of view
      */
-    public int _startHeight;
+    private int _startHeight;
 
     /**
      * Start width of view
      */
-    public int _startWidth;
+    private int _startWidth;
 
     /**
      * Count of rows
      */
-    public int _countRows;
+    private int _countRows;
 
     /**
      * Count of columns
      */
-    public int _countColumns;
+    private int _countColumns;
 
     /**
      * Paint for this view
      */
-    Paint _paint;
+    private Paint _paint;
 
     /**
      * Constructor of class
      *
-     * @param context Current context
-     * @param attrs Attributes
+     * @param context - current context
+     * @param attrs - attributes
      */
     public Panel(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.setBackgroundColor(Color.TRANSPARENT);
-        this.bringToFront();
+        setBackgroundColor(Color.TRANSPARENT);
+        bringToFront();
         _paint = new Paint();
         _paint.setStyle(Paint.Style.STROKE);
         _paint.setStrokeWidth(3);
@@ -71,15 +71,20 @@ public class Panel extends View {
     /**
      * Set sizes of class fields
      *
-     * @param startWidth left x
-     * @param startHeight left top y
-     * @param width width of the grid in px
-     * @param height height of the grid in px
-     * @param countRows count rows rows of the grid
-     * @param countColumns count columns of the grid
+     * @param startWidth - left x
+     * @param startHeight - left top y
+     * @param width - width of the grid in px
+     * @param height - height of the grid in px
+     * @param countRows - count rows rows of the grid
+     * @param countColumns - count columns of the grid
      */
-    public void setLengths
-    (int startWidth, int startHeight, int width, int height, int countRows, int countColumns) {
+    public void setLengths(
+            int startWidth,
+            int startHeight,
+            int width,
+            int height,
+            int countRows,
+            int countColumns) {
         _width = width;
         _height = height;
         _startHeight = startHeight;
@@ -89,16 +94,9 @@ public class Panel extends View {
     }
 
     /**
-     * Draw grid over the image
-     */
-    public void doDraw() {
-        this.invalidate();
-    }
-
-    /**
      * Draw grid
      *
-     * @param canvas I don't what is it but it's necessary
+     * @param canvas - canvas received in 'onDraw'
      */
     private void drawGrid(Canvas canvas) {
         int height = _height / _countRows;
