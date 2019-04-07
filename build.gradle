@@ -25,6 +25,10 @@ allprojects {
     }
 }
 
+ext {
+    PUBLISH_VERSION = '0.2.1'
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
