@@ -78,7 +78,7 @@ public class Panel extends View {
      * @param countRows - count rows rows of the grid
      * @param countColumns - count columns of the grid
      */
-    public void setLengths(
+    void setLengths(
             int startWidth,
             int startHeight,
             int width,
