@@ -117,11 +117,12 @@ public class Nonogram {
      * @param inLim - limit for counter in inner loop
      * @param field - nonogram field
      */
-    private static void fillNonogramGrid(int[][] grid,
-                                         int type,
-                                         int outLim,
-                                         int inLim,
-                                         Field field) {
+    private static void fillNonogramGrid(
+            int[][] grid,
+            int type,
+            int outLim,
+            int inLim,
+            Field field) {
         for (int i = 0; i < outLim; ++i) {
             grid[i] = new int[0];
             for (int j = 0, k, length = 0; j < inLim; ) {
