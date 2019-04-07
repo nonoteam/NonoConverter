@@ -23,20 +23,22 @@ public class FragmentMain extends Fragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View viewMainFragment = inflater.inflate(R.layout.fragment_main, null);
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
+        View viewMainFragment =
+                inflater.inflate(R.layout.fragment_main, null);
 
-        viewMainFragment
-                .findViewById(R.id.button_crop)
+        viewMainFragment.findViewById(R.id.button_crop)
                 .setOnClickListener((View.OnClickListener) getActivity());
-        viewMainFragment
-                .findViewById(R.id.button_columns)
+        viewMainFragment.findViewById(R.id.button_columns)
                 .setOnClickListener((View.OnClickListener) getActivity());
 
         EditImageActivity editImageActivity = (EditImageActivity)getActivity();
         ImageView ivMain = viewMainFragment.findViewById(R.id.image_view_main);
-        if (editImageActivity != null) ivMain.setImageBitmap(editImageActivity._bmpCurrentImage);
+        if (editImageActivity != null)
+            ivMain.setImageBitmap(editImageActivity._bmpCurrentImage);
 
         return viewMainFragment;
     }
