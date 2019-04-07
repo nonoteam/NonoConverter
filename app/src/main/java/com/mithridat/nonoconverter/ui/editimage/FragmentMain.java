@@ -37,9 +37,9 @@ public class FragmentMain extends Fragment{
 
         EditImageActivity editImageActivity = (EditImageActivity)getActivity();
         ImageView ivMain = viewMainFragment.findViewById(R.id.image_view_main);
-        if (editImageActivity != null)
+        if (editImageActivity != null) {
             ivMain.setImageBitmap(editImageActivity._bmpCurrentImage);
-
+        }
         return viewMainFragment;
     }
 

@@ -75,6 +75,21 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final String DIALOG_CONVERT_TAG = "fragmentConvertDialog";
 
     /**
+     * Id of the main fragment
+     */
+    private static final int FRAGMENT_MAIN = 1;
+
+    /**
+     * Id of the columns fragment
+     */
+    private static final int FRAGMENT_COLUMNS = 2;
+
+    /**
+     * Id of the crop fragment
+     */
+    private static final int FRAGMENT_CROP = 3;
+
+    /**
      * Progress dialog for showing processing of the converting
      */
     ProgressDialog _pdLoading;
@@ -232,7 +247,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 return true;
             case R.id.menu_convert:
                 if (!_isSelectedColumns) {
-                    _fragmentConvertDialog.show(getSupportFragmentManager(), DIALOG_CONVERT_TAG);
+                    _fragmentConvertDialog.show(getSupportFragmentManager(),
+                            DIALOG_CONVERT_TAG);
                 } else {
                     showPd();
                     _atConvert = new AsyncTaskConvertImage();
@@ -342,11 +358,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      */
     public void changeFragment(int count) {
         switch (count) {
-            case 1:
+            case FRAGMENT_MAIN:
                 _fragmentTransaction.replace(R.id.fragment_layout_edit,
                         _fragmentMain);
                 break;
-            case 2:
+            case FRAGMENT_COLUMNS:
                 _fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 _fragmentTransaction
@@ -354,7 +370,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                                 _fragmentColumns, FRAGMENT_COLUMNS_TAG);
                 _fragmentTransaction.addToBackStack(null);
                 _fragmentTransaction.commit();
-            case 3:
+            case FRAGMENT_CROP:
                 break;
         }
     }
