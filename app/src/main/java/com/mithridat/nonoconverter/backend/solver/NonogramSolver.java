@@ -95,7 +95,7 @@ public class NonogramSolver {
      *         false, otherwise
      */
     boolean check() {
-        return true;
+        return _nono.isEqual(new Nonogram(_field));
     }
 
     /**
