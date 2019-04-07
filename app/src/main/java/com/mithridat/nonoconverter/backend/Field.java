@@ -138,8 +138,20 @@ public class Field implements Parcelable {
      *               COL, if column
      * @return index of first cell with another color in row or column
      */
-    public int getAntoherColorIndex(int ind, int pos, int dir, int type) {
-        return 0;
+    public int getAnotherColorIndex(int ind, int pos, int dir, int type) {
+        if (type == ROW) {
+            int i = pos + 1;
+            for(; i >= 0 && i < _cols; i += dir) {
+                if(_field[ind][i] != _field[ind][pos]) break;
+            }
+            return i;
+        } else {
+            int i = pos + 1;
+            for(; i >= 0 && i < _rows; i += dir) {
+                if(_field[i][ind] != _field[pos][ind]) break;
+            }
+            return i;
+        }
     }
 
 }
