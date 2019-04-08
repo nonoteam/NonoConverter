@@ -27,7 +27,7 @@ public class ImageConverter {
             int rows,
             int cols,
             AsyncTask<Void, Void, Field> asyncTask) {
-        if(!asyncTask.isCancelled()) {
+        if (!asyncTask.isCancelled()) {
             Bitmap bw =
                     getBlackWhite(bmp.copy(bmp.getConfig(), bmp.isMutable()));
             return getThumbnail(bw, rows, cols, 128);

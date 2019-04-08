@@ -31,8 +31,8 @@ public class Field implements Parcelable {
      */
     public Field(int rows, int cols) {
         _field = new int[rows][cols];
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < cols; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 _field[i][j] = Colors.EMPTY;
             }
         }
@@ -49,8 +49,8 @@ public class Field implements Parcelable {
         _rows = source.readInt();
         _cols = source.readInt();
         _field = new int[_rows][_cols];
-        for(int i = 0; i < _rows; i++) {
-            for(int j = 0; j < _cols; j++) {
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
                 _field[i][j] = source.readInt();
             }
         }
@@ -65,8 +65,8 @@ public class Field implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(_rows);
         dest.writeInt(_cols);
-        for(int i = 0; i < _rows; i++) {
-            for(int j = 0; j < _cols; j++) {
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
                 dest.writeInt(_field[i][j]);
             }
         }
@@ -141,12 +141,12 @@ public class Field implements Parcelable {
     public int getAnotherColorIndex(int ind, int pos, int dir, int type) {
         int i = pos + 1;
         if (type == ROW) {
-            for(; i >= 0 && i < _cols; i += dir) {
-                if(_field[ind][i] != _field[ind][pos]) break;
+            for (; i >= 0 && i < _cols; i += dir) {
+                if (_field[ind][i] != _field[ind][pos]) break;
             }
         } else {
-            for(; i >= 0 && i < _rows; i += dir) {
-                if(_field[i][ind] != _field[pos][ind]) break;
+            for (; i >= 0 && i < _rows; i += dir) {
+                if (_field[i][ind] != _field[pos][ind]) break;
             }
         }
         return i;
