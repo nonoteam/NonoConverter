@@ -77,23 +77,13 @@ public class NonogramSolver {
     public boolean solve() {
         boolean isChanged = true;
         init();
-        while(!_asyncTask.isCancelled() && isChanged) {
+        while (!_asyncTask.isCancelled() && isChanged) {
             isChanged = applyAlgorithms(_rows, Field.ROW);
             _rows.clear();
             isChanged = applyAlgorithms(_cols, Field.COL) || isChanged;
             _cols.clear();
         }
-        for(int i = 0; i < _left.length; i++) {
-            for(int j = 0; j < _left[i].length; j++) {
-                if(!_left[i][j]) return false;
-            }
-        }
-        for(int i = 0; i < _top.length; i++) {
-            for(int j = 0; j < _top[i].length; j++) {
-                if(!_top[i][j]) return false;
-            }
-        }
-        return true;
+        return check();
     }
 
     /**
@@ -104,29 +94,13 @@ public class NonogramSolver {
         int length;
         _field = new Field(rows, cols);
         _left = new boolean[rows][];
-        for(int i = 0; i < rows; i++) {
-            length = _nono.getLeftRowLength(i);
-            _left[i] = new boolean[length];
-            for(int j = 0; j < length; j++) {
-                _left[i][j] = false;
-            }
-        }
+        initBooleanArray(_left, Field.ROW);
         _top = new boolean[cols][];
-        for(int i = 0; i < cols; i++) {
-            length = _nono.getTopColLength(i);
-            _top[i] = new boolean[length];
-            for(int j = 0; j < length; j++) {
-                _top[i][j] = false;
-            }
-        }
+        initBooleanArray(_top, Field.COL);
         _rows = new HashSet<>();
-        for(int i = 0; i < rows; i++) {
-            _rows.add(i);
-        }
+        initHashSet(_rows, rows);
         _cols = new HashSet<>();
-        for(int i = 0; i < cols; i++) {
-            _cols.add(i);
-        }
+        initHashSet(_cols, cols);
     }
 
     /**
@@ -136,6 +110,16 @@ public class NonogramSolver {
      *         false, otherwise
      */
     boolean check() {
+        for (int i = 0; i < _left.length; i++) {
+            for (int j = 0; j < _left[i].length; j++) {
+                if (!_left[i][j]) return false;
+            }
+        }
+        for (int i = 0; i < _top.length; i++) {
+            for (int j = 0; j < _top[i].length; j++) {
+                if (!_top[i][j]) return false;
+            }
+        }
         return _nono.isEqual(new Nonogram(_field));
     }
 
@@ -264,15 +248,18 @@ public class NonogramSolver {
      *
      * @param set - set of indexes
      * @param type - ROW, if row
-     *      *        COL, if column
+     *               COL, if column
      * @return true, if any cell was filled
      *         false, otherwise
      */
     private boolean applyAlgorithms(HashSet<Integer> set, int type) {
         boolean isFilled = false, isChanged;
-        for(int i : set) {
+        for (int i : set) {
+            if (_asyncTask.isCancelled()) {
+                break;
+            }
             isChanged = true;
-            while(isChanged) {
+            while (isChanged) {
                 isChanged = applySimpleBoxes(i, type);
                 isChanged = applySimpleSpaces(i, type) || isChanged;
                 isChanged = applyForcing(i, type) || isChanged;
@@ -287,4 +274,34 @@ public class NonogramSolver {
         return isFilled;
     }
 
+    /**
+     * Method for initialising one of the two boolean arrays
+     *
+     * @param array - array for initialising
+     * @param type - ROW, if _left
+     *               COL, if _top
+     */
+    private void initBooleanArray(boolean[][] array, int type) {
+        int length;
+        for (int i = 0; i < array.length; i++) {
+            length = type == Field.ROW
+                    ? _nono.getLeftRowLength(i) : _nono.getTopColLength(i);
+            array[i] = new boolean[length];
+            for (int j = 0; j < length; j++) {
+                array[i][j] = false;
+            }
+        }
+    }
+
+    /**
+     * Method for initialising one of the two hash sets
+     *
+     * @param set - hash set for initialising
+     * @param size - size of hash set
+     */
+    private void initHashSet(HashSet<Integer> set, int size) {
+        for (int i = 0; i < size; i++) {
+            set.add(i);
+        }
+    }
 }
