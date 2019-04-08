@@ -85,7 +85,33 @@ public class NonogramSolver {
      * Method for initialising class fields before solution start
      */
     void init() {
-
+        int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
+        int length;
+        _field = new Field(rows, cols);
+        _left = new boolean[rows][];
+        for(int i = 0; i < rows; i++) {
+            length = _nono.getLeftRowLength(i);
+            _left[i] = new boolean[length];
+            for(int j = 0; j < length; j++) {
+                _left[i][j] = false;
+            }
+        }
+        _top = new boolean[cols][];
+        for(int i = 0; i < cols; i++) {
+            length = _nono.getTopColLength(i);
+            _top[i] = new boolean[length];
+            for(int j = 0; j < length; j++) {
+                _top[i][j] = false;
+            }
+        }
+        _rows = new HashSet<>();
+        for(int i = 0; i < rows; i++) {
+            _rows.add(i);
+        }
+        _cols = new HashSet<>();
+        for(int i = 0; i < cols; i++) {
+            _cols.add(i);
+        }
     }
 
     /**

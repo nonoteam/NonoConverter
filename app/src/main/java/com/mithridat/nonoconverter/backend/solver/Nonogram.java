@@ -68,7 +68,7 @@ public class Nonogram {
      * @param i - row number
      * @return number of columns
      */
-    int getLeftRowsLength(int i) {
+    int getLeftRowLength(int i) {
         return _left[i].length;
     }
 
@@ -79,7 +79,7 @@ public class Nonogram {
      * @param i - column number
      * @return number of rows
      */
-    int getTopColsLength(int i) {
+    int getTopColLength(int i) {
         return _top[i].length;
     }
 
@@ -126,7 +126,7 @@ public class Nonogram {
         for (int i = 0; i < outLim; ++i) {
             grid[i] = new int[0];
             for (int j = 0, k, length = 0; j < inLim; ) {
-                k = field.getAntoherColorIndex(i, j, 1, type);
+                k = field.getAnotherColorIndex(i, j, 1, type);
                 int color = type == Field.ROW ? field.getColor(i, j)
                         : field.getColor(j, i);
                 if (color == Colors.BLACK) {
