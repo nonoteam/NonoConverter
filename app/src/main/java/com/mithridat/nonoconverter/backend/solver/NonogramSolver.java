@@ -75,10 +75,25 @@ public class NonogramSolver {
      *         false, otherwise
      */
     public boolean solve() {
-        if(!_asyncTask.isCancelled()) {
-            return true;
+        boolean isChanged = true;
+        init();
+        while(!_asyncTask.isCancelled() && isChanged) {
+            isChanged = applyAlgorithms(_rows, Field.ROW);
+            _rows.clear();
+            isChanged = applyAlgorithms(_cols, Field.COL) || isChanged;
+            _cols.clear();
         }
-        return false;
+        for(int i = 0; i < _left.length; i++) {
+            for(int j = 0; j < _left[i].length; j++) {
+                if(!_left[i][j]) return false;
+            }
+        }
+        for(int i = 0; i < _top.length; i++) {
+            for(int j = 0; j < _top[i].length; j++) {
+                if(!_top[i][j]) return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -242,6 +257,34 @@ public class NonogramSolver {
      */
     boolean applyDualPosition(int ind, int type) {
         return false;
+    }
+
+    /**
+     * For every row or column with index in set applies algorithms
+     *
+     * @param set - set of indexes
+     * @param type - ROW, if row
+     *      *        COL, if column
+     * @return true, if any cell was filled
+     *         false, otherwise
+     */
+    private boolean applyAlgorithms(HashSet<Integer> set, int type) {
+        boolean isFilled = false, isChanged;
+        for(int i : set) {
+            isChanged = true;
+            while(isChanged) {
+                isChanged = applySimpleBoxes(i, type);
+                isChanged = applySimpleSpaces(i, type) || isChanged;
+                isChanged = applyForcing(i, type) || isChanged;
+                isChanged = applyGlue(i, type) || isChanged;
+                isChanged = applyJoining(i, type) || isChanged;
+                isChanged = applySplitting(i, type) || isChanged;
+                isChanged = applyPunctuating(i, type) || isChanged;
+                isChanged = applyDualPosition(i, type) || isChanged;
+                isFilled = isChanged || isFilled;
+            }
+        }
+        return isFilled;
     }
 
 }
