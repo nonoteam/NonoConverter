@@ -3,6 +3,8 @@ package com.mithridat.nonoconverter.backend;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
 /**
  * Field storage class
  */
@@ -32,9 +34,7 @@ public class Field implements Parcelable {
     public Field(int rows, int cols) {
         _field = new int[rows][cols];
         for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                _field[i][j] = Colors.EMPTY;
-            }
+            Arrays.fill(_field[i], Colors.EMPTY);
         }
         _rows = rows;
         _cols = cols;

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.mithridat.nonoconverter.backend.Field;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -91,16 +92,15 @@ public class NonogramSolver {
      */
     void init() {
         int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
-        int length;
         _field = new Field(rows, cols);
         _left = new boolean[rows][];
         initBooleanArray(_left, Field.ROW);
         _top = new boolean[cols][];
         initBooleanArray(_top, Field.COL);
         _rows = new HashSet<>();
-        initHashSet(_rows, rows);
+        initHashSet(_rows, 0, rows);
         _cols = new HashSet<>();
-        initHashSet(_cols, cols);
+        initHashSet(_cols, 0, cols);
     }
 
     /**
@@ -110,17 +110,9 @@ public class NonogramSolver {
      *         false, otherwise
      */
     boolean check() {
-        for (int i = 0; i < _left.length; i++) {
-            for (int j = 0; j < _left[i].length; j++) {
-                if (!_left[i][j]) return false;
-            }
-        }
-        for (int i = 0; i < _top.length; i++) {
-            for (int j = 0; j < _top[i].length; j++) {
-                if (!_top[i][j]) return false;
-            }
-        }
-        return _nono.isEqual(new Nonogram(_field));
+        return checkIsAllNumbersReady(_left)
+                && checkIsAllNumbersReady(_top)
+                && _nono.isEqual(new Nonogram(_field));
     }
 
     /**
@@ -255,9 +247,7 @@ public class NonogramSolver {
     private boolean applyAlgorithms(HashSet<Integer> set, int type) {
         boolean isFilled = false, isChanged;
         for (int i : set) {
-            if (_asyncTask.isCancelled()) {
-                break;
-            }
+            if (_asyncTask.isCancelled()) break;
             isChanged = true;
             while (isChanged) {
                 isChanged = applySimpleBoxes(i, type);
@@ -287,21 +277,38 @@ public class NonogramSolver {
             length = type == Field.ROW
                     ? _nono.getLeftRowLength(i) : _nono.getTopColLength(i);
             array[i] = new boolean[length];
-            for (int j = 0; j < length; j++) {
-                array[i][j] = false;
-            }
+            Arrays.fill(array[i], false);
         }
     }
 
     /**
      * Method for initialising one of the two hash sets
+     * with numbers from interval
      *
      * @param set - hash set for initialising
-     * @param size - size of hash set
+     * @param begin - first number from interval
+     * @param end - next to last number from interval
      */
-    private void initHashSet(HashSet<Integer> set, int size) {
-        for (int i = 0; i < size; i++) {
+    private void initHashSet(HashSet<Integer> set, int begin, int end) {
+        for (int i = begin; i < end; i++) {
             set.add(i);
         }
     }
+
+    /**
+     * Method for checking is all numbers are ready
+     *
+     * @param array - boolean array
+     * @return true, if all numbers are ready
+     *         false, otherwise
+     */
+    private boolean checkIsAllNumbersReady(boolean[][] array) {
+        for(boolean[] a : array) {
+            for(boolean b : a) {
+                if(!b) return false;
+            }
+        }
+        return true;
+    }
+
 }
