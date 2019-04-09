@@ -98,9 +98,9 @@ public class NonogramSolver {
         _top = new boolean[cols][];
         initBooleanArray(_top, Field.COL);
         _rows = new HashSet<>();
-        initHashSet(_rows, 0, rows);
+        addIntervalHashSet(_rows, 0, rows);
         _cols = new HashSet<>();
-        initHashSet(_cols, 0, cols);
+        addIntervalHashSet(_cols, 0, cols);
     }
 
     /**
@@ -282,14 +282,13 @@ public class NonogramSolver {
     }
 
     /**
-     * Method for initialising one of the two hash sets
-     * with numbers from interval
+     * Method for adding numbers from interval to hash set
      *
-     * @param set - hash set for initialising
+     * @param set - hash set
      * @param begin - first number from interval
      * @param end - next to last number from interval
      */
-    private void initHashSet(HashSet<Integer> set, int begin, int end) {
+    private void addIntervalHashSet(HashSet<Integer> set, int begin, int end) {
         for (int i = begin; i < end; i++) {
             set.add(i);
         }
