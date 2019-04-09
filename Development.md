@@ -1,8 +1,96 @@
-# Coding standard
+# Development
 
-## File naming
+## Table Of Contents
 
-### Drawable files
+<!---toc start-->
+
+* [Development](#development)
+  * [Table Of Contents](#table-of-contents)
+  * [Git workflow](#git-workflow)
+    * [master](#master)
+    * [develop](#develop)
+    * [feature](#feature)
+    * [hotfix](#hotfix)
+    * [release](#release)
+  * [Rules of commits](#rules-of-commits)
+  * [Coding standard](#coding-standard)
+    * [File naming](#file-naming)
+        * [Drawable files](#drawable-files)
+        * [Layout files](#layout-files)
+        * [Menu files](#menu-files)
+        * [Values files](#values-files)
+    * [Java language rules](#java-language-rules)
+        * [Don't ignore exceptions](#dont-ignore-exceptions)
+        * [Don't catch generic exception](#dont-catch-generic-exception)
+        * [Don't use finalizers](#dont-use-finalizers)
+        * [Fully qualify imports](#fully-qualify-imports)
+    * [Java style rules](#java-style-rules)
+        * [File and package names](#file-and-package-names)
+        * [Names of methods, variables](#names-of-methods-variables)
+        * [Comments](#comments)
+        * [Use spaces for indentation](#use-spaces-for-indentation)
+        * [Use standard brace style](#use-standard-brace-style)
+        * [Class member ordering](#class-member-ordering)
+        * [Line length limit](#line-length-limit)
+        * [Line-wrapping strategies](#line-wrapping-strategies)
+        * [The location of the blocks, operators, spaces, brackets](#the-location-of-the-blocks-operators-spaces-brackets)
+    * [XML style rules](#xml-style-rules)
+        * [Use self closing tags](#use-self-closing-tags)
+        * [Resources naming](#resources-naming)
+        * [ID naming](#id-naming)
+        * [Color naming](#color-naming)
+        * [Strings](#strings)
+        * [Styles and Themes](#styles-and-themes)
+        * [Attributes ordering](#attributes-ordering)
+
+<!---toc end-->
+
+## Git workflow
+
+### master
+
+* Branch with releases
+
+### develop
+
+* Branch created from master, with last changes
+
+### feature
+
+* Branches created from develop for adding new functionalities
+* Name: `NC-number_issue`, for example: `NC-1`
+
+### hotfix
+
+* Branches created from master and develop for hot fixes
+* Name: `NC-number_issue-fix-number_fix`, for example: `NC-1-fix-1`
+
+### release
+
+* Branches created from develop for preparing for release of new product versions. After preparing branches are merged into master and develop
+* Name: `release-number_version`, for example: `release-1.0`
+
+## Rules of commits
+
+* Commit message consists of a subject line (≤ 50 characters) and body text (optional)
+* The subject line: start with `#issue_number`(for example: `#1`) followed by verb in past form starting with capital letter and don't end with dot
+* The title and body text are separated with empty line
+* The body text can contain several lines, each started with `-` and capital letter, altogether representing the list of changes: what and why (not how)
+
+For example:
+```
+#18 Updated README.md, created CodingStandard.md
+
+- Added "Table Of Contents" in README.md
+- Moved coding standard to individual file
+- Added examples of code in CodingStandard.md
+```
+
+## Coding standard
+
+### File naming
+
+#### Drawable files
 
 Naming conventions for drawables:
 
@@ -38,7 +126,7 @@ Naming conventions for selector states:
 | Disabled     | `_disabled`     | `btn_order_disabled.9.png`  |
 | Selected     | `_selected`     | `btn_order_selected.9.png`  |
 
-### Layout files
+#### Layout files
 
 Layout files should match the name of the Android components that they are intended for but moving the top level component name to the beginning. For example, if we are creating a layout for the `SignInActivity`, the name of the layout file should be `activity_sign_in.xml`.
 
@@ -50,19 +138,19 @@ Layout files should match the name of the Android components that they are inten
 
 Note that there are cases where these rules will not be possible to apply. For example, when creating layout files that are intended to be part of other layouts. In this case you should use the prefix `partial_`.
 
-### Menu files
+#### Menu files
 
 Similar to layout files, menu files should match the name of the component. For example, if we are defining a menu file that is going to be used in the `UserActivity`, then the name of the file should be `activity_user.xml`
 
 A good practice is to not include the word `menu` as part of the name because these files are already located in the `menu` directory.
 
-### Values files
+#### Values files
 
 In accordance with the Android Studio style.
 
-## Java language rules
+### Java language rules
 
-### Don't ignore exceptions
+#### Don't ignore exceptions
 
 You must never do the following:
 
@@ -78,7 +166,7 @@ _While you may think that your code will never encounter this error condition or
 
 See alternatives [here](https://source.android.com/source/code-style.html#dont-ignore-exceptions).
 
-### Don't catch generic exception
+#### Don't catch generic exception
 
 You should not do this:
 
@@ -95,11 +183,11 @@ try {
 
 See the reason why and some alternatives [here](https://source.android.com/source/code-style.html#dont-catch-generic-exception)
 
-### Don't use finalizers
+#### Don't use finalizers
 
 _We don't use finalizers. There are no guarantees as to when a finalizer will be called, or even that it will be called at all. In most cases, you can do what you need from a finalizer with good exception handling. If you absolutely need it, define a `close()` method (or the like) and document exactly when that method needs to be called. See `InputStream` for an example. In this case it is appropriate but not required to print a short log message from the finalizer, as long as it is not expected to flood the logs._ - ([Android code style guidelines](https://source.android.com/source/code-style.html#dont-use-finalizers))
 
-### Fully qualify imports
+#### Fully qualify imports
 
 This is bad: `import foo.*;`
 
@@ -107,9 +195,10 @@ This is good: `import foo.Bar;`
 
 See more info [here](https://source.android.com/source/code-style.html#fully-qualify-imports)
 
-## Java style rules
+### Java style rules
 
-### File and package names
+#### File and package names
+
 * Only lowercase letters are used in package names
 
     ```java
@@ -123,7 +212,8 @@ See more info [here](https://source.android.com/source/code-style.html#fully-qua
     }
     ```
 
-### Names of methods, variables
+#### Names of methods, variables
+
 * The names of the methods should be verbs, the first letter should be lowercase, the first letters of the inner words should be uppercase
 
     ```java
@@ -154,7 +244,7 @@ See more info [here](https://source.android.com/source/code-style.html#fully-qua
 
 * Class field names should begin with a prefix `_`: `_length`, `_btnSave`, `_dlgError`, `_tvTitle`, `_ivResult` and etc.
 
-### Comments
+#### Comments
 
 Сomments should be written to the own classes, class fields and class methods, should be Javadoc.
 
@@ -192,7 +282,7 @@ See more info [here](https://source.android.com/source/code-style.html#fully-qua
     }
     ```
 
-### Use spaces for indentation
+#### Use spaces for indentation
 
 Use __4 space__ indents for blocks:
 
@@ -209,7 +299,7 @@ Instrument i =
         someLongExpression(that, wouldNotFit, on, one, line);
 ```
 
-### Use standard brace style
+#### Use standard brace style
 
 Braces go on the same line as the code before them.
 
@@ -242,7 +332,7 @@ if (condition)
     body();  // bad!
 ```
 
-### Class member ordering
+#### Class member ordering
 
 There is no single correct solution for this but using a __logical__ and __consistent__ order will improve code learnability and readability. It is recommendable to use the following order:
 
@@ -307,7 +397,7 @@ public class MainActivity extends Activity {
 }
 ```
 
-### Line length limit
+#### Line length limit
 
 Code lines should not exceed __80 characters__. If the line is longer than this limit there are usually two options to reduce its length:
 
@@ -319,7 +409,7 @@ There are two __exceptions__ where it is possible to have lines longer than 80:
 * Lines that are not possible to split, e.g. long URLs in comments.
 * `package` and `import` statements.
 
-### Line-wrapping strategies
+#### Line-wrapping strategies
 
 There isn't an exact formula that explains how to line-wrap and quite often different solutions are valid. However there are a few rules that can be applied to common cases.
 
@@ -371,7 +461,8 @@ loadPicture(context,
         "Title of the picture");
 ```
 
-### The location of the blocks, operators, spaces, brackets
+#### The location of the blocks, operators, spaces, brackets
+
 * Variable definitions should be located at the beginning of the block. Variables should be initialized as soon as possible
 
    ```java
@@ -419,9 +510,9 @@ loadPicture(context,
    (a > 10) ? b : c;
    ```
    
-## XML style rules
+### XML style rules
 
-### Use self closing tags
+#### Use self closing tags
 
 When an XML element doesn't have any contents, you __must__ use self closing tags.
 
@@ -445,11 +536,11 @@ This is __bad__ :
 </TextView>
 ```
 
-### Resources naming
+#### Resources naming
 
 Resource IDs and names are written in __lowercase_underscore__.
 
-### ID naming
+#### ID naming
 
 IDs should be prefixed with the name of the element in lowercase underscore. For example:
 
@@ -480,7 +571,7 @@ Menu example:
 </menu>
 ```
 
-### Color naming
+#### Color naming
 
 Сolors should be named after their color, not where they are used: `colorLightGrey`.
 
@@ -488,7 +579,7 @@ There is __exception__ where it is possible to name colors after where they are 
 
 * Сolors refer to the main theme: `colorPrimary`, `textColorPrimary`, `colorPrimaryDark`, `windowBackground`, `navigationBarColor` and etc.
 
-### Strings
+#### Strings
 
 String names start with a prefix that identifies the section they belong to. For example `registration_email_hint` or `registration_name_hint`. If a string __doesn't belong__ to any section, then you should follow the rules below:
 
@@ -499,11 +590,11 @@ String names start with a prefix that identifies the section they belong to. For
 | `title_`           | A title, i.e. a dialog title          |
 | `action_`          | An action such as "Save" or "Create"  |
 
-### Styles and Themes
+#### Styles and Themes
 
 Unlike the rest of resources, style names are written in __UpperCamelCase__.
 
-### Attributes ordering
+#### Attributes ordering
 
 As a general rule you should try to group similar attributes together. A good way of ordering the most common attributes is:
 

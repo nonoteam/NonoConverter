@@ -1,10 +1,13 @@
 package com.mithridat.nonoconverter.ui.editimage;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -32,7 +35,14 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+
+import static android.provider.MediaStore.Images.Media.getBitmap;
 
 /**
  * Class for the editing image activity.
@@ -48,6 +58,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * Tag for fragment main
      */
     private static final String FRAGMENT_MAIN_TAG = "fragmentMain";
+
+    /**
+     * Tag for fragment crop
+     */
+    private static final String FRAGMENT_CROP_TAG = "fragmentCrop";
 
     /**
      * Tag for fragment columns
@@ -73,6 +88,16 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * Tag for fragment convert dialog
      */
     private static final String DIALOG_CONVERT_TAG = "fragmentConvertDialog";
+
+    /**
+     * Tag for fragment convert dialog
+     */
+    private static final String CROP_LOADED_IMAGE  = "cropLoadedImage";
+
+    /**
+     * Tag for crop area rect
+     */
+    private static final String RECT = "RECT";
 
     /**
      * Id of the main fragment
@@ -105,6 +130,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     Bitmap _bmpCurrentImage = null;
 
     /**
+     * Current uri
+     */
+    Uri _uriCurrentImage = null;
+
+    /**
      * Main fragment of the EditImageActivity
      */
     FragmentMain _fragmentMain;
@@ -113,6 +143,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * Columns fragment of the EditImageActivity
      */
     FragmentColumns _fragmentColumns;
+
+    /**
+     * Crop fragment of the EditImageActivity
+     */
+    FragmentCrop _fragmentCrop;
 
     /**
      * Fragment manager of the EditImageActivity
@@ -142,7 +177,17 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Path to current image
      */
-    String _path = null;
+    String _pathImage = null;
+
+    /**
+     * Rect of cropping area
+     */
+    Rect _rectCrop = null;
+
+    /**
+     * Flag for checking if we need to rewrite bitmap to file
+     */
+    boolean _needSaveCropped = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,13 +218,23 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                             .getInt(COUNT_ROWS_TAG, 0);
             _isSelectedColumns = savedInstanceState
                     .getByte(IS_SELECTED_COLUMNS_TAG, (byte) 0) != 0;
-            _path = savedInstanceState.getString(BMP_CURRENT_IMAGE_TAG);
-            setImageFromPath(_path);
+
+            _uriCurrentImage = (Uri)savedInstanceState
+                    .getParcelable(CROP_LOADED_IMAGE);
+            try {
+                _bmpCurrentImage
+                        = getBitmap(this.getContentResolver(),
+                                _uriCurrentImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            _rectCrop = (Rect) savedInstanceState.getParcelable(RECT);
+            _pathImage = savedInstanceState.getString(BMP_CURRENT_IMAGE_TAG);
         } else if (_bmpCurrentImage == null) {
-            _path =
+            _pathImage =
                     getIntent()
                             .getStringExtra(ActivitiesConstants.EX_IMAGE_PATH);
-            setImageFromPath(_path);
+            setImageFromPath(_pathImage);
         }
         if (!checkColumns()) {
             _fragmentColumns = new FragmentColumns();
@@ -187,6 +242,13 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             _fragmentColumns =
                     (FragmentColumns) getSupportFragmentManager()
                             .findFragmentByTag(FRAGMENT_COLUMNS_TAG);
+        }
+        if (!checkCrop()) {
+            _fragmentCrop = new FragmentCrop();
+        } else {
+            _fragmentCrop =
+                    (FragmentCrop) getSupportFragmentManager()
+                            .findFragmentByTag(FRAGMENT_CROP_TAG);
         }
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             _fragmentMain = new FragmentMain();
@@ -235,7 +297,15 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         outState.putInt(COUNT_ROWS_TAG, _rows);
         outState.putByte(IS_SELECTED_COLUMNS_TAG,
                 _isSelectedColumns ? (byte) 1 : (byte) 0);
-        outState.putString(BMP_CURRENT_IMAGE_TAG, _path);
+
+        outState.putString(BMP_CURRENT_IMAGE_TAG, _pathImage);
+        _uriCurrentImage = writeTempStateStoreBitmap(this,
+                _bmpCurrentImage, _uriCurrentImage);
+        outState.putParcelable(CROP_LOADED_IMAGE, _uriCurrentImage);
+        _rectCrop = _fragmentCrop.getCropRect();
+        if (_rectCrop != null) {
+            outState.putParcelable(RECT, _fragmentCrop.getCropRect());
+        }
     }
 
     @Override
@@ -264,7 +334,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.button_crop:
-                //for Ilya
+                changeFragment(FRAGMENT_CROP);
                 break;
             case R.id.button_columns:
                 changeFragment(FRAGMENT_COLUMNS);
@@ -319,8 +389,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                     data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
 
             if (images.size() > 0) {
-                _path = images.get(0).getPath();
-                setImageFromPath(_path);
+                _pathImage = images.get(0).getPath();
+                setImageFromPath(_pathImage);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -364,6 +434,79 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     /**
+     * Reset number of columns and rows in nonogram
+     */
+    void resetConvertParams() {
+        _rows = 0;
+        _columns = 0;
+        _isSelectedColumns = false;
+    }
+
+    /**
+     * Close the given closeable object (Stream) in a safe way:
+     * check if it is null and catch.
+     *
+     * @param closeable the closable object to close
+     */
+    private static void closeSafe(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException ignored) {}
+        }
+    }
+
+    /**
+     * Write given bitmap to a temp file. If file already exists no-op as we
+     * already saved the file in this session. Uses JPEG 100% compression.
+     *
+     * @param uri the uri to write the bitmap to, if null
+     * @return the uri where the image was saved in, either the given uri or
+     * new pointing to temp file.
+     */
+    private Uri writeTempStateStoreBitmap(Context context, Bitmap bitmap, Uri uri) {
+        try {
+            if(uri == null) {
+                uri =
+                        Uri.fromFile(
+                                File.createTempFile("ic_state_store_temp",
+                                        ".jpg",
+                                        context.getCacheDir()));
+            }
+            if(_needSaveCropped) {
+                writeBitmapToUri(context,
+                        bitmap,
+                        uri,
+                        Bitmap.CompressFormat.JPEG,
+                        100);
+                _needSaveCropped = false;
+            }
+            return uri;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Write the given bitmap to the given uri using the given compression.
+     */
+     private void writeBitmapToUri(
+            Context context,
+            Bitmap bitmap,
+            Uri uri,
+            Bitmap.CompressFormat compressFormat,
+            int compressQuality)
+            throws FileNotFoundException {
+        OutputStream outputStream = null;
+        try {
+            outputStream = context.getContentResolver().openOutputStream(uri);
+            bitmap.compress(compressFormat, compressQuality, outputStream);
+        } finally {
+            closeSafe(outputStream);
+        }
+    }
+
+    /**
      * Check if columns fragment exists
      *
      * @return true if existing
@@ -374,6 +517,20 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 .findFragmentByTag(FRAGMENT_COLUMNS_TAG);
 
         return myFragment1 != null;
+    }
+
+    /**
+     * Check if crop fragment exists
+     *
+     * @return true if existing
+     */
+    private boolean checkCrop()
+    {
+        FragmentCrop myFragment =
+                (FragmentCrop) getSupportFragmentManager()
+                        .findFragmentByTag(FRAGMENT_CROP_TAG);
+
+        return myFragment != null;
     }
 
     /**
@@ -395,7 +552,15 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                                 _fragmentColumns, FRAGMENT_COLUMNS_TAG);
                 _fragmentTransaction.addToBackStack(null);
                 _fragmentTransaction.commit();
+                break;
             case FRAGMENT_CROP:
+                _fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
+                _fragmentTransaction
+                        .replace(R.id.fragment_layout_edit,
+                                _fragmentCrop, FRAGMENT_CROP_TAG);
+                _fragmentTransaction.addToBackStack(null);
+                _fragmentTransaction.commit();
                 break;
         }
     }
