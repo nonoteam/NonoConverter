@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
-import static android.provider.MediaStore.Images.Media.getBitmap;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +41,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+
+import static android.provider.MediaStore.Images.Media.getBitmap;
 
 /**
  * Class for the editing image activity.
@@ -92,6 +93,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * Tag for fragment convert dialog
      */
     private static final String CROP_LOADED_IMAGE  = "cropLoadedImage";
+
+    /**
+     * Tag for crop area rect
+     */
+    private static final String RECT = "RECT";
 
     /**
      * Id of the main fragment
@@ -222,7 +228,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            _rectCrop = (Rect) savedInstanceState.getParcelable("RECT");
+            _rectCrop = (Rect) savedInstanceState.getParcelable(RECT);
             _pathImage = savedInstanceState.getString(BMP_CURRENT_IMAGE_TAG);
         } else if (_bmpCurrentImage == null) {
             _pathImage =
@@ -298,7 +304,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         outState.putParcelable(CROP_LOADED_IMAGE, _uriCurrentImage);
         _rectCrop = _fragmentCrop.getCropRect();
         if (_rectCrop != null) {
-            outState.putParcelable("RECT", _fragmentCrop.getCropRect());
+            outState.putParcelable(RECT, _fragmentCrop.getCropRect());
         }
     }
 
@@ -442,13 +448,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
 
     /**
      * Check if crop fragment exists
+     *
      * @return true if existing
      */
     private boolean checkCrop()
     {
         FragmentCrop myFragment =
                 (FragmentCrop) getSupportFragmentManager()
-                .findFragmentByTag(FRAGMENT_CROP_TAG);
+                        .findFragmentByTag(FRAGMENT_CROP_TAG);
 
         return myFragment != null;
     }
@@ -585,8 +592,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                                         context.getCacheDir()));
             }
             if(_needSaveCropped) {
-                writeBitmapToUri(
-                        context, bitmap, uri, Bitmap.CompressFormat.JPEG, 100);
+                writeBitmapToUri(context,
+                        bitmap,
+                        uri,
+                        Bitmap.CompressFormat.JPEG,
+                        100);
                 _needSaveCropped = false;
             }
             return uri;
@@ -613,4 +623,13 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             closeSafe(outputStream);
         }
     }
+
+    /**
+     * Reset number of columns and rows in nonogram
+     */
+    void resetConvertParams() {
+        _rows = 0;
+        _columns = 0;
+    }
+
 }
