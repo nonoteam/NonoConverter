@@ -397,6 +397,90 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     /**
+     * Set rows and columns count
+     *
+     * @param rows - rows count
+     * @param columns - columns count
+     */
+    void setSizes(int rows, int columns) {
+        _rows = rows;
+        _columns = columns;
+    }
+
+    /**
+     * Reset number of columns and rows in nonogram
+     */
+    void resetConvertParams() {
+        _rows = 0;
+        _columns = 0;
+        _isSelectedColumns = false;
+    }
+
+    /**
+     * Close the given closeable object (Stream) in a safe way:
+     * check if it is null and catch.
+     *
+     * @param closeable the closable object to close
+     */
+    private static void closeSafe(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException ignored) {}
+        }
+    }
+
+    /**
+     * Write given bitmap to a temp file. If file already exists no-op as we
+     * already saved the file in this session. Uses JPEG 100% compression.
+     *
+     * @param uri the uri to write the bitmap to, if null
+     * @return the uri where the image was saved in, either the given uri or
+     * new pointing to temp file.
+     */
+    private Uri writeTempStateStoreBitmap(Context context, Bitmap bitmap, Uri uri) {
+        try {
+            if(uri == null) {
+                uri =
+                        Uri.fromFile(
+                                File.createTempFile("ic_state_store_temp",
+                                        ".jpg",
+                                        context.getCacheDir()));
+            }
+            if(_needSaveCropped) {
+                writeBitmapToUri(context,
+                        bitmap,
+                        uri,
+                        Bitmap.CompressFormat.JPEG,
+                        100);
+                _needSaveCropped = false;
+            }
+            return uri;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Write the given bitmap to the given uri using the given compression.
+     */
+     private void writeBitmapToUri(
+            Context context,
+            Bitmap bitmap,
+            Uri uri,
+            Bitmap.CompressFormat compressFormat,
+            int compressQuality)
+            throws FileNotFoundException {
+        OutputStream outputStream = null;
+        try {
+            outputStream = context.getContentResolver().openOutputStream(uri);
+            bitmap.compress(compressFormat, compressQuality, outputStream);
+        } finally {
+            closeSafe(outputStream);
+        }
+    }
+
+    /**
      * Provides cancellation of async task execution
      * when the dialog is cancelled
      */
@@ -421,17 +505,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                     }
                 }
             };
-
-    /**
-     * Set rows and columns count
-     *
-     * @param rows - rows count
-     * @param columns - columns count
-     */
-    void setSizes(int rows, int columns) {
-        _rows = rows;
-        _columns = columns;
-    }
 
     /**
      * Check if columns fragment exists
@@ -558,78 +631,5 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         void unLink() {
             _activity = null;
         }
-    }
-
-    /**
-     * Close the given closeable object (Stream) in a safe way:
-     * check if it is null and catch.
-     *
-     * @param closeable the closable object to close
-     */
-    private static void closeSafe(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException ignored) {}
-        }
-    }
-
-    /**
-     * Write given bitmap to a temp file. If file already exists no-op as we
-     * already saved the file in this session. Uses JPEG 100% compression.
-     *
-     * @param uri the uri to write the bitmap to, if null
-     * @return the uri where the image was saved in, either the given uri or
-     * new pointing to temp file.
-     */
-    Uri writeTempStateStoreBitmap(Context context, Bitmap bitmap, Uri uri) {
-        try {
-            if(uri == null) {
-                uri =
-                        Uri.fromFile(
-                                File.createTempFile("ic_state_store_temp",
-                                        ".jpg",
-                                        context.getCacheDir()));
-            }
-            if(_needSaveCropped) {
-                writeBitmapToUri(context,
-                        bitmap,
-                        uri,
-                        Bitmap.CompressFormat.JPEG,
-                        100);
-                _needSaveCropped = false;
-            }
-            return uri;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Write the given bitmap to the given uri using the given compression.
-     */
-    void writeBitmapToUri(
-            Context context,
-            Bitmap bitmap,
-            Uri uri,
-            Bitmap.CompressFormat compressFormat,
-            int compressQuality)
-            throws FileNotFoundException {
-        OutputStream outputStream = null;
-        try {
-            outputStream = context.getContentResolver().openOutputStream(uri);
-            bitmap.compress(compressFormat, compressQuality, outputStream);
-        } finally {
-            closeSafe(outputStream);
-        }
-    }
-
-    /**
-     * Reset number of columns and rows in nonogram
-     */
-    void resetConvertParams() {
-        _rows = 0;
-        _columns = 0;
-        _isSelectedColumns = false;
     }
 }
