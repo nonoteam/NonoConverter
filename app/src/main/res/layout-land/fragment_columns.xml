@@ -62,7 +62,7 @@
                 android:layout_height="20dp"
                 android:layout_marginTop="8dp"
                 android:background="@android:color/holo_purple"
-                android:max="9"
+                android:max="17"
                 android:progress="0"
                 android:rotation="270"
                 app:layout_constraintBottom_toBottomOf="parent"
