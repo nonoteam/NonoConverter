@@ -13,13 +13,14 @@
 
         <com.theartofdev.edmodo.cropper.CropImageView
             xmlns:custom="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/cropImageView"
+            android:id="@+id/crop_image_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="0dp"
             android:layout_weight="1"
-            custom:layout_constraintBottom_toTopOf="@+id/linear_layout_edit_main"
+            custom:layout_constraintBottom_toTopOf=
+                    "@+id/linear_layout_edit_main"
             custom:layout_constraintEnd_toEndOf="parent"
             custom:layout_constraintHorizontal_bias="0.0"
             custom:layout_constraintStart_toStartOf="parent"
@@ -69,4 +70,5 @@
                 android:textSize="14sp" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>
