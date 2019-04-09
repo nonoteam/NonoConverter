@@ -397,6 +397,32 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     /**
+     * Provides cancellation of async task execution
+     * when the dialog is cancelled
+     */
+    private OnCancelListener _diCancelListener = new OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialogInterface) {
+            if (_atConvert != null) _atConvert.cancel(true);
+        }
+    };
+
+    /**
+     * Callback for OpenCVLoader
+     */
+    private BaseLoaderCallback _baseLoaderCallback =
+            new BaseLoaderCallback(this) {
+                @Override
+                public void onManagerConnected(int status) {
+                    switch (status) {
+                        default:
+                            super.onManagerConnected(status);
+                            break;
+                    }
+                }
+            };
+
+    /**
      * Set rows and columns count
      *
      * @param rows - rows count
@@ -479,32 +505,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             closeSafe(outputStream);
         }
     }
-
-    /**
-     * Provides cancellation of async task execution
-     * when the dialog is cancelled
-     */
-    private OnCancelListener _diCancelListener = new OnCancelListener() {
-        @Override
-        public void onCancel(DialogInterface dialogInterface) {
-            if (_atConvert != null) _atConvert.cancel(true);
-        }
-    };
-
-    /**
-     * Callback for OpenCVLoader
-     */
-    private BaseLoaderCallback _baseLoaderCallback =
-            new BaseLoaderCallback(this) {
-                @Override
-                public void onManagerConnected(int status) {
-                    switch (status) {
-                        default:
-                            super.onManagerConnected(status);
-                            break;
-                    }
-                }
-            };
 
     /**
      * Check if columns fragment exists
