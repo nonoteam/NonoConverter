@@ -10,6 +10,8 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import static java.lang.Math.min;
+
 /**
  * Image converting class
  */
@@ -29,6 +31,8 @@ public class ImageConverter {
             int rows,
             int cols,
             AsyncTask<Void, Void, Field> asyncTask) {
+        rows = min(rows, bmp.getHeight());
+        cols = min(cols, bmp.getWidth());
         Bitmap bw = getBlackWhite(bmp.copy(bmp.getConfig(), bmp.isMutable()));
         Field field = null;
         NonogramSolver solver = new NonogramSolver(null, asyncTask);
