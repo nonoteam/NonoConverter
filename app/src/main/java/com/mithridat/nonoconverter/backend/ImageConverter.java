@@ -3,6 +3,8 @@ package com.mithridat.nonoconverter.backend;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+import com.mithridat.nonoconverter.backend.solver.Nonogram;
+import com.mithridat.nonoconverter.backend.solver.NonogramSolver;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -27,12 +29,18 @@ public class ImageConverter {
             int rows,
             int cols,
             AsyncTask<Void, Void, Field> asyncTask) {
-        if (!asyncTask.isCancelled()) {
-            Bitmap bw =
-                    getBlackWhite(bmp.copy(bmp.getConfig(), bmp.isMutable()));
-            return getThumbnail(bw, rows, cols, 128);
+        Bitmap bw = getBlackWhite(bmp.copy(bmp.getConfig(), bmp.isMutable()));
+        Field field = null;
+        NonogramSolver solver = new NonogramSolver(null, asyncTask);
+        for (int p = 128; !asyncTask.isCancelled() && p <= 248; p += 5) {
+            field = getThumbnail(bw, rows, cols, p);
+            solver.setNonogram(new Nonogram(field));
+            if (solver.solve()) return field;
         }
-        return null;
+        /*
+         *TODO: `field` needs to be replaced by `null` when solver will be ready
+         */
+        return field;
     }
 
     /**
