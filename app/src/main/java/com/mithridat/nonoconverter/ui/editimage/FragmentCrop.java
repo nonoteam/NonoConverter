@@ -55,8 +55,7 @@ public class FragmentCrop extends Fragment implements View.OnClickListener {
             LayoutInflater inflater,
             ViewGroup container,
             Bundle savedInstanceState) {
-        View viewCropFragment =
-                inflater.inflate(R.layout.fragment_crop, null);
+        View viewCropFragment = inflater.inflate(R.layout.fragment_crop, null);
 
         viewCropFragment.findViewById(R.id.button_rotate)
                 .setOnClickListener(this);
@@ -98,5 +97,5 @@ public class FragmentCrop extends Fragment implements View.OnClickListener {
         if (_myView != null) return _myView.getCropRect();
         return null;
     }
-
 }
+

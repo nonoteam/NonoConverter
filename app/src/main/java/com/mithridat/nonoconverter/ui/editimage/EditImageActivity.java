@@ -630,6 +630,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     void resetConvertParams() {
         _rows = 0;
         _columns = 0;
+        _isSelectedColumns = false;
     }
-
 }
