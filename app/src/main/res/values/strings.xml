@@ -118,4 +118,7 @@
         available. Just click on the house icon in the upper right corner
         on the action bar.</string>
 
+    <string name="action_rotate">Rotate</string>
+    <string name="action_flip">Flip</string>
+
 </resources>
