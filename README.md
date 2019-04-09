@@ -1,4 +1,5 @@
 ﻿# NonoConverter
+
 Android mobile application for converting images to black-and-white nonogram with the following features:
 * User can select an image from the gallery or take a photo directly in the application
 * User can crop selected image
@@ -22,9 +23,7 @@ Advantages over web analogues:
 
 * [NonoConverter](#nonoconverter)
   * [Table Of Contents](#table-of-contents)
-  * [Git workflow](http://github.com/nonoteam/NonoConverter/blob/master/GIT_WORKFLOW.md)
-  * [Rules of commits](http://github.com/nonoteam/NonoConverter/blob/master/RULES_OF_COMMITS.md)
-  * [Coding standard](http://github.com/nonoteam/NonoConverter/blob/master/CODING_STANDARD.md)
+  * [Development](http://github.com/nonoteam/NonoConverter/blob/master/Development.md)
   * [Device requirements](#device-requirements)
   * [Installation instruction](#installation-instruction)
   * [Installation instruction for developers](#installation-instruction-for-developers)
@@ -33,15 +32,18 @@ Advantages over web analogues:
 <!---toc end-->
 
 ## Device requirements
+
 * Android 5.0 or later
 * 80 MB Hard Disk Space or more
 * 512 МB of RAM or more 
 
 ## Installation instruction
+
 * Download the apk file to your device from [here](https://github.com/nonoteam/NonoConverter/releases)
 * Install it
 
 ## Installation instruction for developers
+
 * Install on the PC Android Studio + Android Sdk according to the instruction on the site  
   https://developer.android.com/studio/index.html
 * Clone project from git server:
@@ -51,6 +53,7 @@ Advantages over web analogues:
 * Open project and build
 
 ## Development team
+
 * [Maxim Smolskiy](https://github.com/MaximSmolskiy) - **teamlead**
 * [Mikhail Nakhatovich](https://github.com/MikhailNakhatovich) - **techlead**
 * [Pavel Melnik](https://github.com/PawelMelnik)
