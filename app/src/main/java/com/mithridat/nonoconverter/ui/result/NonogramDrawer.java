@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import com.mithridat.nonoconverter.backend.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Field;
 
 /**
  * Class for drawing nonogram.

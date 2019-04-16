@@ -2,9 +2,9 @@ package com.mithridat.nonoconverter.backend.solver;
 
 import android.os.AsyncTask;
 
-import com.mithridat.nonoconverter.backend.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
-import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -84,7 +84,7 @@ public class NonogramSolver {
             isChanged = applyAlgorithms(_cols, Field.COL) || isChanged;
             _cols.clear();
         }
-        return check();
+        return false;
     }
 
     /**
@@ -94,25 +94,11 @@ public class NonogramSolver {
         int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
         _field = new Field(rows, cols);
         _left = new boolean[rows][];
-        initBooleanArray(_left, Field.ROW);
         _top = new boolean[cols][];
-        initBooleanArray(_top, Field.COL);
         _rows = new HashSet<>();
         addIntervalHashSet(_rows, 0, rows);
         _cols = new HashSet<>();
         addIntervalHashSet(_cols, 0, cols);
-    }
-
-    /**
-     * Method for checking solution
-     *
-     * @return true, if solution is correct
-     *         false, otherwise
-     */
-    boolean check() {
-        return checkIsAllNumbersReady(_left)
-                && checkIsAllNumbersReady(_top)
-                && _nono.isEqual(new Nonogram(_field));
     }
 
     /**
@@ -262,23 +248,6 @@ public class NonogramSolver {
             }
         }
         return isFilled;
-    }
-
-    /**
-     * Method for initialising one of the two boolean arrays
-     *
-     * @param array - array for initialising
-     * @param type - ROW, if _left
-     *               COL, if _top
-     */
-    private void initBooleanArray(boolean[][] array, int type) {
-        int length;
-        for (int i = 0; i < array.length; i++) {
-            length = type == Field.ROW
-                    ? _nono.getLeftRowLength(i) : _nono.getTopColLength(i);
-            array[i] = new boolean[length];
-            Arrays.fill(array[i], false);
-        }
     }
 
     /**
