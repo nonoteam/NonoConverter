@@ -11,6 +11,21 @@ import java.util.Arrays;
 public class Field implements Parcelable {
 
     /**
+     * White color
+     */
+    public static final int WHITE = 0xFFFFFFFF;
+
+    /**
+     * Black color
+     */
+    public static final int BLACK = 0xFF000000;
+
+    /**
+     * Empty cell
+     */
+    public static final int EMPTY = -1;
+
+    /**
      * Constants for argument type - row or column
      */
     public static final int ROW = 0, COL = 1;
@@ -34,7 +49,7 @@ public class Field implements Parcelable {
     public Field(int rows, int cols) {
         _field = new int[rows][cols];
         for (int i = 0; i < rows; i++) {
-            Arrays.fill(_field[i], Colors.EMPTY);
+            Arrays.fill(_field[i], EMPTY);
         }
         _rows = rows;
         _cols = cols;

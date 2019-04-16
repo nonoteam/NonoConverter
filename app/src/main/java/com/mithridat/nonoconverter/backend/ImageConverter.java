@@ -3,7 +3,6 @@ package com.mithridat.nonoconverter.backend;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-import com.mithridat.nonoconverter.backend.nonogram.Colors;
 import com.mithridat.nonoconverter.backend.nonogram.Field;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.backend.solver.NonogramSolver;
@@ -86,14 +85,14 @@ public class ImageConverter {
                 for (int x = j * w; x < (j + 1) * w; x++) {
                     for (int y = i * h; y < (i + 1) * h; y++) {
                         int color = bmp.getPixel(x, y);
-                        if (color == Colors.WHITE) {
+                        if (color == Field.WHITE) {
                             sumColors += 255;
                         }
                     }
                 }
                 int avgColor = sumColors / (w * h);
                 if (avgColor <= p) {
-                    field.setColor(i, j, Colors.BLACK);
+                    field.setColor(i, j, Field.BLACK);
                 }
             }
         }
