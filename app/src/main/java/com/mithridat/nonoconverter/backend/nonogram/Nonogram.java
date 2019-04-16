@@ -127,7 +127,7 @@ public class Nonogram {
                 k = field.getAnotherColorIndex(i, j, 1, type);
                 int color = type == Field.ROW ? field.getColor(i, j)
                         : field.getColor(j, i);
-                if (color == Colors.BLACK) {
+                if (color == Field.BLACK) {
                     int[] tmp = new int[length + 1];
                     System.arraycopy(grid[i], 0, tmp, 0, length);
                     tmp[length] = k - j;
