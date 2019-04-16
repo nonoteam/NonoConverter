@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.mithridat.nonoconverter.R;
-import com.mithridat.nonoconverter.backend.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Field;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 import com.mithridat.nonoconverter.ui.start.StartActivity;
 

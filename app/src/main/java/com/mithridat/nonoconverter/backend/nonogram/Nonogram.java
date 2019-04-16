@@ -1,8 +1,6 @@
-package com.mithridat.nonoconverter.backend.solver;
+package com.mithridat.nonoconverter.backend.nonogram;
 
 import androidx.annotation.NonNull;
-import com.mithridat.nonoconverter.backend.Colors;
-import com.mithridat.nonoconverter.backend.Field;
 
 import java.util.Arrays;
 
@@ -48,7 +46,7 @@ public class Nonogram {
      *
      * @return number of left nonogram grid rows
      */
-    int getLeftRowsLength() {
+    public int getLeftRowsLength() {
         return _left.length;
     }
 
@@ -57,7 +55,7 @@ public class Nonogram {
      *
      * @return number of top nonogram grid columns
      */
-    int getTopColsLength() {
+    public int getTopColsLength() {
         return _top.length;
     }
 

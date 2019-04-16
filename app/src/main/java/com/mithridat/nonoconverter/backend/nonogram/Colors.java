@@ -1,4 +1,4 @@
-package com.mithridat.nonoconverter.backend;
+package com.mithridat.nonoconverter.backend.nonogram;
 
 /**
  * Colors storage class
