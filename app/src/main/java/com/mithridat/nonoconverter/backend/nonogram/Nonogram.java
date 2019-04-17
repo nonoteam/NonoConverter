@@ -52,7 +52,7 @@ public class Nonogram implements Parcelable {
     private Nonogram() {
 
     }
-    
+
     /**
      * Constructor by the parcel
      *
@@ -138,7 +138,7 @@ public class Nonogram implements Parcelable {
      * @param i - row number
      * @return number of columns
      */
-    int getLeftRowLength(int i) {
+    public int getLeftRowLength(int i) {
         return _left[i].length;
     }
 
@@ -149,7 +149,7 @@ public class Nonogram implements Parcelable {
      * @param i - column number
      * @return number of rows
      */
-    int getTopColLength(int i) {
+    public int getTopColLength(int i) {
         return _top[i].length;
     }
 
@@ -161,7 +161,7 @@ public class Nonogram implements Parcelable {
      *               COL, if _top
      * @return length of _left[i] or _top[i]
      */
-    int getSecondLength(int i, int type) {
+    public int getSecondLength(int i, int type) {
         if (type == Field.ROW) return getLeftRowLength(i);
         return getTopColLength(i);
     }
@@ -174,7 +174,7 @@ public class Nonogram implements Parcelable {
      * @param j - column number
      * @return left nonogram grid cell with row number i and column number j
      */
-    int getLeftRowValue(int i, int j) {
+    public int getLeftRowValue(int i, int j) {
         return _left[i][j];
     }
 
@@ -186,7 +186,7 @@ public class Nonogram implements Parcelable {
      * @param j - row number
      * @return top nonogram grid cell with column number i and row number j
      */
-    int getTopColValue(int i, int j) {
+    public int getTopColValue(int i, int j) {
         return _top[i][j];
     }
 
@@ -199,7 +199,7 @@ public class Nonogram implements Parcelable {
      *               COL, if _top
      * @return _left[i][j] or _top[i][j]
      */
-    int getValue(int i, int j, int type) {
+    public int getValue(int i, int j, int type) {
         if (type == Field.ROW) return getLeftRowValue(i, j);
         return getTopColValue(i, j);
     }
@@ -210,7 +210,7 @@ public class Nonogram implements Parcelable {
      * @return true, if filling of the field is correct
      *         false, otherwise
      */
-    boolean checkCorrectness() {
+    public boolean checkCorrectness() {
         int rows = _field.getRows(), cols = _field.getCols();
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {

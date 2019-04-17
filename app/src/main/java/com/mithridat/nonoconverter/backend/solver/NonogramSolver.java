@@ -70,22 +70,17 @@ public class NonogramSolver {
      *         false, otherwise
      */
     public boolean solve() {
-        boolean isChanged = true;
         init();
-        int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
-        for (int i = 0; i < rows; i++) {
-            applySimpleBoxes(i, Field.ROW);
-        }
-        for (int i = 0; i < cols; i++) {
-            applySimpleBoxes(i, Field.COL);
-        }
-        while (!_asyncTask.isCancelled() && isChanged) {
-            isChanged = applyAlgorithm(_rows, Field.ROW);
+        applyAlgorithmSB(Field.ROW);
+        applyAlgorithmSB(Field.COL);
+        while (!_asyncTask.isCancelled()) {
+            if (!applyAlgorithmFSM(_rows, Field.ROW)) return false;
             _rows.clear();
-            isChanged = applyAlgorithm(_cols, Field.COL) || isChanged;
+            if (!applyAlgorithmFSM(_cols, Field.COL)) return false;
             _cols.clear();
+            if(_nono.checkCorrectness()) return true;
         }
-        return false;
+        return _nono.checkCorrectness();
     }
 
     /**
@@ -97,6 +92,10 @@ public class NonogramSolver {
         addIntervalHashSet(_rows, 0, rows);
         _cols = new HashSet<>();
         addIntervalHashSet(_cols, 0, cols);
+        _rowsFSM = new StateMachine[rows];
+        initFSM(_rowsFSM, Field.ROW);
+        _colsFSM = new StateMachine[cols];
+        initFSM(_colsFSM, Field.COL);
     }
 
     /**
@@ -118,8 +117,8 @@ public class NonogramSolver {
      * @param ind - index of row or column
      * @param type - ROW, if row
      *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
+     * @return false, if this nonogram hasn't solution
+     *         true, otherwise
      */
     boolean applyStateMachine(int ind, int type) {
         return false;
@@ -132,20 +131,28 @@ public class NonogramSolver {
      * @param set - set of indexes
      * @param type - ROW, if row
      *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
+     * @return false, if this nonogram hasn't solution
+     *         true, otherwise
      */
-    private boolean applyAlgorithm(HashSet<Integer> set, int type) {
-        boolean isFilled = false, isChanged;
+    private boolean applyAlgorithmFSM(HashSet<Integer> set, int type) {
         for (int i : set) {
             if (_asyncTask.isCancelled()) break;
-            isChanged = true;
-            while (isChanged) {
-                isChanged = applyStateMachine(i, type);
-                isFilled = isChanged || isFilled;
-            }
+            if (!applyStateMachine(i, type)) return false;
         }
-        return isFilled;
+        return true;
+    }
+
+    /**
+     * For every row or column applies algorithm simple boxes
+     *
+     * @param type - ROW, if row
+     *               COL, if column
+     */
+    private void applyAlgorithmSB(int type) {
+        int length = _nono.getFirstLength(type);
+        for (int i = 0; i < length; i++) {
+            applySimpleBoxes(i, type);
+        }
     }
 
     /**
@@ -158,6 +165,24 @@ public class NonogramSolver {
     private void addIntervalHashSet(HashSet<Integer> set, int begin, int end) {
         for (int i = begin; i < end; i++) {
             set.add(i);
+        }
+    }
+
+    /**
+     * Method for initialising _rowsFSM or _colsFSM
+     *
+     * @param array - _rowsFSM or _colsFSM
+     * @param type - ROW, if _rowsFSM
+     *               COL, if _colsFSM
+     */
+    private void initFSM(StateMachine[] array, int type) {
+        for (int i = 0; i < _nono.getFirstLength(type); i++) {
+            int length = _nono.getSecondLength(i, type);
+            int[] line = new int[length];
+            for (int j = 0; j < length; j++) {
+                line[j] = _nono.getValue(i, j, type);
+            }
+            array[i] = new StateMachine(line);
         }
     }
 
