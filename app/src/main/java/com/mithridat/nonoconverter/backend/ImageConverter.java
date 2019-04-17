@@ -27,7 +27,7 @@ public class ImageConverter {
      * @param asyncTask - async task of image converting
      * @return nonogram field
      */
-    public static Field convertImage(
+    public static Nonogram convertImage(
             Bitmap bmp,
             int rows,
             int cols,
@@ -41,12 +41,12 @@ public class ImageConverter {
         for (int p = 128; !asyncTask.isCancelled() && p <= 248; p += 5) {
             field = new Field(bw, rows, cols, p);
             solver.setNonogram(new Nonogram(field));
-            if (solver.solve()) return field;
+            if (solver.solve()) return new Nonogram(field);
         }
         /*
          *TODO: `field` needs to be replaced by `null` when solver will be ready
          */
-        return field;
+        return new Nonogram(field);
     }
 
     /**
