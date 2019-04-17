@@ -227,7 +227,7 @@ public class Nonogram implements Parcelable {
      *
      * @return field of the puzzle
      */
-    Field getField() {
+    public Field getField() {
         return _field;
     }
 

@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.backend.nonogram.Field;
 import com.mithridat.nonoconverter.backend.ImageConverter;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 import com.mithridat.nonoconverter.ui.imagepicker.ImageUpload;
 import com.mithridat.nonoconverter.ui.result.ResultActivity;
@@ -585,7 +586,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Inner class for async converting image in background.
      */
-    static class AsyncTaskConvertImage extends AsyncTask<Void, Void, Field> {
+    static class AsyncTaskConvertImage extends AsyncTask<Void, Void, Nonogram> {
 
         /**
          * Reference to activity
@@ -593,7 +594,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         private EditImageActivity _activity;
 
         @Override
-        protected Field doInBackground(Void... params) {
+        protected Nonogram doInBackground(Void... params) {
             try {
                 return ImageConverter.convertImage(_activity._bmpCurrentImage,
                         _activity._rows,
@@ -606,11 +607,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         }
 
         @Override
-        protected void onPostExecute(Field result) {
+        protected void onPostExecute(Nonogram result) {
             if (isCancelled()) return;
             _activity._pdLoading.dismiss();
             Intent intent = new Intent(_activity, ResultActivity.class);
-            intent.putExtra(ActivitiesConstants.EX_NONO_FIELD, result);
+            intent.putExtra(ActivitiesConstants.EX_NONO_FIELD, result.getField());
             _activity.startActivity(intent);
             _activity.overridePendingTransition(R.anim.slide_in_left,
                     R.anim.slide_out_left);
