@@ -215,7 +215,7 @@ public class Nonogram implements Parcelable {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (_field.getColor(i, j) == Field.EMPTY) {
-                    _field.setColor(i, j, Field.BLACK);
+                    _field.setColor(i, j, 0);
                 }
             }
         }
