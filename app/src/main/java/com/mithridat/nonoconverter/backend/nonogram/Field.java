@@ -1,13 +1,15 @@
 package com.mithridat.nonoconverter.backend.nonogram;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Arrays;
 
 /**
  * Field storage class
  */
-public class Field {
+public class Field implements Parcelable {
 
     /**
      * White color
@@ -106,6 +108,53 @@ public class Field {
     }
 
     /**
+     * Constructor by the parcel
+     *
+     * @param source - parcel
+     */
+    Field(Parcel source) {
+        _rows = source.readInt();
+        _cols = source.readInt();
+        _field = new int[_rows][_cols];
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
+                _field[i][j] = source.readInt();
+            }
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(_rows);
+        dest.writeInt(_cols);
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
+                dest.writeInt(_field[i][j]);
+            }
+        }
+    }
+
+    public static final Parcelable.Creator<Field> CREATOR =
+            new Parcelable.Creator<Field>() {
+
+                @Override
+                public Field createFromParcel(Parcel source) {
+                    return new Field(source);
+                }
+
+                @Override
+                public Field[] newArray(int size) {
+                    return new Field[size];
+                }
+
+            };
+
+    /**
      * Method for getting number of field rows
      *
      * @return number of field rows
@@ -135,6 +184,18 @@ public class Field {
         return getCols();
     }
 
+
+    /**
+     * Method for getting field cell color with coordinates (i,j)
+     *
+     * @param i - field cell row number
+     * @param j - field cell column number
+     * @return field cell color with coordinates (i,j)
+     */
+    public int getColor(int i, int j) {
+        return _field[i][j];
+    }
+
     /**
      * Method for getting field cell color with coordinates (i,j) or (j, i)
      *
@@ -145,8 +206,20 @@ public class Field {
      * @return field cell color with coordinates (i,j) or (j, i)
      */
     public int getColor(int i, int j, int type) {
-        if (type == ROW) return _field[i][j];
-        return _field[j][i];
+        if (type == ROW) return getColor(i, j);
+        return getColor(j, i);
+    }
+
+
+    /**
+     * Method for setting field cell color with coordinates (i,j)
+     *
+     * @param i - field cell row number
+     * @param j - field cell column number
+     * @param color - color
+     */
+    public void setColor(int i, int j, int color) {
+        _field[i][j] = color;
     }
 
     /**
@@ -159,8 +232,8 @@ public class Field {
      *               COL, if (j, i)
      */
     public void setColor(int i, int j, int color, int type) {
-        if (type == ROW) _field[i][j] = color;
-        _field[j][i] = color;
+        if (type == ROW) setColor(i, j, color);
+        setColor(j, i, color);
     }
 
     /**
@@ -168,8 +241,33 @@ public class Field {
      *
      * @return count of colors
      */
-    int getColors() {
+   public int getColors() {
         return _colorsCount;
+    }
+
+    /**
+     * Method for getting index of first cell with another color
+     * (current color - the color of cell with index = pos) in row or column
+     *
+     * @param ind - index of row or column
+     * @param pos - position, the search begins with the next cell
+     * @param dir - direction, +1 or -1
+     * @param type - ROW, if row
+     *               COL, if column
+     * @return index of first cell with another color in row or column
+     */
+    public int getAnotherColorIndex(int ind, int pos, int dir, int type) {
+        int i = pos + 1;
+        if (type == ROW) {
+            for (; i >= 0 && i < _cols; i += dir) {
+                if (_field[ind][i] != _field[ind][pos]) break;
+            }
+        } else {
+            for (; i >= 0 && i < _rows; i += dir) {
+                if (_field[i][ind] != _field[pos][ind]) break;
+            }
+        }
+        return i;
     }
 
     /**
@@ -196,9 +294,7 @@ public class Field {
      */
     void clear() {
         for (int i = 0; i < _rows; i++) {
-            for (int j = 0; j < _cols; j++) {
-                _field[i][j] = EMPTY;
-            }
+            Arrays.fill(_field[i], EMPTY);
         }
     }
 
@@ -222,7 +318,7 @@ public class Field {
                 }
             }
         }
-        return  field;
+        return field;
     }
 
 }
