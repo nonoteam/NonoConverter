@@ -31,14 +31,15 @@ public class ImageConverter {
             Bitmap bmp,
             int rows,
             int cols,
-            AsyncTask<Void, Void, Field> asyncTask) {
+            AsyncTask<Void, Void, Nonogram> asyncTask) {
         rows = min(rows, bmp.getHeight());
         cols = min(cols, bmp.getWidth());
         Bitmap bw = getBlackWhite(bmp.copy(bmp.getConfig(), bmp.isMutable()));
         Field field = null;
-        NonogramSolver solver = new NonogramSolver(null, asyncTask);
+        NonogramSolver solver = new NonogramSolver();
+        solver.setAsyncTask(asyncTask);
         for (int p = 128; !asyncTask.isCancelled() && p <= 248; p += 5) {
-            field = getThumbnail(bw, rows, cols, p);
+            field = new Field(bw, rows, cols, p);
             solver.setNonogram(new Nonogram(field));
             if (solver.solve()) return field;
         }
@@ -64,39 +65,6 @@ public class ImageConverter {
         Utils.matToBitmap(imageMat, bmp);
 
         return bmp;
-    }
-
-    /**
-     * Method for getting thumbnail from black-and-white image
-     *
-     * @param bmp - black-and-white image
-     * @param rows - number of thumbnail rows
-     * @param cols - number of thumbnail columns
-     * @param p - fill parameter
-     * @return thumbnail
-     */
-    private static Field getThumbnail(Bitmap bmp, int rows, int cols, int p) {
-        Field field = new Field(rows, cols);
-        int height = bmp.getHeight(), width = bmp.getWidth();
-        int h = height / rows, w = width / cols;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                int sumColors = 0;
-                for (int x = j * w; x < (j + 1) * w; x++) {
-                    for (int y = i * h; y < (i + 1) * h; y++) {
-                        int color = bmp.getPixel(x, y);
-                        if (color == Field.WHITE) {
-                            sumColors += 255;
-                        }
-                    }
-                }
-                int avgColor = sumColors / (w * h);
-                if (avgColor <= p) {
-                    field.setColor(i, j, Field.BLACK);
-                }
-            }
-        }
-        return field;
     }
 
 }
