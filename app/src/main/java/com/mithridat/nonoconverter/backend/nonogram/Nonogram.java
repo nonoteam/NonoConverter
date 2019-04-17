@@ -1,5 +1,9 @@
 package com.mithridat.nonoconverter.backend.nonogram;
 
+import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import java.util.Arrays;
@@ -7,7 +11,7 @@ import java.util.Arrays;
 /**
  * Nonogram storage class
  */
-public class Nonogram {
+public class Nonogram implements Parcelable {
 
     /**
      * Left and top nonogram grids
@@ -15,19 +19,75 @@ public class Nonogram {
     private int[][] _left, _top;
 
     /**
+     * Field of the puzzle
+     */
+    Field _field;
+
+    /**
      * Constructor by the nonogram field
      *
      * @param fieldNono - nonogram field
      */
     public Nonogram(@NonNull Field fieldNono) {
-        int w = fieldNono.getCols(), h = fieldNono.getRows();
-
-        _left = new int[h][];
-        _top = new int[w][];
-
-        fillNonogramGrid(_left, Field.ROW, h, w, fieldNono);
-        fillNonogramGrid(_top, Field.COL, w, h, fieldNono);
+        _field = fieldNono;
+        initGrid();
     }
+
+    /**
+     * Constructor by black-and-white image
+     *
+     * @param bmp - black-and-white image
+     * @param rows - number of thumbnail rows
+     * @param cols - number of thumbnail columns
+     * @param p - fill parameter
+     */
+    public Nonogram(Bitmap bmp, int rows, int cols, int p) {
+        _field = new Field(bmp, rows, cols, p);
+        initGrid();
+    }
+
+    /**
+     * Private constructor without parameters
+     */
+    private Nonogram() {
+
+    }
+    
+    /**
+     * Constructor by the parcel
+     *
+     * @param source - parcel
+     */
+    private Nonogram(Parcel source) {
+        _field = new Field(source);
+        initGrid();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        _field.writeToParcel(dest, flags);
+    }
+
+    public static final Parcelable.Creator<Nonogram> CREATOR =
+
+            new Parcelable.Creator<Nonogram>() {
+
+                @Override
+                public Nonogram createFromParcel(Parcel source) {
+                    return new Nonogram(source);
+                }
+
+                @Override
+                public Nonogram[] newArray(int size) {
+                    return new Nonogram[size];
+                }
+
+            };
 
     /**
      * Method for comparing nonograms
@@ -60,6 +120,18 @@ public class Nonogram {
     }
 
     /**
+     * Method for getting length of _left or _top
+     *
+     * @param type - ROW, if _left
+     *               COL, if _top
+     * @return length of _left or _top
+     */
+    public int getFirstLength(int type) {
+        if (type == Field.ROW) return getLeftRowsLength();
+        return getTopColsLength();
+    }
+
+    /**
      * Method for getting number of columns
      * in left nonogram grid row with number i
      *
@@ -79,6 +151,19 @@ public class Nonogram {
      */
     int getTopColLength(int i) {
         return _top[i].length;
+    }
+
+    /**
+     * Method for getting length of _left[i] or _top[i]
+     *
+     * @param i - i
+     * @param type - ROW, if _left
+     *               COL, if _top
+     * @return length of _left[i] or _top[i]
+     */
+    int getSecondLength(int i, int type) {
+        if (type == Field.ROW) return getLeftRowLength(i);
+        return getTopColLength(i);
     }
 
     /**
@@ -106,6 +191,76 @@ public class Nonogram {
     }
 
     /**
+     * Method for getting _left[i][j] or _top[i][j]
+     *
+     * @param i - i
+     * @param j - j
+     * @param type - ROW, if _left
+     *               COL, if _top
+     * @return _left[i][j] or _top[i][j]
+     */
+    int getValue(int i, int j, int type) {
+        if (type == Field.ROW) return getLeftRowValue(i, j);
+        return getTopColValue(i, j);
+    }
+
+    /**
+     * Method for checking correctness of filling of the field
+     *
+     * @return true, if filling of the field is correct
+     *         false, otherwise
+     */
+    boolean checkCorrectness() {
+        int rows = _field.getRows(), cols = _field.getCols();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (_field.getColor(i, j) == Field.EMPTY) {
+                    _field.setColor(i, j, Field.BLACK);
+                }
+            }
+        }
+        return isEqual(new Nonogram(_field));
+    }
+
+    /**
+     * Method for getting field of the puzzle
+     *
+     * @return field of the puzzle
+     */
+    Field getField() {
+        return _field;
+    }
+
+    /**
+     * Method for clearing field of the puzzle
+     */
+    void clearField() {
+        _field.clear();
+    }
+
+    /**
+     * Method for getting new nonogram that contains field with colors in cells
+     *
+     * @return new nonogram that contains field with colors in cells
+     */
+    Nonogram translateToColors() {
+        return new Nonogram(_field.translateToColors());
+    }
+
+    /**
+     * Method for initialising grid
+     */
+    private void initGrid() {
+        int w = _field.getCols(), h = _field.getRows();
+
+        _left = new int[h][];
+        _top = new int[w][];
+
+        fillNonogramGrid(_left, Field.ROW, h, w, _field);
+        fillNonogramGrid(_top, Field.COL, w, h, _field);
+    }
+
+    /**
      * Method for filling one of the two grids from field
      *
      * @param grid - grid for filling
@@ -125,8 +280,7 @@ public class Nonogram {
             grid[i] = new int[0];
             for (int j = 0, k, length = 0; j < inLim; ) {
                 k = field.getAnotherColorIndex(i, j, 1, type);
-                int color = type == Field.ROW ? field.getColor(i, j)
-                        : field.getColor(j, i);
+                int color = field.getColor(i, j, type);
                 if (color == Field.BLACK) {
                     int[] tmp = new int[length + 1];
                     System.arraycopy(grid[i], 0, tmp, 0, length);
