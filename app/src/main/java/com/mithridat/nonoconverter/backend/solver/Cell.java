@@ -7,6 +7,16 @@ package com.mithridat.nonoconverter.backend.solver;
 class Cell {
 
     /**
+     * Diagonal direction
+     */
+    public static final int DIAG = 0;
+
+    /**
+     * Horizontal direction
+     */
+    public static final int HOR = 1;
+
+    /**
      * Array that contains all directions with their values
      * for concrete cell of the matrix.
      * One direction with value is int[2], where int[0] is direction
