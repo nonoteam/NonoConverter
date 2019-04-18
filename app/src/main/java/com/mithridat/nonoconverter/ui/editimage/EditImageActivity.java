@@ -23,7 +23,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.mithridat.nonoconverter.R;
-import com.mithridat.nonoconverter.backend.nonogram.Field;
 import com.mithridat.nonoconverter.backend.ImageConverter;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
