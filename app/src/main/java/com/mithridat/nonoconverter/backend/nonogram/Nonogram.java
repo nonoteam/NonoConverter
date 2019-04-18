@@ -8,6 +8,10 @@ import androidx.annotation.NonNull;
 
 import java.util.Arrays;
 
+import static com.mithridat.nonoconverter.backend.nonogram.Field.COL;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.COLOR;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
+
 /**
  * Nonogram storage class
  */
@@ -21,14 +25,14 @@ public class Nonogram implements Parcelable {
     /**
      * Field of the puzzle
      */
-    Field _field;
+    private Field _field;
 
     /**
      * Constructor by the nonogram field
      *
      * @param fieldNono - nonogram field
      */
-    public Nonogram(@NonNull Field fieldNono) {
+    private Nonogram(@NonNull Field fieldNono) {
         _field = fieldNono;
         initGrid();
     }
@@ -49,9 +53,7 @@ public class Nonogram implements Parcelable {
     /**
      * Private constructor without parameters
      */
-    private Nonogram() {
-
-    }
+    private Nonogram() { }
 
     /**
      * Constructor by the parcel
@@ -212,14 +214,16 @@ public class Nonogram implements Parcelable {
      */
     public boolean checkCorrectness() {
         int rows = _field.getRows(), cols = _field.getCols();
+        Field field = new Field(_field);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (_field.getColor(i, j) == Field.EMPTY) {
-                    _field.setColor(i, j, 0);
+                if (field.getColor(i, j) == Field.EMPTY) {
+                    field.setColor(i, j, 0);
                 }
             }
         }
-        return isEqual(new Nonogram(_field));
+        return checkNonogramGrid(field, _left, ROW, rows, cols) &&
+                checkNonogramGrid(field, _top, COL, cols, rows);
     }
 
     /**
@@ -234,7 +238,7 @@ public class Nonogram implements Parcelable {
     /**
      * Method for clearing field of the puzzle
      */
-    void clearField() {
+    public void clearField() {
         _field.clear();
     }
 
@@ -243,7 +247,7 @@ public class Nonogram implements Parcelable {
      *
      * @return new nonogram that contains field with colors in cells
      */
-    Nonogram translateToColors() {
+    public Nonogram translateToColors() {
         return new Nonogram(_field.translateToColors());
     }
 
@@ -256,8 +260,8 @@ public class Nonogram implements Parcelable {
         _left = new int[h][];
         _top = new int[w][];
 
-        fillNonogramGrid(_left, Field.ROW, h, w, _field);
-        fillNonogramGrid(_top, Field.COL, w, h, _field);
+        fillNonogramGrid(_left, Field.ROW, h, w);
+        fillNonogramGrid(_top, COL, w, h);
     }
 
     /**
@@ -268,20 +272,17 @@ public class Nonogram implements Parcelable {
      *               COL, if _top
      * @param outLim - limit for counter in outer loop
      * @param inLim - limit for counter in inner loop
-     * @param field - nonogram field
      */
-    private static void fillNonogramGrid(
+    private void fillNonogramGrid(
             int[][] grid,
             int type,
             int outLim,
-            int inLim,
-            Field field) {
+            int inLim) {
         for (int i = 0; i < outLim; ++i) {
             grid[i] = new int[0];
             for (int j = 0, k, length = 0; j < inLim; ) {
-                k = field.getAnotherColorIndex(i, j, 1, type);
-                int color = field.getColor(i, j, type);
-                if (color == Field.BLACK) {
+                k = _field.getAnotherColorIndex(i, j, 1, type);
+                if (_field.getColorState(i, j, type, COLOR) == Field.BLACK) {
                     int[] tmp = new int[length + 1];
                     System.arraycopy(grid[i], 0, tmp, 0, length);
                     tmp[length] = k - j;
@@ -291,6 +292,39 @@ public class Nonogram implements Parcelable {
                 j = k;
             }
         }
+    }
+
+    /**
+     * Method for checking one of the two grids
+     *
+     * @param field - field
+     * @param grid - grid
+     * @param type - ROW, if _left
+     *               COL, if _top
+     * @param outLim - limit for counter in outer loop
+     * @param inLim - limit for counter in inner loop
+     * @return true, if grid is correct
+     *         false, otherwise
+     */
+    private boolean checkNonogramGrid(
+            Field field,
+            int[][] grid,
+            int type,
+            int outLim,
+            int inLim) {
+        for (int i = 0; i < outLim; ++i) {
+            int length = 0;
+            for (int j = 0, k; j < inLim; ) {
+                k = field.getAnotherColorIndex(i, j, 1, type);
+                if (field.getColorState(i, j, type, COLOR) == Field.BLACK) {
+                    if (grid[i][length] != k - j) return false;
+                    length++;
+                }
+                j = k;
+            }
+            if (grid[i].length != length) return false;
+        }
+        return true;
     }
 
 }

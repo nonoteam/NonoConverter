@@ -97,6 +97,18 @@ public class Field implements Parcelable {
         }
     }
 
+    public Field(Field other) {
+        _colors = other._colors;
+        _colorsCount = other._colorsCount;
+        _state = other._state;
+        _rows = other._rows;
+        _cols = other._cols;
+        _field = new int[_rows][];
+        for (int i = 0; i < _rows; i++) {
+            _field[i] = other._field[i].clone();
+        }
+    }
+
     /**
      * Private constructor without parameters
      */
@@ -179,7 +191,6 @@ public class Field implements Parcelable {
         return getCols();
     }
 
-
     /**
      * Method for getting field cell color with coordinates (i,j)
      *
@@ -205,6 +216,23 @@ public class Field implements Parcelable {
         return getColor(j, i);
     }
 
+    /**
+     * Method for getting field cell color with coordinates (i,j) or (j, i)
+     *
+     * @param i - i
+     * @param j - j
+     * @param type - ROW, if (i, j)
+     *               COL, if (j, i)
+     * @param state - state
+     * @return field cell color with coordinates (i,j) or (j, i)
+     */
+    public int getColorState(int i, int j, int type, int state) {
+        int color = getColor(i, j, type);
+        if (color == EMPTY) return EMPTY;
+        if (state == _state) return color;
+        if (_state == INDEX) return _colors[color];
+        return Arrays.binarySearch(_colors, color);
+    }
 
     /**
      * Method for setting field cell color with coordinates (i,j)
@@ -236,7 +264,7 @@ public class Field implements Parcelable {
      *
      * @return count of colors
      */
-    public int getColors() {
+    public int getColorsCount() {
         return _colorsCount;
     }
 
@@ -293,16 +321,7 @@ public class Field implements Parcelable {
      * @return new field
      */
     Field translateToColors() {
-        Field field = new Field();
-        field._colors = _colors;
-        field._colorsCount = _colorsCount;
-        field._state = COLOR;
-        field._rows = _rows;
-        field._cols = _cols;
-        field._field = new int[field._rows][];
-        for (int i = 0; i < field._rows; i++) {
-            field._field[i] = _field[i].clone();
-        }
+        Field field = new Field(this);
         if(_state == INDEX) {
             for (int i = 0; i < field._rows; i++) {
                 for (int j = 0; j < field._cols; j++) {
