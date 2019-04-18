@@ -3,7 +3,6 @@ package com.mithridat.nonoconverter.backend;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-import com.mithridat.nonoconverter.backend.nonogram.Field;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.backend.solver.NonogramSolver;
 import org.opencv.android.Utils;

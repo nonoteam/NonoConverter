@@ -9,12 +9,12 @@ class Cell {
     /**
      * Diagonal direction
      */
-    public static final int DIAG = 0;
+    static final int DIAG = 0;
 
     /**
      * Horizontal direction
      */
-    public static final int HOR = 1;
+    static final int HOR = 1;
 
     /**
      * Array that contains all directions with their values
@@ -27,9 +27,7 @@ class Cell {
     /**
      * Constructor without parameters
      */
-    Cell() {
-
-    }
+    Cell() {}
 
     /**
      * Method for adding new direction with value for it
@@ -37,9 +35,7 @@ class Cell {
      * @param dir - direction
      * @param val - value
      */
-    void addDirection(int dir, int val) {
-
-    }
+    void addDirection(int dir, int val) { }
 
     /**
      * Method to check if all directions are equals
