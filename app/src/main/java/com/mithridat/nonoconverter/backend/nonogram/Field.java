@@ -81,19 +81,16 @@ public class Field implements Parcelable {
         _field = new int[rows][cols];
         int height = bmp.getHeight(), width = bmp.getWidth();
         int h = height / rows, w = width / cols;
+        int sumColors;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                int sumColors = 0;
+                sumColors = 0;
                 for (int x = j * w; x < (j + 1) * w; x++) {
                     for (int y = i * h; y < (i + 1) * h; y++) {
-                        int color = bmp.getPixel(x, y);
-                        if (color == WHITE) {
-                            sumColors += 255;
-                        }
+                        if (bmp.getPixel(x, y) == WHITE) sumColors += 255;
                     }
                 }
-                int avgColor = sumColors / (w * h);
-                if (avgColor <= p) {
+                if (sumColors <= p * w * h) {
                     _field[i][j] = Arrays.binarySearch(_colors, BLACK);
                 }
             }
@@ -103,9 +100,7 @@ public class Field implements Parcelable {
     /**
      * Private constructor without parameters
      */
-    private Field() {
-
-    }
+    private Field() { }
 
     /**
      * Constructor by the parcel
@@ -241,7 +236,7 @@ public class Field implements Parcelable {
      *
      * @return count of colors
      */
-   public int getColors() {
+    public int getColors() {
         return _colorsCount;
     }
 
@@ -257,15 +252,9 @@ public class Field implements Parcelable {
      * @return index of first cell with another color in row or column
      */
     public int getAnotherColorIndex(int ind, int pos, int dir, int type) {
-        int i = pos + 1;
-        if (type == ROW) {
-            for (; i >= 0 && i < _cols; i += dir) {
-                if (_field[ind][i] != _field[ind][pos]) break;
-            }
-        } else {
-            for (; i >= 0 && i < _rows; i += dir) {
-                if (_field[i][ind] != _field[pos][ind]) break;
-            }
+        int i = pos + 1, len = getLength(ROW + COL - type);
+        for(; i >= 0 && i < len; i += dir) {
+            if(getColor(ind, i, type) != getColor(ind, pos, type)) break;
         }
         return i;
     }
@@ -276,11 +265,11 @@ public class Field implements Parcelable {
      *
      * @return thumbnail
      */
-    Bitmap getBitmap() {
-        Field field = translateToColors();
-        Bitmap bmp = Bitmap.createBitmap(_cols,
-                _rows,
-                Bitmap.Config.ARGB_8888);
+    public Bitmap getBitmap() {
+        Field field = this;
+        if (_state == INDEX)
+            field = translateToColors();
+        Bitmap bmp = Bitmap.createBitmap(_cols, _rows, Bitmap.Config.RGB_565);
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < _cols; j++) {
                 bmp.setPixel(j, i, field._field[j][i]);
@@ -310,11 +299,18 @@ public class Field implements Parcelable {
         field._state = COLOR;
         field._rows = _rows;
         field._cols = _cols;
-        field._field = _field;
+        field._field = new int[field._rows][];
+        for (int i = 0; i < field._rows; i++) {
+            field._field[i] = _field[i].clone();
+        }
         if(_state == INDEX) {
             for (int i = 0; i < field._rows; i++) {
                 for (int j = 0; j < field._cols; j++) {
-                    field._field[i][j] = _colors[_field[i][j]];
+                    if (_field[i][j] != EMPTY) {
+                        field._field[i][j] = _colors[_field[i][j]];
+                    } else {
+                        field._field[i][j] = EMPTY;
+                    }
                 }
             }
         }
