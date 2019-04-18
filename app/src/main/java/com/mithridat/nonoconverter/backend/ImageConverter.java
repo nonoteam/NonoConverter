@@ -35,18 +35,18 @@ public class ImageConverter {
         rows = min(rows, bmp.getHeight());
         cols = min(cols, bmp.getWidth());
         Bitmap bw = getBlackWhite(bmp.copy(bmp.getConfig(), bmp.isMutable()));
-        Field field = null;
+        Nonogram nono = null;
         NonogramSolver solver = new NonogramSolver();
         solver.setAsyncTask(asyncTask);
         for (int p = 128; !asyncTask.isCancelled() && p <= 248; p += 5) {
-            field = new Field(bw, rows, cols, p);
-            solver.setNonogram(new Nonogram(field));
-            if (solver.solve()) return new Nonogram(field);
+            nono = new Nonogram(bw, rows, cols, p);
+            solver.setNonogram(nono);
+            if (solver.solve()) return nono;
         }
         /*
-         *TODO: `field` needs to be replaced by `null` when solver will be ready
+         *TODO: `nono` needs to be replaced by `null` when solver will be ready
          */
-        return new Nonogram(field);
+        return nono;
     }
 
     /**
