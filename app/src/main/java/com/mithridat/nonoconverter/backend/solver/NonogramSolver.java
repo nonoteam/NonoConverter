@@ -7,6 +7,8 @@ import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
 import java.util.HashSet;
 
+import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
+
 /**
  * Nonogram solving class
  */
@@ -15,35 +17,77 @@ public class NonogramSolver {
     /**
      * Nonogram
      */
-    Nonogram _nono;
+    private Nonogram _nono;
 
     /**
      * Async task of image converting
      */
-    AsyncTask<Void, Void, Nonogram> _asyncTask;
+    private AsyncTask<Void, Void, Nonogram> _asyncTask;
 
     /**
      * Show rows and columns in which there were changes during
      * the previous iteration of the nonogram solution
      */
-    HashSet<Integer> _rows, _cols;
+    private HashSet<Integer> _rows, _cols;
 
     /**
      * Set for storage numbers of states of state machine
      * for algorithm that uses finite-state machine
      */
-    HashSet<Integer> _states;
+    private HashSet<Integer> _states;
 
     /**
      * Finite-state machines for nonogram (for rows and columns)
      */
-    StateMachine[] _rowsFSM, _colsFSM;
+    private StateMachine[] _rowsFSM, _colsFSM;
 
     /**
      * Constructor without parameters
      */
-    public NonogramSolver()
-    {}
+    public NonogramSolver() {}
+
+    /**
+     * Method for getting nonogram
+     *
+     * @return nonogram
+     */
+    public Nonogram getNonogram() {
+        return _nono;
+    }
+
+    /**
+     * Method for getting _rows or _cols
+     *
+     * @param type - ROW, if _rows
+     *               COL, if _cols
+     * @return _rows or _cols
+     */
+    public HashSet<Integer> getSetWithChanges(int type) {
+        if (type == ROW) return _rows;
+        return _cols;
+    }
+
+    /**
+     * Method for getting _states
+     *
+     * @return _states
+     */
+    public HashSet<Integer> getStates() {
+        return _states;
+    }
+
+    /**
+     * Method for getting finite-state machines for nonogram
+     * (for rows or columns)
+     *
+     * @param type - ROW, if for rows
+     *               COL, if for columns
+     * @return finite-state machines for nonogram (for rows or columns)
+     */
+    public StateMachine[] getFSM(int type) {
+        if (type == ROW) return _rowsFSM;
+        return _colsFSM;
+    }
 
     /**
      * Method for setting nonogram
@@ -52,6 +96,11 @@ public class NonogramSolver {
      */
     public void setNonogram(Nonogram nono) {
         _nono = nono;
+        int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
+        _rowsFSM = new StateMachine[rows];
+        initFSM(_rowsFSM, ROW);
+        _colsFSM = new StateMachine[cols];
+        initFSM(_colsFSM, Field.COL);
     }
 
     /**
@@ -71,14 +120,14 @@ public class NonogramSolver {
      */
     public boolean solve() {
         init();
-        applyAlgorithmSB(Field.ROW);
+        applyAlgorithmSB(ROW);
         applyAlgorithmSB(Field.COL);
         while (!_asyncTask.isCancelled()) {
-            if (!applyAlgorithmFSM(_rows, Field.ROW)) return false;
+            if (!applyAlgorithmFSM(_rows, ROW)) return false;
             _rows.clear();
             if (!applyAlgorithmFSM(_cols, Field.COL)) return false;
             _cols.clear();
-            if(_nono.checkCorrectness()) return true;
+            if(_rows.isEmpty()) break;
         }
         return _nono.checkCorrectness();
     }
@@ -92,10 +141,6 @@ public class NonogramSolver {
         addIntervalHashSet(_rows, 0, rows);
         _cols = new HashSet<>();
         addIntervalHashSet(_cols, 0, cols);
-        _rowsFSM = new StateMachine[rows];
-        initFSM(_rowsFSM, Field.ROW);
-        _colsFSM = new StateMachine[cols];
-        initFSM(_colsFSM, Field.COL);
     }
 
     /**
@@ -151,6 +196,7 @@ public class NonogramSolver {
     private void applyAlgorithmSB(int type) {
         int length = _nono.getFirstLength(type);
         for (int i = 0; i < length; i++) {
+            if (_asyncTask.isCancelled()) break;
             applySimpleBoxes(i, type);
         }
     }
