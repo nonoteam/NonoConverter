@@ -63,13 +63,13 @@ public class NonogramView extends View implements View.OnTouchListener {
      */
     private boolean _restoreState = false;
 
-
     public NonogramView(Context context, AttributeSet attrs) {
         super(context, attrs);
         _nonogramDrawer = new NonogramDrawer();
         _initialMargins = new RectF(50f, 50f, 50f, 50f);
         _nonogramPos = new PointF(0f, 0f);
         _touchManager = new TouchManager(context);
+        setOnTouchListener(this);
         setListener();
     }
 
@@ -92,7 +92,8 @@ public class NonogramView extends View implements View.OnTouchListener {
     protected void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
-            super.onRestoreInstanceState(bundle.getParcelable(StringKeys.INITIAL_STATE));
+            super.onRestoreInstanceState(bundle
+                    .getParcelable(StringKeys.INITIAL_STATE));
             _cellSize = bundle.getFloat(StringKeys.CELL_SIZE);
             _touchManager.setTotalScale(bundle.getFloat(StringKeys.TOTAL_SCALE));
             _centerRelativeX = bundle.getFloat(StringKeys.CENTER_RELATIVE_X);
@@ -127,7 +128,7 @@ public class NonogramView extends View implements View.OnTouchListener {
     /**
      * Set nonogram, return view to initial state and redraw.
      *
-     * @param nonogramField nonogram as Field backend class
+     * @param nonogramField - nonogram as Field backend class
      */
     void setNonogramField(Field nonogramField) {
         _nonogram = nonogramField;
@@ -142,13 +143,16 @@ public class NonogramView extends View implements View.OnTouchListener {
      */
     private void setListener() {
         final View thisView = this;
-        final ViewTreeObserver observer = this.getViewTreeObserver();
+        final ViewTreeObserver observer = getViewTreeObserver();
         ViewTreeObserver.OnGlobalLayoutListener listener =
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        if (_restoreState) restorePosition();
-                        else setInitialState();
+                        if (_restoreState) {
+                            restorePosition();
+                        } else {
+                            setInitialState();
+                        }
                         invalidate();
                         ViewTreeObserver vto = thisView.getViewTreeObserver();
                         if (vto.isAlive()) {
@@ -164,8 +168,8 @@ public class NonogramView extends View implements View.OnTouchListener {
      * Called on first appearance or when nonogram has changed.
      */
     private void setInitialState() {
-        final float viewWidth = this.getWidth();
-        final float viewHeight = this.getHeight();
+        final float viewWidth = getWidth();
+        final float viewHeight = getHeight();
         calculateInitialCellSize(viewWidth, viewHeight);
         _nonogramDrawer.setCellSize(_cellSize);
         calculateInitialPosition(viewWidth, viewHeight);
@@ -176,8 +180,8 @@ public class NonogramView extends View implements View.OnTouchListener {
     /**
      * Calculate initial cell size.
      *
-     * @param viewWidth  width of the view
-     * @param viewHeight height of the view
+     * @param viewWidth - width of the view
+     * @param viewHeight - height of the view
      */
     private void calculateInitialCellSize(float viewWidth, float viewHeight) {
         if (_nonogram == null) {
@@ -197,8 +201,8 @@ public class NonogramView extends View implements View.OnTouchListener {
     /**
      * Calculate initial nonogram position.
      *
-     * @param viewWidth  width of the view
-     * @param viewHeight height of the view
+     * @param viewWidth - width of the view
+     * @param viewHeight - height of the view
      */
     private void calculateInitialPosition(float viewWidth, float viewHeight) {
         if (_nonogram == null) {
@@ -219,8 +223,8 @@ public class NonogramView extends View implements View.OnTouchListener {
      * by relative coordinates of nonogram center.
      */
     private void restorePosition() {
-        final float viewWidth = this.getWidth();
-        final float viewHeight = this.getHeight();
+        final float viewWidth = getWidth();
+        final float viewHeight = getHeight();
         final float nonoWidth = _cellSize * _nonogram.getCols();
         final float nonoHeight = _cellSize * _nonogram.getRows();
 
@@ -240,8 +244,8 @@ public class NonogramView extends View implements View.OnTouchListener {
      * Should be called after every position changing.
      */
     private void screenBordersCheck() {
-        final float viewWidth = this.getWidth();
-        final float viewHeight = this.getHeight();
+        final float viewWidth = getWidth();
+        final float viewHeight = getHeight();
         final float nonoWidth = _cellSize * _nonogram.getCols();
         final float nonoHeight = _cellSize * _nonogram.getRows();
 
@@ -250,19 +254,22 @@ public class NonogramView extends View implements View.OnTouchListener {
         float nonoCenterX = _nonogramPos.x + nonoWidth / 2f;
         float nonoCenterY = _nonogramPos.y + nonoHeight / 2f;
 
+        final float centerDistanceX = viewCenterX - nonoCenterX;
+        final float centerDistanceY = viewCenterY - nonoCenterY;
+
         /* Distance between nonogram center and view center might not be
            greater then half of nonogram size.
            (Distance if calculated as infinite norm, different for X and Y
             directions)
          */
-        if (viewCenterX - nonoCenterX > nonoWidth / 2f)
-            _nonogramPos.x += viewCenterX - nonoCenterX - nonoWidth / 2f;
-        if (nonoCenterX - viewCenterX > nonoWidth / 2f)
-            _nonogramPos.x -= nonoCenterX - viewCenterX - nonoWidth / 2f;
-        if (viewCenterY - nonoCenterY > nonoHeight / 2f)
-            _nonogramPos.y += viewCenterY - nonoCenterY - nonoHeight / 2f;
-        if (nonoCenterY - viewCenterY > nonoHeight / 2f)
-            _nonogramPos.y -= nonoCenterY - viewCenterY - nonoHeight / 2f;
+        if (centerDistanceX > nonoWidth / 2f)
+            _nonogramPos.x += centerDistanceX - nonoWidth / 2f;
+        if (centerDistanceX < -nonoWidth / 2f)
+            _nonogramPos.x += centerDistanceX + nonoWidth / 2f;
+        if (centerDistanceY > nonoHeight / 2f)
+            _nonogramPos.y += centerDistanceY - nonoHeight / 2f;
+        if (centerDistanceY < -nonoHeight / 2f)
+            _nonogramPos.y += centerDistanceY + nonoHeight / 2f;
 
         nonoCenterX = _nonogramPos.x + nonoWidth / 2f;
         nonoCenterY = _nonogramPos.y + nonoHeight / 2f;
@@ -278,8 +285,8 @@ public class NonogramView extends View implements View.OnTouchListener {
         /**
          * Maximal and minimal total scale values.
          */
-        static final float TOTAL_SCALE_MAX = 10f;
-        static final float TOTAL_SCALE_MIN = 0.8f;
+        private static final float TOTAL_SCALE_MAX = 10f;
+        private static final float TOTAL_SCALE_MIN = 0.8f;
 
         /**
          * Invalid pointer ID.
@@ -306,7 +313,6 @@ public class NonogramView extends View implements View.OnTouchListener {
          */
         private float _lastTouchX = 0f, _lastTouchY = 0f;
 
-
         TouchManager(Context context) {
             _totalScale = 1f;
             _scaleDetector = new ScaleGestureDetector(context,
@@ -320,12 +326,13 @@ public class NonogramView extends View implements View.OnTouchListener {
          * @param scale - scale to set
          */
         void setTotalScale(float scale) {
-            if (scale > TOTAL_SCALE_MAX)
+            if (scale > TOTAL_SCALE_MAX) {
                 _totalScale = TOTAL_SCALE_MAX;
-            else if (scale < TOTAL_SCALE_MIN)
+            } else if (scale < TOTAL_SCALE_MIN) {
                 _totalScale = TOTAL_SCALE_MIN;
-            else
+            } else {
                 _totalScale = scale;
+            }
         }
 
         /**
@@ -340,7 +347,7 @@ public class NonogramView extends View implements View.OnTouchListener {
         /**
          * Function for processing touches.
          *
-         * @param event motion event
+         * @param event - motion event
          */
         void processTouch(MotionEvent event) {
             _scaleDetector.onTouchEvent(event);
@@ -395,9 +402,10 @@ public class NonogramView extends View implements View.OnTouchListener {
                 case MotionEvent.ACTION_CANCEL:
                     _activePointerId = INVALID_POINTER_ID;
                     break;
+                default:
+                    break;
             }
         }
-
 
         /**
          * Inner class to process scaling.

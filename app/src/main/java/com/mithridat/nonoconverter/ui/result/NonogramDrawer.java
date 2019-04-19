@@ -36,7 +36,7 @@ class NonogramDrawer {
     /**
      * Rectangles for painting background, grid and filled cells.
      */
-    private RectF _backgroudRect, _gridRect, _cellsRect;
+    private RectF _backgroundRect, _gridRect, _cellsRect;
 
     /**
      * Width of the lines in grid.
@@ -56,7 +56,7 @@ class NonogramDrawer {
     NonogramDrawer() {
         _gridPainter = new Paint();
         _cellsPainter = new Paint();
-        _backgroudRect = new RectF();
+        _backgroundRect = new RectF();
         _gridRect = new RectF();
         _cellsRect = new RectF();
         _position = new PointF(0f, 0f);
@@ -67,20 +67,20 @@ class NonogramDrawer {
      * Set position of the top left corner of nonogram.
      * Used to translate the picture.
      *
-     * @param startX x coordinate
-     * @param startY y coordinate
+     * @param startX - x coordinate
+     * @param startY - y coordinate
      */
     void setPosition(float startX, float startY) {
         _position.x = startX;
         _position.y = startY;
-        _backgroudRect.offsetTo(startX, startY);
+        _backgroundRect.offsetTo(startX, startY);
     }
 
     /**
      * Set size of cells in nonogram grid.
      * Used to scale the picture from the top left corner.
      *
-     * @param cellSize size of cells
+     * @param cellSize - size of cells
      */
     void setCellSize(float cellSize) {
         _cellSize = cellSize;
@@ -105,8 +105,8 @@ class NonogramDrawer {
     /**
      * Function for drawing nonogram.
      *
-     * @param canvas   canvas received in 'onDraw'
-     * @param nonogram nonogram to draw
+     * @param canvas   - canvas received in 'onDraw'
+     * @param nonogram - nonogram to draw
      */
     void drawNonogram(Canvas canvas, final Field nonogram) {
         if (canvas == null || nonogram == null) return;
@@ -115,10 +115,10 @@ class NonogramDrawer {
         final int rows = nonogram.getRows();
 
         // draw white background
-        _backgroudRect.bottom = _position.y + rows * _cellSize;
-        _backgroudRect.right = _position.x + columns * _cellSize;
+        _backgroundRect.bottom = _position.y + rows * _cellSize;
+        _backgroundRect.right = _position.x + columns * _cellSize;
         _cellsPainter.setColor(Color.WHITE);
-        canvas.drawRect(_backgroudRect, _cellsPainter);
+        canvas.drawRect(_backgroundRect, _cellsPainter);
 
         //draw grid and filled cells
         _gridRect.offsetTo(_position.x, _position.y);

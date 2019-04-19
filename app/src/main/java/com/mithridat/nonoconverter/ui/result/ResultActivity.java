@@ -34,10 +34,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         Field field =
                 getIntent()
                         .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);
-        if (nonorgamView != null) {
-            nonorgamView.setNonogramField(field);
-            nonorgamView.setOnTouchListener(nonorgamView);
-        }
+        if (nonorgamView != null) nonorgamView.setNonogramField(field);
     }
 
     @Override
