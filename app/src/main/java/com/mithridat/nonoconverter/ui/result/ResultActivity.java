@@ -12,10 +12,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.mithridat.nonoconverter.R;
-import com.mithridat.nonoconverter.backend.nonogram.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 import com.mithridat.nonoconverter.ui.start.StartActivity;
 
@@ -31,14 +30,11 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.button_save_thumb).setOnClickListener(this);
         findViewById(R.id.button_save_nng).setOnClickListener(this);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_result));
-        NonogramDrawer nonogramDrawer = findViewById(R.id.nonogram_drawer);
-        Field field =
+        NonogramView nonorgamView = findViewById(R.id.nonogram_view);
+        Nonogram nonogram =
                 getIntent()
                         .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);
-        if (nonogramDrawer != null) {
-            nonogramMarginSet(nonogramDrawer);
-            nonogramDrawer.setNonogramField(field);
-        }
+        if (nonorgamView != null) nonorgamView.setNonogram(nonogram);
     }
 
     @Override
@@ -134,30 +130,5 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 .setNegativeButton(R.string.action_cancel, listenerCancel)
                 .create()
                 .show();
-    }
-
-    /**
-     * Calculate margins according to the toolbar and button layout sizes
-     * and set them for nonogram drawer.
-     *
-     * @param nonogramDrawer instance of NonogramDrawer
-     */
-    private void nonogramMarginSet(NonogramDrawer nonogramDrawer) {
-        int marginVer = -50;
-        int marginHor = 50;
-        if (nonogramDrawer == null) return;
-
-        Toolbar toolbar = findViewById(R.id.toolbar_result);
-        if (toolbar != null) {
-            toolbar.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            marginVer += toolbar.getMeasuredHeight();
-        }
-        LinearLayout layout = findViewById(R.id.linear_layout_result_buttons);
-        if (layout != null) {
-            layout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            marginVer += layout.getMeasuredHeight();
-        }
-        nonogramDrawer.setMarginHor(marginHor);
-        nonogramDrawer.setMarginVer(marginVer);
     }
 }

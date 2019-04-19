@@ -129,6 +129,12 @@ public class Field implements Parcelable {
      * @param source - parcel
      */
     Field(Parcel source) {
+        _state = source.readInt();
+        _colorsCount = source.readInt();
+        _colors = new int[_colorsCount];
+        for (int j = 0; j < _colorsCount; j++) {
+            _colors[j] = source.readInt();
+        }
         _rows = source.readInt();
         _cols = source.readInt();
         _field = new int[_rows][_cols];
@@ -146,6 +152,11 @@ public class Field implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(_state);
+        dest.writeInt(_colorsCount);
+        for (int j = 0; j < _colorsCount; j++) {
+            dest.writeInt(_colors[j]);
+        }
         dest.writeInt(_rows);
         dest.writeInt(_cols);
         for (int i = 0; i < _rows; i++) {
@@ -322,7 +333,7 @@ public class Field implements Parcelable {
      */
     Field translateToColors() {
         Field field = copy();
-        if(_state == INDEX) {
+        if (_state == INDEX) {
             field._state = COLOR;
             for (int i = 0; i < field._rows; i++) {
                 for (int j = 0; j < field._cols; j++) {

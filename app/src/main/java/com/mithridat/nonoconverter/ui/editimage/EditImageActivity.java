@@ -92,7 +92,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Tag for fragment convert dialog
      */
-    private static final String CROP_LOADED_IMAGE  = "cropLoadedImage";
+    private static final String CROP_LOADED_IMAGE = "cropLoadedImage";
 
     /**
      * Tag for crop area rect
@@ -332,7 +332,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.button_crop:
                 changeFragment(FRAGMENT_CROP);
                 break;
@@ -466,14 +466,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      */
     private Uri writeTempStateStoreBitmap(Context context, Bitmap bitmap, Uri uri) {
         try {
-            if(uri == null) {
+            if (uri == null) {
                 uri =
                         Uri.fromFile(
                                 File.createTempFile("ic_state_store_temp",
                                         ".jpg",
                                         context.getCacheDir()));
             }
-            if(_needSaveCropped) {
+            if (_needSaveCropped) {
                 writeBitmapToUri(context,
                         bitmap,
                         uri,
@@ -490,7 +490,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Write the given bitmap to the given uri using the given compression.
      */
-     private void writeBitmapToUri(
+    private void writeBitmapToUri(
             Context context,
             Bitmap bitmap,
             Uri uri,
@@ -511,10 +511,10 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      *
      * @return true if existing
      */
-     private boolean checkColumns() {
+    private boolean checkColumns() {
         FragmentColumns myFragment1 =
                 (FragmentColumns) getSupportFragmentManager()
-                .findFragmentByTag(FRAGMENT_COLUMNS_TAG);
+                        .findFragmentByTag(FRAGMENT_COLUMNS_TAG);
 
         return myFragment1 != null;
     }
@@ -524,8 +524,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      *
      * @return true if existing
      */
-    private boolean checkCrop()
-    {
+    private boolean checkCrop() {
         FragmentCrop myFragment =
                 (FragmentCrop) getSupportFragmentManager()
                         .findFragmentByTag(FRAGMENT_CROP_TAG);
@@ -610,8 +609,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             if (isCancelled()) return;
             _activity._pdLoading.dismiss();
             Intent intent = new Intent(_activity, ResultActivity.class);
-            intent.putExtra(ActivitiesConstants.EX_NONO_FIELD,
-                    result.getField());
+            intent.putExtra(ActivitiesConstants.EX_NONO_FIELD, result);
             _activity.startActivity(intent);
             _activity.overridePendingTransition(R.anim.slide_in_left,
                     R.anim.slide_out_left);
