@@ -12,6 +12,7 @@ import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.COL;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.EMPTY;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.WHITE;
 
 /**
  * Nonogram storage class
@@ -219,7 +220,7 @@ public class Nonogram implements Parcelable {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (field.getColor(i, j) == EMPTY) {
-                    field.setColor(i, j, 0);
+                    field.setColor(i, j, field.getColorState(WHITE));
                 }
             }
         }
@@ -283,8 +284,8 @@ public class Nonogram implements Parcelable {
             grid[i] = new int[0];
             for (int j = 0, k, length = 0; j < inLim; ) {
                 k = _field.getAnotherColorIndex(i, j, 1, type);
-                if (_field.getColor(i, j, type) ==
-                        _field.getColorState(BLACK)) {
+                if (_field.getColor(i, j, type)
+                        == _field.getColorState(BLACK)) {
                     int[] tmp = new int[length + 1];
                     System.arraycopy(grid[i], 0, tmp, 0, length);
                     tmp[length] = k - j;
