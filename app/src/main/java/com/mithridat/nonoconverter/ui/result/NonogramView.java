@@ -12,7 +12,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
-import com.mithridat.nonoconverter.backend.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Field;
 
 import androidx.annotation.Nullable;
 

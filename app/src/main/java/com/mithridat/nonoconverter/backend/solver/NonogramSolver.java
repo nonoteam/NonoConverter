@@ -2,10 +2,12 @@ package com.mithridat.nonoconverter.backend.solver;
 
 import android.os.AsyncTask;
 
-import com.mithridat.nonoconverter.backend.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
-import java.util.Arrays;
 import java.util.HashSet;
+
+import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.COL;
 
 /**
  * Nonogram solving class
@@ -13,43 +15,36 @@ import java.util.HashSet;
 public class NonogramSolver {
 
     /**
-     * Show what numbers are ready
-     */
-    boolean[][] _left, _top;
-
-    /**
      * Nonogram
      */
-    Nonogram _nono;
-
-    /**
-     * Field
-     */
-    Field _field;
+    private Nonogram _nono;
 
     /**
      * Async task of image converting
      */
-    AsyncTask<Void, Void, Field> _asyncTask;
+    private AsyncTask<Void, Void, Nonogram> _asyncTask;
 
     /**
      * Show rows and columns in which there were changes during
      * the previous iteration of the nonogram solution
      */
-    HashSet<Integer> _rows, _cols;
+    private HashSet<Integer> _rows, _cols;
 
     /**
-     * Constructor by the nonogram and async task of image converting
-     *
-     * @param nono - nonogram
-     * @param asyncTask - async task of image converting
+     * Set for storage numbers of states of state machine
+     * for algorithm that uses finite-state machine
      */
-    public NonogramSolver(
-            Nonogram nono,
-            AsyncTask<Void, Void, Field> asyncTask) {
-        _nono = nono;
-        _asyncTask = asyncTask;
-    }
+    private HashSet<Integer> _states;
+
+    /**
+     * Finite-state machines for nonogram (for rows and columns)
+     */
+    private StateMachine[] _rowsFSM, _colsFSM;
+
+    /**
+     * Constructor without parameters
+     */
+    public NonogramSolver() {}
 
     /**
      * Method for setting nonogram
@@ -58,6 +53,11 @@ public class NonogramSolver {
      */
     public void setNonogram(Nonogram nono) {
         _nono = nono;
+        int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
+        _rowsFSM = new StateMachine[rows];
+        initFSM(_rowsFSM, ROW);
+        _colsFSM = new StateMachine[cols];
+        initFSM(_colsFSM, COL);
     }
 
     /**
@@ -65,7 +65,7 @@ public class NonogramSolver {
      *
      * @param asyncTask - async task of image converting
      */
-    public void setAsyncTask(AsyncTask<Void, Void, Field> asyncTask) {
+    public void setAsyncTask(AsyncTask<Void, Void, Nonogram> asyncTask) {
         _asyncTask = asyncTask;
     }
 
@@ -76,59 +76,75 @@ public class NonogramSolver {
      *         false, otherwise
      */
     public boolean solve() {
-        boolean isChanged = true;
         init();
-        while (!_asyncTask.isCancelled() && isChanged) {
-            isChanged = applyAlgorithms(_rows, Field.ROW);
+        applyAlgorithmSB(ROW);
+        applyAlgorithmSB(COL);
+        while (!_asyncTask.isCancelled()) {
+            if (!applyAlgorithmFSM(_rows, ROW)) return false;
             _rows.clear();
-            isChanged = applyAlgorithms(_cols, Field.COL) || isChanged;
+            if (!applyAlgorithmFSM(_cols, COL)) return false;
             _cols.clear();
+            if (_rows.isEmpty()) break;
         }
-        return check();
+        if (_asyncTask.isCancelled()) return false;
+        return _nono.checkCorrectness();
+    }
+
+    /**
+     * Method for getting nonogram
+     *
+     * @return nonogram
+     */
+    Nonogram getNonogram() {
+        return _nono;
+    }
+
+    /**
+     * Method for getting _rows or _cols
+     *
+     * @param type - ROW, if _rows
+     *               COL, if _cols
+     * @return _rows or _cols
+     */
+    HashSet<Integer> getSetWithChanges(int type) {
+        if (type == ROW) return _rows;
+        return _cols;
+    }
+
+    /**
+     * Method for getting _states
+     *
+     * @return _states
+     */
+    HashSet<Integer> getStates() {
+        return _states;
+    }
+
+    /**
+     * Method for getting finite-state machines for nonogram
+     * (for rows or columns)
+     *
+     * @param type - ROW, if for rows
+     *               COL, if for columns
+     * @return finite-state machines for nonogram (for rows or columns)
+     */
+    StateMachine[] getFSM(int type) {
+        if (type == ROW) return _rowsFSM;
+        return _colsFSM;
     }
 
     /**
      * Method for initialising class fields before solution start
      */
     void init() {
+        /*
+         *TODO: add `_nono.clearField();` when solver will be ready
+         */
         int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
-        _field = new Field(rows, cols);
-        _left = new boolean[rows][];
-        initBooleanArray(_left, Field.ROW);
-        _top = new boolean[cols][];
-        initBooleanArray(_top, Field.COL);
         _rows = new HashSet<>();
         addIntervalHashSet(_rows, 0, rows);
         _cols = new HashSet<>();
         addIntervalHashSet(_cols, 0, cols);
-    }
-
-    /**
-     * Method for checking solution
-     *
-     * @return true, if solution is correct
-     *         false, otherwise
-     */
-    boolean check() {
-        return checkIsAllNumbersReady(_left)
-                && checkIsAllNumbersReady(_top)
-                && _nono.isEqual(new Nonogram(_field));
-    }
-
-    /**
-     * Method for getting workspace in row or column:
-     * - each row of result matrix contains start position and
-     * next to last position
-     * of cell and number blocks
-     * - one row - one block
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return workspace
-     */
-    int[][] getWorkspace(int ind, int type) {
-        return null;
     }
 
     /**
@@ -145,139 +161,47 @@ public class NonogramSolver {
     }
 
     /**
-     * Implementation of simple spaces algorithm
+     * Implementation of nonogram solving algorithm using finite-state machine
      *
      * @param ind - index of row or column
      * @param type - ROW, if row
      *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
+     * @return false, if this nonogram hasn't solution
+     *         true, otherwise
      */
-    boolean applySimpleSpaces(int ind, int type) {
+    boolean applyStateMachine(int ind, int type) {
         return false;
     }
 
     /**
-     * Implementation of forcing algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applyForcing(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * Implementation of glue algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applyGlue(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * Implementation of joining algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applyJoining(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * Implementation of splitting algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applySplitting(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * Implementation of punctuating algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applyPunctuating(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * Implementation of dual position algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applyDualPosition(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * For every row or column with index in set applies algorithms
+     * For every row or column with index in set applies algorithm
+     * using finite-state machine
      *
      * @param set - set of indexes
      * @param type - ROW, if row
      *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
+     * @return false, if this nonogram hasn't solution
+     *         true, otherwise
      */
-    private boolean applyAlgorithms(HashSet<Integer> set, int type) {
-        boolean isFilled = false, isChanged;
+    private boolean applyAlgorithmFSM(HashSet<Integer> set, int type) {
         for (int i : set) {
             if (_asyncTask.isCancelled()) break;
-            isChanged = true;
-            while (isChanged) {
-                isChanged = applySimpleBoxes(i, type);
-                isChanged = applySimpleSpaces(i, type) || isChanged;
-                isChanged = applyForcing(i, type) || isChanged;
-                isChanged = applyGlue(i, type) || isChanged;
-                isChanged = applyJoining(i, type) || isChanged;
-                isChanged = applySplitting(i, type) || isChanged;
-                isChanged = applyPunctuating(i, type) || isChanged;
-                isChanged = applyDualPosition(i, type) || isChanged;
-                isFilled = isChanged || isFilled;
-            }
+            if (!applyStateMachine(i, type)) return false;
         }
-        return isFilled;
+        return true;
     }
 
     /**
-     * Method for initialising one of the two boolean arrays
+     * For every row or column applies algorithm simple boxes
      *
-     * @param array - array for initialising
-     * @param type - ROW, if _left
-     *               COL, if _top
+     * @param type - ROW, if row
+     *               COL, if column
      */
-    private void initBooleanArray(boolean[][] array, int type) {
-        int length;
-        for (int i = 0; i < array.length; i++) {
-            length = type == Field.ROW
-                    ? _nono.getLeftRowLength(i) : _nono.getTopColLength(i);
-            array[i] = new boolean[length];
-            Arrays.fill(array[i], false);
+    private void applyAlgorithmSB(int type) {
+        int length = _nono.getFirstLength(type);
+        for (int i = 0; i < length; i++) {
+            if (_asyncTask.isCancelled()) break;
+            applySimpleBoxes(i, type);
         }
     }
 
@@ -295,19 +219,21 @@ public class NonogramSolver {
     }
 
     /**
-     * Method for checking is all numbers are ready
+     * Method for initialising _rowsFSM or _colsFSM
      *
-     * @param array - boolean array
-     * @return true, if all numbers are ready
-     *         false, otherwise
+     * @param array - _rowsFSM or _colsFSM
+     * @param type - ROW, if _rowsFSM
+     *               COL, if _colsFSM
      */
-    private boolean checkIsAllNumbersReady(boolean[][] array) {
-        for(boolean[] a : array) {
-            for(boolean b : a) {
-                if(!b) return false;
+    private void initFSM(StateMachine[] array, int type) {
+        for (int i = 0; i < _nono.getFirstLength(type); i++) {
+            int length = _nono.getSecondLength(i, type);
+            int[] line = new int[length];
+            for (int j = 0; j < length; j++) {
+                line[j] = _nono.getValue(i, j, type);
             }
+            array[i] = new StateMachine(line);
         }
-        return true;
     }
 
 }
