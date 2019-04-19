@@ -74,11 +74,13 @@ public class Field implements Parcelable {
      */
     public Field(Bitmap bmp, int rows, int cols, int p) {
         _colors = new int[]{ BLACK, WHITE };
+        Arrays.sort(_colors);
         _colorsCount = _colors.length;
         _state = INDEX;
         _rows = rows;
         _cols = cols;
         _field = new int[rows][cols];
+        fillField(WHITE);
         int height = bmp.getHeight(), width = bmp.getWidth();
         int h = height / rows, w = width / cols;
         int sumColors;
@@ -97,16 +99,23 @@ public class Field implements Parcelable {
         }
     }
 
-    public Field(Field other) {
-        _colors = other._colors;
-        _colorsCount = other._colorsCount;
-        _state = other._state;
-        _rows = other._rows;
-        _cols = other._cols;
-        _field = new int[_rows][];
-        for (int i = 0; i < _rows; i++) {
-            _field[i] = other._field[i].clone();
+    /**
+     * Method to copy object
+     *
+     * @return copy
+     */
+    public Field copy() {
+        Field field = new Field();
+        field._colors = _colors.clone();
+        field._colorsCount = _colorsCount;
+        field._state = _state;
+        field._rows = _rows;
+        field._cols = _cols;
+        field._field = new int[_rows][];
+        for (int i = 0; i < field._rows; i++) {
+            field._field[i] = _field[i].clone();
         }
+        return field;
     }
 
     /**
@@ -180,15 +189,15 @@ public class Field implements Parcelable {
     }
 
     /**
-     * Method for getting length of _rows or _cols
+     * Method for getting length of row or сolumn
      *
-     * @param type - ROW, if _rows
-     *               COL, if _cols
-     * @return length of _rows or _cols
+     * @param type - ROW, if row
+     *               COL, if column
+     * @return length of row or сolumn
      */
     public int getLength(int type) {
-        if (type == ROW) return getRows();
-        return getCols();
+        if (type == ROW) return getCols();
+        return getRows();
     }
 
     /**
@@ -217,20 +226,13 @@ public class Field implements Parcelable {
     }
 
     /**
-     * Method for getting field cell color with coordinates (i,j) or (j, i)
+     * Method for getting index of color or color depending on the _state
      *
-     * @param i - i
-     * @param j - j
-     * @param type - ROW, if (i, j)
-     *               COL, if (j, i)
-     * @param state - state
-     * @return field cell color with coordinates (i,j) or (j, i)
+     * @param color - сolor
+     * @return index of color or color depending on the _state
      */
-    public int getColorState(int i, int j, int type, int state) {
-        int color = getColor(i, j, type);
-        if (color == EMPTY) return EMPTY;
-        if (state == _state) return color;
-        if (_state == INDEX) return _colors[color];
+    public int getColorState(int color) {
+        if (_state == COLOR) return color;
         return Arrays.binarySearch(_colors, color);
     }
 
@@ -280,7 +282,7 @@ public class Field implements Parcelable {
      * @return index of first cell with another color in row or column
      */
     public int getAnotherColorIndex(int ind, int pos, int dir, int type) {
-        int i = pos + 1, len = getLength(ROW + COL - type);
+        int i = pos + 1, len = getLength(type);
         for(; i >= 0 && i < len; i += dir) {
             if(getColor(ind, i, type) != getColor(ind, pos, type)) break;
         }
@@ -300,7 +302,7 @@ public class Field implements Parcelable {
         Bitmap bmp = Bitmap.createBitmap(_cols, _rows, Bitmap.Config.RGB_565);
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < _cols; j++) {
-                bmp.setPixel(j, i, field._field[j][i]);
+                bmp.setPixel(j, i, field._field[i][j]);
             }
         }
         return bmp;
@@ -310,9 +312,7 @@ public class Field implements Parcelable {
      * Method for clearing field - all cells lose colors
      */
     void clear() {
-        for (int i = 0; i < _rows; i++) {
-            Arrays.fill(_field[i], EMPTY);
-        }
+        fillField(EMPTY);
     }
 
     /**
@@ -321,19 +321,32 @@ public class Field implements Parcelable {
      * @return new field
      */
     Field translateToColors() {
-        Field field = new Field(this);
+        Field field = copy();
         if(_state == INDEX) {
+            field._state = COLOR;
             for (int i = 0; i < field._rows; i++) {
                 for (int j = 0; j < field._cols; j++) {
                     if (_field[i][j] != EMPTY) {
                         field._field[i][j] = _colors[_field[i][j]];
                     } else {
-                        field._field[i][j] = EMPTY;
+                        field._field[i][j] = WHITE;
                     }
                 }
             }
         }
         return field;
+    }
+
+    /**
+     * Method for filling _field with color
+     *
+     * @param color - color
+     */
+    private void fillField(int color) {
+        int value = getColorState(color);
+        for (int i = 0; i < _rows; i++) {
+            Arrays.fill(_field[i], value);
+        }
     }
 
 }
