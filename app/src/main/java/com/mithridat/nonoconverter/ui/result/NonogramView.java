@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.mithridat.nonoconverter.backend.nonogram.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
 import androidx.annotation.Nullable;
 
@@ -34,7 +35,7 @@ public class NonogramView extends View implements View.OnTouchListener {
     /**
      * Nonogram as Field backend class.
      */
-    private Field _nonogram = null;
+    private Nonogram _nonogram = null;
 
     /**
      * Size of cells in nonogram grid.
@@ -109,7 +110,7 @@ public class NonogramView extends View implements View.OnTouchListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (canvas == null) return;
-        _nonogramDrawer.drawNonogram(canvas, _nonogram);
+        _nonogramDrawer.drawNonogram(canvas, _nonogram.getField());
     }
 
     @Override
@@ -128,10 +129,10 @@ public class NonogramView extends View implements View.OnTouchListener {
     /**
      * Set nonogram, return view to initial state and redraw.
      *
-     * @param nonogramField - nonogram as Field backend class
+     * @param nonogram - nonogram as Field backend class
      */
-    void setNonogramField(Field nonogramField) {
-        _nonogram = nonogramField;
+    void setNonogram(Nonogram nonogram) {
+        _nonogram = nonogram;
         setInitialState();
         invalidate();
     }
@@ -180,7 +181,7 @@ public class NonogramView extends View implements View.OnTouchListener {
     /**
      * Calculate initial cell size.
      *
-     * @param viewWidth - width of the view
+     * @param viewWidth  - width of the view
      * @param viewHeight - height of the view
      */
     private void calculateInitialCellSize(float viewWidth, float viewHeight) {
@@ -191,17 +192,17 @@ public class NonogramView extends View implements View.OnTouchListener {
 
         final float cellSizeHor =
                 (viewWidth - _initialMargins.left - _initialMargins.right)
-                        / _nonogram.getCols();
+                        / _nonogram.getField().getCols();
         final float cellSizeVer =
                 (viewHeight - _initialMargins.top - _initialMargins.bottom)
-                        / _nonogram.getRows();
+                        / _nonogram.getField().getRows();
         _cellSize = Math.min(cellSizeHor, cellSizeVer);
     }
 
     /**
      * Calculate initial nonogram position.
      *
-     * @param viewWidth - width of the view
+     * @param viewWidth  - width of the view
      * @param viewHeight - height of the view
      */
     private void calculateInitialPosition(float viewWidth, float viewHeight) {
@@ -210,8 +211,8 @@ public class NonogramView extends View implements View.OnTouchListener {
             return;
         }
 
-        float spaceHor = viewWidth - _cellSize * _nonogram.getCols();
-        float spaceVer = viewHeight - _cellSize * _nonogram.getRows();
+        float spaceHor = viewWidth - _cellSize * _nonogram.getField().getCols();
+        float spaceVer = viewHeight - _cellSize * _nonogram.getField().getRows();
         spaceHor -= _initialMargins.left + _initialMargins.right;
         spaceVer -= _initialMargins.top + _initialMargins.bottom;
         _nonogramPos.x = _initialMargins.left + spaceHor / 2f;
@@ -225,8 +226,8 @@ public class NonogramView extends View implements View.OnTouchListener {
     private void restorePosition() {
         final float viewWidth = getWidth();
         final float viewHeight = getHeight();
-        final float nonoWidth = _cellSize * _nonogram.getCols();
-        final float nonoHeight = _cellSize * _nonogram.getRows();
+        final float nonoWidth = _cellSize * _nonogram.getField().getCols();
+        final float nonoHeight = _cellSize * _nonogram.getField().getRows();
 
         final float viewCenterX = viewWidth / 2f;
         final float viewCenterY = viewHeight / 2f;
@@ -246,8 +247,8 @@ public class NonogramView extends View implements View.OnTouchListener {
     private void screenBordersCheck() {
         final float viewWidth = getWidth();
         final float viewHeight = getHeight();
-        final float nonoWidth = _cellSize * _nonogram.getCols();
-        final float nonoHeight = _cellSize * _nonogram.getRows();
+        final float nonoWidth = _cellSize * _nonogram.getField().getCols();
+        final float nonoHeight = _cellSize * _nonogram.getField().getRows();
 
         final float viewCenterX = viewWidth / 2f;
         final float viewCenterY = viewHeight / 2f;

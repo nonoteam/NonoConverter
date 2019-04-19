@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mithridat.nonoconverter.R;
-import com.mithridat.nonoconverter.backend.nonogram.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 import com.mithridat.nonoconverter.ui.start.StartActivity;
 
@@ -31,10 +31,10 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.button_save_nng).setOnClickListener(this);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_result));
         NonogramView nonorgamView = findViewById(R.id.nonogram_view);
-        Field field =
+        Nonogram nonogram =
                 getIntent()
                         .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);
-        if (nonorgamView != null) nonorgamView.setNonogramField(field);
+        if (nonorgamView != null) nonorgamView.setNonogram(nonogram);
     }
 
     @Override
