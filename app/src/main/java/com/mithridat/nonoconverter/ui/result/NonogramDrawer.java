@@ -11,7 +11,7 @@ import com.mithridat.nonoconverter.backend.Field;
 /**
  * Class for drawing nonogram.
  */
-public class NonogramDrawer {
+class NonogramDrawer {
 
     /**
      * Size of cells in nonogram grid.
@@ -53,7 +53,7 @@ public class NonogramDrawer {
      */
     private float _radius = 0f;
 
-    public NonogramDrawer() {
+    NonogramDrawer() {
         _gridPainter = new Paint();
         _cellsPainter = new Paint();
         _backgroudRect = new RectF();
@@ -66,6 +66,7 @@ public class NonogramDrawer {
     /**
      * Set position of the top left corner of nonogram.
      * Used to translate the picture.
+     *
      * @param startX x coordinate
      * @param startY y coordinate
      */
@@ -78,6 +79,7 @@ public class NonogramDrawer {
     /**
      * Set size of cells in nonogram grid.
      * Used to scale the picture from the top left corner.
+     *
      * @param cellSize size of cells
      */
     void setCellSize(float cellSize) {
@@ -109,8 +111,8 @@ public class NonogramDrawer {
     void drawNonogram(Canvas canvas, final Field nonogram) {
         if (canvas == null || nonogram == null) return;
 
-        int columns = nonogram.getCols();
-        int rows = nonogram.getRows();
+        final int columns = nonogram.getCols();
+        final int rows = nonogram.getRows();
 
         // draw white background
         _backgroudRect.bottom = _position.y + rows * _cellSize;

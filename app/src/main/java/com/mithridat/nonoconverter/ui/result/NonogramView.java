@@ -82,7 +82,7 @@ public class NonogramView extends View implements View.OnTouchListener {
         bundle.putFloat(StringKeys.CELL_SIZE, _cellSize);
         bundle.putFloat(StringKeys.TOTAL_SCALE,
                 _touchManager.getTotalScale());
-        calculateCenterCoordinates();
+        screenBordersCheck();
         bundle.putFloat(StringKeys.CENTER_RELATIVE_X, _centerRelativeX);
         bundle.putFloat(StringKeys.CENTER_RELATIVE_Y, _centerRelativeY);
         return bundle;
@@ -215,37 +215,29 @@ public class NonogramView extends View implements View.OnTouchListener {
     }
 
     /**
-     * Calculate relative coordinates of nonogram center.
-     * Used for saving current state.
-     */
-    private void calculateCenterCoordinates() {
-        final float viewWidth = this.getWidth();
-        final float viewHeight = this.getHeight();
-        float centerX = _nonogramPos.x + (_cellSize * _nonogram.getCols()) / 2f;
-        float centerY = _nonogramPos.y + (_cellSize * _nonogram.getRows()) / 2f;
-        if (viewWidth != 0f && viewHeight != 0f) {
-            _centerRelativeX = centerX / viewWidth;
-            _centerRelativeY = centerY / viewHeight;
-        }
-    }
-
-    /**
      * Restore current position of nonogram
      * by relative coordinates of nonogram center.
      */
     private void restorePosition() {
         final float viewWidth = this.getWidth();
         final float viewHeight = this.getHeight();
-        float centerX = _centerRelativeX * viewWidth;
-        float centerY = _centerRelativeY * viewHeight;
-        _nonogramPos.x = centerX - (_cellSize * _nonogram.getCols()) / 2f;
-        _nonogramPos.y = centerY - (_cellSize * _nonogram.getRows()) / 2f;
+        final float nonoWidth = _cellSize * _nonogram.getCols();
+        final float nonoHeight = _cellSize * _nonogram.getRows();
+
+        final float viewCenterX = viewWidth / 2f;
+        final float viewCenterY = viewHeight / 2f;
+        final float nonoCenterX = viewCenterX + _centerRelativeX * nonoWidth;
+        final float nonoCenterY = viewCenterY + _centerRelativeY * nonoHeight;
+        _nonogramPos.x = nonoCenterX - nonoWidth / 2f;
+        _nonogramPos.y = nonoCenterY - nonoHeight / 2f;
         screenBordersCheck();
         _nonogramDrawer.setPosition(_nonogramPos.x, _nonogramPos.y);
     }
 
     /**
-     * Does not allow the nonogram to be moved too far from the screen.
+     * Does not allow the nonogram to be moved too far from the screen
+     * and calculates the relative coordinates.
+     * Should be called after every position changing.
      */
     private void screenBordersCheck() {
         final float viewWidth = this.getWidth();
@@ -255,8 +247,8 @@ public class NonogramView extends View implements View.OnTouchListener {
 
         final float viewCenterX = viewWidth / 2f;
         final float viewCenterY = viewHeight / 2f;
-        final float nonoCenterX = _nonogramPos.x + nonoWidth / 2f;
-        final float nonoCenterY = _nonogramPos.y + nonoHeight / 2f;
+        float nonoCenterX = _nonogramPos.x + nonoWidth / 2f;
+        float nonoCenterY = _nonogramPos.y + nonoHeight / 2f;
 
         /* Distance between nonogram center and view center might not be
            greater then half of nonogram size.
@@ -271,6 +263,11 @@ public class NonogramView extends View implements View.OnTouchListener {
             _nonogramPos.y += viewCenterY - nonoCenterY - nonoHeight / 2f;
         if (nonoCenterY - viewCenterY > nonoHeight / 2f)
             _nonogramPos.y -= nonoCenterY - viewCenterY - nonoHeight / 2f;
+
+        nonoCenterX = _nonogramPos.x + nonoWidth / 2f;
+        nonoCenterY = _nonogramPos.y + nonoHeight / 2f;
+        _centerRelativeX = (nonoCenterX - viewCenterX) / nonoWidth;
+        _centerRelativeY = (nonoCenterY - viewCenterY) / nonoHeight;
     }
 
 
