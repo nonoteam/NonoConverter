@@ -610,7 +610,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             if (isCancelled()) return;
             _activity._pdLoading.dismiss();
             Intent intent = new Intent(_activity, ResultActivity.class);
-            intent.putExtra(ActivitiesConstants.EX_NONO_FIELD, result.getField());
+            intent.putExtra(ActivitiesConstants.EX_NONO_FIELD,
+                    result.getField());
             _activity.startActivity(intent);
             _activity.overridePendingTransition(R.anim.slide_in_left,
                     R.anim.slide_out_left);
