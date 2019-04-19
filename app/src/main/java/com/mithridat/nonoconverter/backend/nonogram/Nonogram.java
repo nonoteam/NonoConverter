@@ -8,8 +8,9 @@ import androidx.annotation.NonNull;
 
 import java.util.Arrays;
 
+import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.COL;
-import static com.mithridat.nonoconverter.backend.nonogram.Field.COLOR;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.EMPTY;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
 
 /**
@@ -129,7 +130,7 @@ public class Nonogram implements Parcelable {
      * @return length of _left or _top
      */
     public int getFirstLength(int type) {
-        if (type == Field.ROW) return getLeftRowsLength();
+        if (type == ROW) return getLeftRowsLength();
         return getTopColsLength();
     }
 
@@ -164,7 +165,7 @@ public class Nonogram implements Parcelable {
      * @return length of _left[i] or _top[i]
      */
     public int getSecondLength(int i, int type) {
-        if (type == Field.ROW) return getLeftRowLength(i);
+        if (type == ROW) return getLeftRowLength(i);
         return getTopColLength(i);
     }
 
@@ -202,7 +203,7 @@ public class Nonogram implements Parcelable {
      * @return _left[i][j] or _top[i][j]
      */
     public int getValue(int i, int j, int type) {
-        if (type == Field.ROW) return getLeftRowValue(i, j);
+        if (type == ROW) return getLeftRowValue(i, j);
         return getTopColValue(i, j);
     }
 
@@ -214,10 +215,10 @@ public class Nonogram implements Parcelable {
      */
     public boolean checkCorrectness() {
         int rows = _field.getRows(), cols = _field.getCols();
-        Field field = new Field(_field);
+        Field field = _field.copy();
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (field.getColor(i, j) == Field.EMPTY) {
+                if (field.getColor(i, j) == EMPTY) {
                     field.setColor(i, j, 0);
                 }
             }
@@ -260,7 +261,7 @@ public class Nonogram implements Parcelable {
         _left = new int[h][];
         _top = new int[w][];
 
-        fillNonogramGrid(_left, Field.ROW, h, w);
+        fillNonogramGrid(_left, ROW, h, w);
         fillNonogramGrid(_top, COL, w, h);
     }
 
@@ -282,7 +283,8 @@ public class Nonogram implements Parcelable {
             grid[i] = new int[0];
             for (int j = 0, k, length = 0; j < inLim; ) {
                 k = _field.getAnotherColorIndex(i, j, 1, type);
-                if (_field.getColorState(i, j, type, COLOR) == Field.BLACK) {
+                if (_field.getColor(i, j, type) ==
+                        _field.getColorState(BLACK)) {
                     int[] tmp = new int[length + 1];
                     System.arraycopy(grid[i], 0, tmp, 0, length);
                     tmp[length] = k - j;
@@ -316,7 +318,7 @@ public class Nonogram implements Parcelable {
             int length = 0;
             for (int j = 0, k; j < inLim; ) {
                 k = field.getAnotherColorIndex(i, j, 1, type);
-                if (field.getColorState(i, j, type, COLOR) == Field.BLACK) {
+                if (field.getColor(i, j, type) == field.getColorState(BLACK)) {
                     if (grid[i][length] != k - j) return false;
                     length++;
                 }
