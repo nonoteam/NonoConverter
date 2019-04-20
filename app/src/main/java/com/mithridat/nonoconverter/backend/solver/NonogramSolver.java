@@ -2,10 +2,12 @@ package com.mithridat.nonoconverter.backend.solver;
 
 import android.os.AsyncTask;
 
+import com.mithridat.nonoconverter.backend.nonogram.Field;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
 import java.util.HashSet;
 
+import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.COL;
 
@@ -44,7 +46,10 @@ public class NonogramSolver {
     /**
      * Constructor without parameters
      */
-    public NonogramSolver() {}
+    public NonogramSolver() {
+        _rows = new HashSet<>();
+        _cols = new HashSet<>();
+    }
 
     /**
      * Method for setting nonogram
@@ -141,9 +146,9 @@ public class NonogramSolver {
          *TODO: add `_nono.clearField();` when solver will be ready
          */
         int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
-        _rows = new HashSet<>();
+        _rows.clear();
         addIntervalHashSet(_rows, 0, rows);
-        _cols = new HashSet<>();
+        _cols.clear();
         addIntervalHashSet(_cols, 0, cols);
     }
 
@@ -157,7 +162,33 @@ public class NonogramSolver {
      *         false, otherwise
      */
     boolean applySimpleBoxes(int ind, int type) {
-        return false;
+        int max = 0, count = _nono.getSecondLength(ind, type), len = count - 1;
+        int delta = 0, lineLength = _nono.getField().getLength(type);
+        int value = 0;
+        // HashSet<Integer> set = null;
+        Field field = null;
+        if (count == 0)
+            return false;
+        max = _nono.getValue(ind, 0, type);
+        len += max;
+        for (int i = 1; i < count; ++i) {
+            value = _nono.getValue(ind, i, type);
+            len += value;
+            if (value > max) max = value;
+        }
+        delta = lineLength - len;
+        if (delta < 0 || delta >= max) return false;
+        // set = type == ROW ? _rows : _cols;
+        field = _nono.getField();
+        for (int i = 0, j = 0; i < count; ++i) {
+            value = _nono.getValue(ind, i, type);
+            // addIntervalHashSet(set, j + delta, j + value);
+            for (int k = j + delta; k < j + value; ++k) {
+                field.setColor(ind, k, field.getColorState(BLACK), type);
+            }
+            j += value + 1;
+        }
+        return true;
     }
 
     /**
