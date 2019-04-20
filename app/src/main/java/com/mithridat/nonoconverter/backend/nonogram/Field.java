@@ -80,7 +80,7 @@ public class Field implements Parcelable {
         _rows = rows;
         _cols = cols;
         _field = new int[rows][cols];
-        fillField(WHITE);
+        fillField(getColorState(WHITE));
         int height = bmp.getHeight(), width = bmp.getWidth();
         int h = height / rows, w = width / cols;
         int sumColors;
@@ -121,7 +121,7 @@ public class Field implements Parcelable {
     /**
      * Private constructor without parameters
      */
-    private Field() { }
+    private Field() {}
 
     /**
      * Constructor by the parcel
@@ -255,7 +255,7 @@ public class Field implements Parcelable {
      * @param color - color
      */
     public void setColor(int i, int j, int color) {
-        _field[i][j] = color;
+        if (i >= 0 && i < _rows && j >= 0 && j < _cols) _field[i][j] = color;
     }
 
     /**
@@ -268,8 +268,11 @@ public class Field implements Parcelable {
      *               COL, if (j, i)
      */
     public void setColor(int i, int j, int color, int type) {
-        if (type == ROW) setColor(i, j, color);
-        setColor(j, i, color);
+        if (type == ROW) {
+            setColor(i, j, color);
+        } else {
+            setColor(j, i, color);
+        }
     }
 
     /**
@@ -354,9 +357,8 @@ public class Field implements Parcelable {
      * @param color - color
      */
     private void fillField(int color) {
-        int value = getColorState(color);
         for (int i = 0; i < _rows; i++) {
-            Arrays.fill(_field[i], value);
+            Arrays.fill(_field[i], color);
         }
     }
 
