@@ -18,15 +18,40 @@ class StateMachine {
     /**
      * Count of states
      */
-    private int _states;
+    private int _statesCount;
 
     /**
-     * Constructor by the numbers from nonogram
+     * Constructor by the numbers from nonogram, count of possible input data,
+     * delimiter value
      *
      * @param line - numbers from nonogram
+     * @param count - count of possible input data
+     * @param value - delimiter value
      */
-    StateMachine(int[] line) {
-
+    StateMachine(int[] line, int count, int value) {
+        int len = line.length, sum = 0, k = 0;
+        for (int i : line) {
+            sum += i;
+        }
+        _statesCount = sum + len;
+        if (_statesCount == 0) {
+            _statesCount = 1;
+            _table = new int[_statesCount][count];
+            addState(0, new int[]{INVALID, 0});
+        } else {
+            _table = new int[_statesCount][count];
+            for (int i = 0; i < len; i++) {
+                k = addState(k, new int[]{k + 1, k});
+                for (int j = 0; j + 1 < line[i]; j++) {
+                    k = addState(k, new int[]{k + 1, INVALID});
+                }
+                if (i + 1 < len) {
+                    k = addState(k, new int[]{INVALID, k + 1});
+                } else {
+                    k = addState(k, new int[]{INVALID, k});
+                }
+            }
+        }
     }
 
     /**
@@ -38,7 +63,9 @@ class StateMachine {
      * @return - next state
      */
     int getNextState(int state, int input) {
-        return INVALID;
+        if (state < 0 || state >= _statesCount) return INVALID;
+        if (input < 0 || input >= _table[state].length) return INVALID;
+        return _table[state][input];
     }
 
     /**
@@ -46,8 +73,20 @@ class StateMachine {
      *
      * @return count of states
      */
-    int getStates() {
-        return _states;
+    int getStatesCount() {
+        return _statesCount;
+    }
+
+    /**
+     * Method for adding state
+     *
+     * @param index - index of state
+     * @param states - indexes of next states
+     * @return index of state + 1
+     */
+    private int addState(int index, int[] states) {
+        System.arraycopy(states, 0, _table[index], 0, states.length);
+        return index + 1;
     }
 
 }
