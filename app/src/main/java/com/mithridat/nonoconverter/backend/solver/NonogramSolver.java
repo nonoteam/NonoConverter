@@ -2,14 +2,19 @@ package com.mithridat.nonoconverter.backend.solver;
 
 import android.os.AsyncTask;
 
+import androidx.annotation.VisibleForTesting;
 import com.mithridat.nonoconverter.backend.nonogram.Field;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
 import java.util.HashSet;
 
 import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.EMPTY;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.COL;
+import static com.mithridat.nonoconverter.backend.solver.StateMachine.INVALID;
+import static com.mithridat.nonoconverter.backend.solver.Cell.DIAG;
+import static com.mithridat.nonoconverter.backend.solver.Cell.HOR;
 
 /**
  * Nonogram solving class
@@ -33,10 +38,10 @@ public class NonogramSolver {
     private HashSet<Integer> _rows, _cols;
 
     /**
-     * Set for storage numbers of states of state machine
+     * Sets for storage numbers of states of state machine
      * for algorithm that uses finite-state machine
      */
-    private HashSet<Integer> _states;
+    private HashSet<Integer> _statesPrev, _statesNext;
 
     /**
      * Finite-state machines for nonogram (for rows and columns)
@@ -49,6 +54,8 @@ public class NonogramSolver {
     public NonogramSolver() {
         _rows = new HashSet<>();
         _cols = new HashSet<>();
+        _statesPrev = new HashSet<>();
+        _statesNext = new HashSet<>();
     }
 
     /**
@@ -100,6 +107,7 @@ public class NonogramSolver {
      *
      * @return nonogram
      */
+    @VisibleForTesting
     Nonogram getNonogram() {
         return _nono;
     }
@@ -111,36 +119,52 @@ public class NonogramSolver {
      *               COL, if _cols
      * @return _rows or _cols
      */
+    @VisibleForTesting
     HashSet<Integer> getSetWithChanges(int type) {
         if (type == ROW) return _rows;
         return _cols;
     }
 
     /**
-     * Method for getting _states
+     * Method for getting _statesPrev
      *
-     * @return _states
+     * @return _statesPrev
      */
-    HashSet<Integer> getStates() {
-        return _states;
+    @VisibleForTesting
+    HashSet<Integer> getStatesPrev() {
+        return _statesPrev;
     }
 
     /**
-     * Method for getting finite-state machines for nonogram
+     * Method for getting _statesNext
+     *
+     * @return _statesNext
+     */
+    @VisibleForTesting
+    HashSet<Integer> getStatesNext() {
+        return _statesNext;
+    }
+
+    /**
+     * Method for getting finite-state machine for nonogram
      * (for rows or columns)
      *
+     * @param ind - index of finite-state machine
      * @param type - ROW, if for rows
      *               COL, if for columns
      * @return finite-state machines for nonogram (for rows or columns)
      */
-    StateMachine[] getFSM(int type) {
-        if (type == ROW) return _rowsFSM;
-        return _colsFSM;
+    @VisibleForTesting
+    StateMachine getFSM(int ind, int type) {
+        StateMachine[] machines = getFSM(type);
+        if (ind < 0 || ind >= machines.length) return null;
+        return machines[ind];
     }
 
     /**
      * Method for initialising class fields before solution start
      */
+    @VisibleForTesting
     void init() {
         /*
          *TODO: add `_nono.clearField();` when solver will be ready
@@ -161,6 +185,7 @@ public class NonogramSolver {
      * @return true, if any cell was filled
      *         false, otherwise
      */
+    @VisibleForTesting
     boolean applySimpleBoxes(int ind, int type) {
         int max = 0, count = _nono.getSecondLength(ind, type), len = count - 1;
         int delta = 0, lineLength = _nono.getField().getLength(type);
@@ -192,6 +217,75 @@ public class NonogramSolver {
     }
 
     /**
+     * Method for swapping _statesPrev and _statesNext
+     */
+    @VisibleForTesting
+    void swapStateSets() {
+        HashSet<Integer> tmp = _statesNext;
+        _statesNext = _statesPrev;
+        _statesPrev = tmp;
+    }
+
+    /**
+     * Implementation of the one step (processing one cell) of the forward move
+     * on the line of the solving algorithm using finite-state machine
+     *
+     * @param matrix - matrix for algorithm that uses finite-state machine
+     * @param machine - finite-state machine of the line
+     * @param color - index of color for cell of the line
+     * @param step - index of the cell in the line
+     */
+    @VisibleForTesting
+    void applyStateMachineForwardStep(
+            Cell[][] matrix,
+            StateMachine machine,
+            int color,
+            int step) {
+        int stateNext = 0, dir = HOR;
+        for (int state : _statesPrev) {
+            stateNext = machine.getNextState(state, color);
+            if (stateNext != INVALID) {
+                if (matrix[stateNext][step] == null) {
+                    matrix[stateNext][step] = new Cell();
+                }
+                dir = stateNext == state ? HOR : DIAG;
+                matrix[stateNext][step].addDirection(dir, color);
+                _statesNext.add(stateNext);
+            }
+        }
+    }
+
+    /**
+     * Implementation of forward move on the line of the solving algorithm
+     * using finite-state machine
+     *
+     * @param ind - index of the line
+     * @param type - type of the line
+     * @param matrix - matrix for algorithm that uses finite-state machine
+     */
+    @VisibleForTesting
+    void applyStateMachineForward(int ind, int type, Cell[][] matrix) {
+        StateMachine machine = getFSM(ind, type);
+        Field field = _nono.getField();
+        int length = field.getLength(type), color = EMPTY;
+        _statesPrev.clear();
+        _statesNext.clear();
+        _statesPrev.add(0);
+        for (int i = 0; i < length && !_statesPrev.isEmpty(); ++i) {
+            color = field.getColor(ind, i, type);
+            if (color == EMPTY) {
+                for (int j = 0; j < field.getColorsCount(); ++j) {
+                    applyStateMachineForwardStep(matrix, machine, j, i);
+                }
+            } else {
+                applyStateMachineForwardStep(matrix, machine, color, i);
+            }
+            _statesPrev.clear();
+            swapStateSets();
+        }
+    }
+
+    /**
      * Implementation of nonogram solving algorithm using finite-state machine
      *
      * @param ind - index of row or column
@@ -200,6 +294,7 @@ public class NonogramSolver {
      * @return false, if this nonogram hasn't solution
      *         true, otherwise
      */
+    @VisibleForTesting
     boolean applyStateMachine(int ind, int type) {
         return false;
     }
@@ -265,6 +360,19 @@ public class NonogramSolver {
             }
             array[i] = new StateMachine(line);
         }
+    }
+
+    /**
+     * Method for getting finite-state machines for nonogram
+     * (for rows or columns)
+     *
+     * @param type - ROW, if for rows
+     *               COL, if for columns
+     * @return finite-state machines for nonogram (for rows or columns)
+     */
+    private StateMachine[] getFSM(int type) {
+        if (type == ROW) return _rowsFSM;
+        return _colsFSM;
     }
 
 }
