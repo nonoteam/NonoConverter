@@ -286,8 +286,7 @@ public class Nonogram implements Parcelable {
                 k = _field.getAnotherColorIndex(i, j, 1, type);
                 if (_field.getColor(i, j, type)
                         == _field.getColorState(BLACK)) {
-                    int[] tmp = new int[length + 1];
-                    System.arraycopy(grid[i], 0, tmp, 0, length);
+                    int[] tmp = Arrays.copyOf(grid[i], length + 1);
                     tmp[length] = k - j;
                     length++;
                     grid[i] = tmp;
