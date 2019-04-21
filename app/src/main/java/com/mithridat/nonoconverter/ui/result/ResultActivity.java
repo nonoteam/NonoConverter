@@ -1,13 +1,9 @@
 package com.mithridat.nonoconverter.ui.result;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,12 +12,21 @@ import android.view.View;
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
-import com.mithridat.nonoconverter.ui.start.StartActivity;
 
 /**
  * Class for handling result activity
  */
 public class ResultActivity extends AppCompatActivity implements View.OnClickListener {
+
+    /**
+     * Done dialog fragment.
+     */
+    FragmentDoneDialog _fragmentDoneDialog;
+
+    /**
+     * Home-return fragment.
+     */
+    FragmentHomeReturnDialog _fragmentHomeReturnDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,8 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 getIntent()
                         .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);
         if (nonorgamView != null) nonorgamView.setNonogram(nonogram);
+        _fragmentDoneDialog = new FragmentDoneDialog();
+        _fragmentHomeReturnDialog = new FragmentHomeReturnDialog();
     }
 
     @Override
@@ -52,7 +59,8 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_home:
-                createDialogHomeReturn();
+                _fragmentHomeReturnDialog.show(getSupportFragmentManager(),
+                        StringKeys.DIALOG_HOME_RETURN_TAG);
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -75,60 +83,11 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.button_save_thumb:
             case R.id.button_save_nng:
-                createDialogDone();
+                _fragmentDoneDialog.show(getSupportFragmentManager(),
+                        StringKeys.DIALOG_DONE_TAG);
                 break;
             default:
                 break;
         }
-    }
-
-    /**
-     * Create dialog with "Done" message
-     */
-    private void createDialogDone() {
-        OnClickListener listener = new OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.title_dialog_done)
-                .setIcon(R.drawable.ic_done)
-                .setPositiveButton(R.string.action_ok, listener)
-                .create()
-                .show();
-    }
-
-    /**
-     * Create home-return dialog
-     */
-    private void createDialogHomeReturn() {
-        OnClickListener listenerReturn = new OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-                Intent intent = new Intent(ResultActivity.this,
-                        StartActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right,
-                        R.anim.slide_out_right);
-            }
-        };
-
-        OnClickListener listenerCancel = new OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.title_dialog_home_return)
-                .setIcon(R.drawable.ic_info)
-                .setMessage(R.string.msg_home_return)
-                .setPositiveButton(R.string.action_return, listenerReturn)
-                .setNegativeButton(R.string.action_cancel, listenerCancel)
-                .create()
-                .show();
     }
 }
