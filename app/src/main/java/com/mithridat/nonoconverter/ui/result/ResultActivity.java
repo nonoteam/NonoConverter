@@ -28,16 +28,6 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
      */
     FragmentHomeReturnDialog _fragmentHomeReturnDialog;
 
-    /**
-     * Tag for fragment done dialog.
-     */
-    private static final String DIALOG_DONE_TAG = "fragmentDoneDialog";
-
-    /**
-     * Tag for fragment home-return dialog.
-     */
-    private static final String DIALOG_HOME_RETURN_TAG = "fragmentHomeReturnDialog";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +60,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         switch (item.getItemId()) {
             case R.id.menu_home:
                 _fragmentHomeReturnDialog.show(getSupportFragmentManager(),
-                        DIALOG_HOME_RETURN_TAG);
+                        StringKeys.DIALOG_HOME_RETURN_TAG);
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -94,7 +84,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.button_save_thumb:
             case R.id.button_save_nng:
                 _fragmentDoneDialog.show(getSupportFragmentManager(),
-                        DIALOG_DONE_TAG);
+                        StringKeys.DIALOG_DONE_TAG);
                 break;
             default:
                 break;
