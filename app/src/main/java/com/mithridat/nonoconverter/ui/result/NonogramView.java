@@ -1,5 +1,7 @@
 package com.mithridat.nonoconverter.ui.result;
 
+import androidx.annotation.Nullable;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PointF;
@@ -12,10 +14,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
-import com.mithridat.nonoconverter.backend.nonogram.Field;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
-
-import androidx.annotation.Nullable;
 
 /**
  * Manages zooming and panning of the nonogram and forces it to be drawn.
