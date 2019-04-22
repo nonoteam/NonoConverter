@@ -12,6 +12,7 @@ import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.EMPTY;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.COL;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.WHITE;
 import static com.mithridat.nonoconverter.backend.solver.StateMachine.INVALID;
 import static com.mithridat.nonoconverter.backend.solver.Cell.DIAG;
 import static com.mithridat.nonoconverter.backend.solver.Cell.HOR;
@@ -352,13 +353,16 @@ public class NonogramSolver {
      *               COL, if _colsFSM
      */
     private void initFSM(StateMachine[] array, int type) {
+        int delim = _nono.getField().getColorState(WHITE);
+        int length;
         for (int i = 0; i < _nono.getFirstLength(type); i++) {
-            int length = _nono.getSecondLength(i, type);
-            int[] line = new int[length];
+            length = _nono.getSecondLength(i, type);
+            int[][] line = new int[length][2];
             for (int j = 0; j < length; j++) {
-                line[j] = _nono.getValue(i, j, type);
+                line[j][0] = _nono.getValue(i, j, type);
+                line[j][1] = _nono.getField().getColorState(BLACK);
             }
-            array[i] = new StateMachine(line);
+            array[i] = new StateMachine(line, 2, delim);
         }
     }
 

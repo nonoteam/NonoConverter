@@ -1,5 +1,7 @@
 package com.mithridat.nonoconverter.backend.solver;
 
+import java.util.Arrays;
+
 /**
  * Representation of the finite-state machine. It contains state table
  */
@@ -21,37 +23,34 @@ class StateMachine {
     private int _statesCount;
 
     /**
-     * Constructor by the numbers from nonogram, count of possible input data,
-     * delimiter value
+     * Constructor by the numbers from nonogram, count of colors,
+     * index of delimiter color
      *
      * @param line - numbers from nonogram
-     * @param count - count of possible input data
-     * @param value - delimiter value
+     *        line[][0] - length of block
+     *        line[][1] - index of color
+     * @param count - count of colors
+     * @param delim - index of delimiter color
      */
-    StateMachine(int[] line, int count, int value) {
-        int len = line.length, sum = 0, k = 0;
-        for (int i : line) {
-            sum += i;
+    StateMachine(int[][] line, int count, int delim) {
+        int len = line.length, state = 0;
+        _statesCount = 0;
+        for (int i = 0; i < len; i++) {
+            _statesCount += i;
+            if (i + 1 < len && line[i][1] == line[i + 1][1]) _statesCount++;
         }
-        _statesCount = sum + len;
-        if (_statesCount == 0) {
-            _statesCount = 1;
-            _table = new int[_statesCount][count];
-            addState(0, new int[]{INVALID, 0});
-        } else {
-            _table = new int[_statesCount][count];
-            for (int i = 0; i < len; i++) {
-                k = addState(k, new int[]{k + 1, k});
-                for (int j = 0; j + 1 < line[i]; j++) {
-                    k = addState(k, new int[]{k + 1, INVALID});
-                }
-                if (i + 1 < len) {
-                    k = addState(k, new int[]{INVALID, k + 1});
-                } else {
-                    k = addState(k, new int[]{INVALID, k});
-                }
+        _statesCount++;
+        _table = new int[_statesCount][count];
+        for (int i = 0; i < len; i++) {
+            state = addLoop(state, line[i][1], delim);
+            for (int j = 0; j + 1 < line[i][0]; j++) {
+                state = addColorArrow(state, line[i][1]);
+            }
+            if (i + 1 < len && line[i][1] == line[i + 1][1]) {
+                state = addColorArrow(state, delim);
             }
         }
+        state = addLastLoop(state, delim);
     }
 
     /**
@@ -78,15 +77,44 @@ class StateMachine {
     }
 
     /**
-     * Method for adding state
+     * Method for adding loop (not last loop)
      *
-     * @param index - index of state
-     * @param states - indexes of next states
-     * @return index of state + 1
+     * @param state - current state
+     * @param color - index of next block color
+     * @param delim - index of delimiter color
+     * @return state + 1
      */
-    private int addState(int index, int[] states) {
-        System.arraycopy(states, 0, _table[index], 0, states.length);
-        return index + 1;
+    private int addLoop(int state, int color, int delim) {
+        Arrays.fill(_table[state], INVALID);
+        _table[state][color] = state + 1;
+        _table[state][delim] = state;
+        return state + 1;
+    }
+
+    /**
+     * Method for adding color arrow
+     *
+     * @param state - current state
+     * @param color - index of color
+     * @return state + 1
+     */
+    private int addColorArrow(int state, int color) {
+        Arrays.fill(_table[state], INVALID);
+        _table[state][color] = state + 1;
+        return state + 1;
+    }
+
+    /**
+     * Method for adding last loop
+     *
+     * @param state - current state
+     * @param delim - index of delimiter color
+     * @return state + 1
+     */
+    private int addLastLoop(int state, int delim) {
+        Arrays.fill(_table[state], INVALID);
+        _table[state][delim] = state;
+        return state + 1;
     }
 
 }
