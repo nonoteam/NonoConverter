@@ -36,7 +36,7 @@ class StateMachine {
         int len = line.length, state = 0;
         _statesCount = 0;
         for (int i = 0; i < len; i++) {
-            _statesCount += i;
+            _statesCount += line[i][0];
             if (i + 1 < len && line[i][1] == line[i + 1][1]) _statesCount++;
         }
         _statesCount++;
