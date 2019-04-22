@@ -204,7 +204,7 @@ public class NonogramSolver {
         }
         delta = lineLength - len;
         if (delta < 0 || delta >= max) return false;
-        // set = type == ROW ? _rows : _cols;
+        // set = type == ROW ? _cols : _rows;
         field = _nono.getField();
         for (int i = 0, j = 0; i < count; ++i) {
             value = _nono.getValue(ind, i, type);
@@ -269,8 +269,7 @@ public class NonogramSolver {
         StateMachine machine = getFSM(ind, type);
         Field field = _nono.getField();
         int length = field.getLength(type), color = EMPTY;
-        _statesPrev.clear();
-        _statesNext.clear();
+        clearStateSets();
         _statesPrev.add(0);
         for (int i = 0; i < length && !_statesPrev.isEmpty(); ++i) {
             color = field.getColor(ind, i, type);
@@ -281,6 +280,69 @@ public class NonogramSolver {
             } else {
                 applyStateMachineForwardStep(matrix, machine, color, i);
             }
+            _statesPrev.clear();
+            swapStateSets();
+        }
+    }
+
+    /**
+     * Implementation of the one step (processing one cell) of the reverse move
+     * on the line of the solving algorithm using finite-state machine
+     *
+     * @param matrix - matrix for algorithm that uses finite-state machine
+     * @param step - index of the cell in the line
+     * @param ind - index of the line
+     * @param type - type of the line
+     */
+    @VisibleForTesting
+    void applyStateMachineReverseStep(
+            Cell[][] matrix,
+            int step,
+            int ind,
+            int type) {
+        int dirsCount = 0;
+        int color = matrix[_statesPrev.iterator().next()][step].getValue(0);
+        Cell cell = null;
+        for (int state : _statesPrev) {
+            cell = matrix[state][step];
+            dirsCount = cell.getDirectionsCount();
+            for (int i = 0; i < dirsCount; ++i) {
+                if (cell.getDirection(i) == DIAG) {
+                    _statesNext.add(state - 1);
+                } else {
+                    _statesNext.add(state);
+                }
+            }
+            if (color != EMPTY && (color != cell.getValue(0)
+                    || !cell.isEqualVals())) {
+                color = EMPTY;
+            }
+        }
+        if (color != EMPTY
+                && _nono.getField().getColor(ind, step, type) == EMPTY) {
+            _nono.getField().setColor(ind, step, color, type);
+            (type == ROW ? _cols : _rows).add(step);
+        }
+    }
+
+    /**
+     * Implementation of reverse move on the line of the solving algorithm
+     * using finite-state machine
+     *
+     * @param ind - index of the line
+     * @param type - type of the line
+     * @param matrix - matrix for algorithm that uses finite-state machine
+     */
+    @VisibleForTesting
+    void applyStateMachineReverse(int ind, int type, Cell[][] matrix) {
+        StateMachine machine = getFSM(ind, type);
+        Field field = _nono.getField();
+        int length = field.getLength(type);
+        if (matrix[machine.getStatesCount() - 1][length - 1] == null) return;
+        clearStateSets();
+        _statesPrev.add(machine.getStatesCount() - 1);
+        for (int i = length - 1; i >= 0; --i) {
+            applyStateMachineReverseStep(matrix, i, ind, type);
             _statesPrev.clear();
             swapStateSets();
         }
@@ -377,6 +439,14 @@ public class NonogramSolver {
     private StateMachine[] getFSM(int type) {
         if (type == ROW) return _rowsFSM;
         return _colsFSM;
+    }
+
+    /**
+     * Method for clearing _statesPrev and _statesNext
+     */
+    private void clearStateSets() {
+        _statesPrev.clear();
+        _statesNext.clear();
     }
 
 }
