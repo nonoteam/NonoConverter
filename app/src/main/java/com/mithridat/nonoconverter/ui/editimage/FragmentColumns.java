@@ -190,8 +190,8 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         _bmpImageColumns = ((EditImageActivity)getActivity())._bmpCurrentImage;
 
         _civColumns.setImageBitmap(_bmpImageColumns);
-        _tvRowsAndColumns = _vColumnsFragment
-                .findViewById(R.id.text_view_rows);
+        _tvRowsAndColumns
+                = _vColumnsFragment.findViewById(R.id.text_view_rows);
 
         _vColumnsFragment.findViewById(R.id.button_add)
                 .setOnClickListener(this);
