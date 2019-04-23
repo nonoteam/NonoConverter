@@ -90,9 +90,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final String DIALOG_CONVERT_TAG = "fragmentConvertDialog";
 
     /**
-     * Tag for fragment convert dialog
+     * Tag for cropped image
      */
     private static final String CROP_LOADED_IMAGE = "cropLoadedImage";
+
+    /**
+     * Tag for _isCropeed flag
+     */
+    private static final String BMP_IS_CROPPED_TAG = "bmpIsCropped";
 
     /**
      * Tag for crop area rect
@@ -189,6 +194,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      */
     boolean _needSaveCropped = false;
 
+    /**
+     * Flag for checking if image is cropped
+     */
+    boolean _isCropped = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,17 +229,24 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             _isSelectedColumns = savedInstanceState
                     .getByte(IS_SELECTED_COLUMNS_TAG, (byte) 0) != 0;
 
+            _pathImage = savedInstanceState.getString(BMP_CURRENT_IMAGE_TAG);
             _uriCurrentImage = (Uri)savedInstanceState
                     .getParcelable(CROP_LOADED_IMAGE);
-            try {
-                _bmpCurrentImage
-                        = getBitmap(this.getContentResolver(),
-                                _uriCurrentImage);
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            _isCropped = savedInstanceState.getBoolean(BMP_IS_CROPPED_TAG);
+            if(_isCropped) {
+                try {
+                    _bmpCurrentImage
+                            = getBitmap(this.getContentResolver(),
+                            _uriCurrentImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                setImageFromPath(_pathImage);
             }
             _rectCrop = (Rect) savedInstanceState.getParcelable(RECT);
-            _pathImage = savedInstanceState.getString(BMP_CURRENT_IMAGE_TAG);
         } else if (_bmpCurrentImage == null) {
             _pathImage =
                     getIntent()
@@ -302,6 +319,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         _uriCurrentImage = writeTempStateStoreBitmap(this,
                 _bmpCurrentImage, _uriCurrentImage);
         outState.putParcelable(CROP_LOADED_IMAGE, _uriCurrentImage);
+        outState.putBoolean(BMP_IS_CROPPED_TAG, _isCropped);
         _rectCrop = _fragmentCrop.getCropRect();
         if (_rectCrop != null) {
             outState.putParcelable(RECT, _fragmentCrop.getCropRect());
