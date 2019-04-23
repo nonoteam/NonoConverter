@@ -236,9 +236,10 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                     .getByte(BMP_IS_CROPPED_TAG, (byte) 0) != 0;
             if (_isCropped) {
                 try {
-                    _bmpCurrentImage = getBitmap(getContentResolver(),
-                            _uriCurrentImage);
+                    _bmpCurrentImage =
+                            getBitmap(getContentResolver(), _uriCurrentImage);
                 } catch (IOException e) {
+                    setImageFromPath(_pathImage);
                     e.printStackTrace();
                 }
             }
