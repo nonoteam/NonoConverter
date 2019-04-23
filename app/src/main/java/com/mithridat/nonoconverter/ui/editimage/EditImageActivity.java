@@ -279,6 +279,12 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                     .findViewById(R.id.image_view_main))
                     .setImageBitmap(_bmpCurrentImage);
         }
+        if (_columns == 0) {
+            int bmWidth = _bmpCurrentImage.getWidth();
+            int bmHeight = _bmpCurrentImage.getHeight();
+            _columns = bmWidth < 90 ? bmWidth - bmWidth % 5 : 45;
+            _rows = _columns * bmHeight / bmWidth;
+        }
     }
 
     @Override
@@ -315,15 +321,16 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 onBackPressed();
                 return true;
             case R.id.menu_convert:
-                if (!_isSelectedColumns) {
-                    _fragmentConvertDialog.show(getSupportFragmentManager(),
-                            DIALOG_CONVERT_TAG);
-                } else {
-                    showPd();
-                    _atConvert = new AsyncTaskConvertImage();
-                    _atConvert.link(this);
-                    _atConvert.execute();
+                int bmWidth = _bmpCurrentImage.getWidth();
+                if (_columns > bmWidth) {
+                    int bmHeight = _bmpCurrentImage.getHeight();
+                    _columns = bmWidth - bmWidth % 5;
+                    _rows = _columns * bmWidth / bmHeight;
                 }
+                showPd();
+                _atConvert = new AsyncTaskConvertImage();
+                _atConvert.link(this);
+                _atConvert.execute();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -437,9 +444,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * Reset number of columns and rows in nonogram
      */
     void resetConvertParams() {
-        _rows = 0;
-        _columns = 0;
-        _isSelectedColumns = false;
+        int bmWidth = _bmpCurrentImage.getWidth();
+        int bmHeight = _bmpCurrentImage.getHeight();
+        _columns = bmWidth < 90 ? bmWidth - bmWidth % 5 : 45;
+        _rows = _columns * bmHeight / bmWidth;
+        return;
     }
 
     /**
@@ -608,11 +617,17 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         protected void onPostExecute(Nonogram result) {
             if (isCancelled()) return;
             _activity._pdLoading.dismiss();
-            Intent intent = new Intent(_activity, ResultActivity.class);
-            intent.putExtra(ActivitiesConstants.EX_NONO_FIELD, result);
-            _activity.startActivity(intent);
-            _activity.overridePendingTransition(R.anim.slide_in_left,
-                    R.anim.slide_out_left);
+            if (result == null) {
+                _activity._fragmentConvertDialog
+                        .show(_activity.getSupportFragmentManager(),
+                                DIALOG_CONVERT_TAG);
+            } else {
+                Intent intent = new Intent(_activity, ResultActivity.class);
+                intent.putExtra(ActivitiesConstants.EX_NONO_FIELD, result);
+                _activity.startActivity(intent);
+                _activity.overridePendingTransition(R.anim.slide_in_left,
+                        R.anim.slide_out_left);
+            }
         }
 
         /**
