@@ -167,14 +167,12 @@ public class NonogramSolver {
      */
     @VisibleForTesting
     void init() {
-        /*
-         *TODO: add `_nono.clearField();` when solver will be ready
-         */
         int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
         _rows.clear();
         addIntervalHashSet(_rows, 0, rows);
         _cols.clear();
         addIntervalHashSet(_cols, 0, cols);
+        _nono.clearField();
     }
 
     /**
@@ -359,7 +357,14 @@ public class NonogramSolver {
      */
     @VisibleForTesting
     boolean applyStateMachine(int ind, int type) {
-        return false;
+        StateMachine machine = getFSM(ind, type);
+        int length = _nono.getField().getLength(type);
+        int states = machine.getStatesCount();
+        Cell[][] matrix = new Cell[states][length];
+        applyStateMachineForward(ind, type, matrix);
+        if (matrix[states - 1][length - 1] == null) return false;
+        applyStateMachineReverse(ind, type, matrix);
+        return true;
     }
 
     /**
