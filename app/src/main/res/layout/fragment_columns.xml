@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <TextView
-        android:id="@+id/text_view_Rows"
+        android:id="@+id/text_view_rows"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -53,7 +52,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <SeekBar
-                android:id="@+id/seek_bar_Rows"
+                android:id="@+id/seek_bar_rows"
                 android:layout_width="238dp"
                 android:layout_height="20dp"
                 android:max="85"
@@ -72,7 +71,7 @@
                 android:background="@null"
                 android:drawableStart="@drawable/ic_add"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/seek_bar_Rows"
+                app:layout_constraintStart_toEndOf="@+id/seek_bar_rows"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
@@ -82,7 +81,7 @@
                 android:background="@null"
                 android:drawableStart="@drawable/ic_remove"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/seek_bar_Rows"
+                app:layout_constraintEnd_toStartOf="@+id/seek_bar_rows"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
