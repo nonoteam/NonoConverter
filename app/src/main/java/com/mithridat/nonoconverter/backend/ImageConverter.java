@@ -48,10 +48,7 @@ public class ImageConverter {
             solver.setNonogram(nono);
             if (solver.solve()) return nono.translateToColors();
         }
-        /*
-         *TODO: `nono.translateToColors()` needs to be replaced by `null` when solver will be ready
-         */
-        return nono.translateToColors();
+        return null;
     }
 
     /**
