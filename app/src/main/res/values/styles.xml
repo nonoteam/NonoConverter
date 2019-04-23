@@ -86,4 +86,10 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="SeekBar.Color"
+        parent="Widget.AppCompat.SeekBar">
+        <item name="android:colorControlActivated">@color/colorWhite</item>
+        <item name="android:colorControlNormal">@color/colorLightBlue</item>
+    </style>
+
 </resources>

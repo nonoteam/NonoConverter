@@ -18,7 +18,7 @@ import com.mithridat.nonoconverter.R;
 /**
  * Class for the columns fragment
  */
-public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChangeListener {
+public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
     /**
      * Tag for fragment columns
@@ -148,6 +148,24 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
     }
 
     @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.button_add:
+                if (_countColumns < _sbColumns.getMax() + 5) {
+                    _sbColumns.setProgress(_sbColumns.getProgress() + 1);
+                }
+                break;
+            case R.id.button_remove:
+                if (_countColumns > 5) {
+                    _sbColumns.setProgress(_sbColumns.getProgress() - 1);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(COUNT_COLUMNS_TAG, _countColumns);
@@ -172,6 +190,11 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
         _civColumns.setImageBitmap(_bmpImageColumns);
         _tvRowsAndColumns = _vColumnsFragment
                 .findViewById(R.id.text_view_Rows);
+
+        _vColumnsFragment.findViewById(R.id.button_add)
+                .setOnClickListener(this);
+        _vColumnsFragment.findViewById(R.id.button_remove)
+                .setOnClickListener(this);
 
         if (savedInstanceState != null) {
             _countColumns = savedInstanceState.getInt(COUNT_COLUMNS_TAG,
