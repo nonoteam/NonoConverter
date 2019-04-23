@@ -13,10 +13,26 @@ import android.os.Bundle;
 
 import com.mithridat.nonoconverter.R;
 
+import static com.mithridat.nonoconverter.ui.result.StringKeys.DIALOG_TITLE;
+import static com.mithridat.nonoconverter.ui.result.StringKeys.DIALOG_ICON;
+
 /**
  * Class for done dialog fragment.
  */
-public class FragmentDoneDialog extends DialogFragment {
+public class FragmentAfterSaveDialog extends DialogFragment {
+
+    static FragmentAfterSaveDialog newInstance(boolean success) {
+        FragmentAfterSaveDialog frag = new FragmentAfterSaveDialog();
+        Bundle args = new Bundle();
+        args.putInt(DIALOG_TITLE,
+                success ? R.string.title_dialog_done
+                        : R.string.title_dialog_fail);
+        args.putInt(DIALOG_ICON,
+                success ? R.drawable.ic_done
+                        : R.drawable.ic_error);
+        frag.setArguments(args);
+        return frag;
+    }
 
     @NonNull
     @Override
@@ -32,9 +48,16 @@ public class FragmentDoneDialog extends DialogFragment {
             }
         };
 
+        Bundle args = getArguments();
+        int title = R.string.title_dialog_done, icon = R.drawable.ic_done;
+        if (args != null) {
+            title = args.getInt(DIALOG_TITLE);
+            icon = args.getInt(DIALOG_ICON);
+        }
+
         return new AlertDialog.Builder(fragmentActivity)
-                .setTitle(R.string.title_dialog_done)
-                .setIcon(R.drawable.ic_done)
+                .setTitle(title)
+                .setIcon(icon)
                 .setPositiveButton(R.string.action_ok, okListener)
                 .create();
     }

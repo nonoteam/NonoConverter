@@ -22,6 +22,7 @@
     <string name="action_return">RETURN</string>
     <string name="action_cancel">CANCEL</string>
     <string name="title_dialog_done">Done</string>
+    <string name="title_dialog_fail">Fail</string>
     <string name="action_ok">OK</string>
     <string name="title_dialog_convert">Nonogram size</string>
     <string name="msg_convert">Conversion can not be started.\nPlease click
