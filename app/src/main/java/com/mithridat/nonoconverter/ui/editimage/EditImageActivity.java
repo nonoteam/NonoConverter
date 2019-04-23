@@ -232,12 +232,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             _pathImage = savedInstanceState.getString(BMP_CURRENT_IMAGE_TAG);
             _uriCurrentImage = (Uri)savedInstanceState
                     .getParcelable(CROP_LOADED_IMAGE);
-
-            _isCropped = savedInstanceState.getBoolean(BMP_IS_CROPPED_TAG);
-            if(_isCropped) {
+            _isCropped = savedInstanceState
+                    .getByte(BMP_IS_CROPPED_TAG, (byte) 0) != 0;
+            if (_isCropped) {
                 try {
-                    _bmpCurrentImage
-                            = getBitmap(this.getContentResolver(),
+                    _bmpCurrentImage = getBitmap(getContentResolver(),
                             _uriCurrentImage);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -317,9 +316,10 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
 
         outState.putString(BMP_CURRENT_IMAGE_TAG, _pathImage);
         _uriCurrentImage = writeTempStateStoreBitmap(this,
-                _bmpCurrentImage, _uriCurrentImage);
+                _bmpCurrentImage,
+                _uriCurrentImage);
         outState.putParcelable(CROP_LOADED_IMAGE, _uriCurrentImage);
-        outState.putBoolean(BMP_IS_CROPPED_TAG, _isCropped);
+        outState.putByte(BMP_IS_CROPPED_TAG, _isCropped ? (byte) 1 : (byte) 0);
         _rectCrop = _fragmentCrop.getCropRect();
         if (_rectCrop != null) {
             outState.putParcelable(RECT, _fragmentCrop.getCropRect());
