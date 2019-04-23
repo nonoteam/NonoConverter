@@ -18,7 +18,7 @@ public class FragmentConvertDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.title_dialog_convert)
-                .setIcon(R.drawable.ic_info)
+                .setIcon(R.drawable.ic_error)
                 .setMessage(R.string.msg_convert)
                 .setPositiveButton(R.string.action_ok, listenerOk)
                 .create();
