@@ -25,8 +25,7 @@
     <string name="title_dialog_fail">Fail</string>
     <string name="action_ok">OK</string>
     <string name="title_dialog_convert">Nonogram size</string>
-    <string name="msg_convert">Conversion can not be started.\nPlease click
-        on \"Columns\" and enter the columns count.</string>
+    <string name="msg_convert">Conversion can not be started.\nYou can try to change the columns count or crop the image.</string>
 
     <string name="action_load_image">Load Image</string>
     <string name="action_open_about">About</string>
