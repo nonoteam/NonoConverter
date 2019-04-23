@@ -2,10 +2,20 @@ package com.mithridat.nonoconverter.backend.solver;
 
 import android.os.AsyncTask;
 
-import com.mithridat.nonoconverter.backend.Field;
+import androidx.annotation.VisibleForTesting;
+import com.mithridat.nonoconverter.backend.nonogram.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
-import java.util.Arrays;
 import java.util.HashSet;
+
+import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.EMPTY;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.COL;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.WHITE;
+import static com.mithridat.nonoconverter.backend.solver.StateMachine.INVALID;
+import static com.mithridat.nonoconverter.backend.solver.Cell.DIAG;
+import static com.mithridat.nonoconverter.backend.solver.Cell.HOR;
 
 /**
  * Nonogram solving class
@@ -13,42 +23,40 @@ import java.util.HashSet;
 public class NonogramSolver {
 
     /**
-     * Show what numbers are ready
-     */
-    boolean[][] _left, _top;
-
-    /**
      * Nonogram
      */
-    Nonogram _nono;
-
-    /**
-     * Field
-     */
-    Field _field;
+    private Nonogram _nono;
 
     /**
      * Async task of image converting
      */
-    AsyncTask<Void, Void, Field> _asyncTask;
+    private AsyncTask<Void, Void, Nonogram> _asyncTask;
 
     /**
      * Show rows and columns in which there were changes during
      * the previous iteration of the nonogram solution
      */
-    HashSet<Integer> _rows, _cols;
+    private HashSet<Integer> _rows, _cols;
 
     /**
-     * Constructor by the nonogram and async task of image converting
-     *
-     * @param nono - nonogram
-     * @param asyncTask - async task of image converting
+     * Sets for storage numbers of states of state machine
+     * for algorithm that uses finite-state machine
      */
-    public NonogramSolver(
-            Nonogram nono,
-            AsyncTask<Void, Void, Field> asyncTask) {
-        _nono = nono;
-        _asyncTask = asyncTask;
+    private HashSet<Integer> _statesPrev, _statesNext;
+
+    /**
+     * Finite-state machines for nonogram (for rows and columns)
+     */
+    private StateMachine[] _rowsFSM, _colsFSM;
+
+    /**
+     * Constructor without parameters
+     */
+    public NonogramSolver() {
+        _rows = new HashSet<>();
+        _cols = new HashSet<>();
+        _statesPrev = new HashSet<>();
+        _statesNext = new HashSet<>();
     }
 
     /**
@@ -58,6 +66,11 @@ public class NonogramSolver {
      */
     public void setNonogram(Nonogram nono) {
         _nono = nono;
+        int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
+        _rowsFSM = new StateMachine[rows];
+        initFSM(_rowsFSM, ROW);
+        _colsFSM = new StateMachine[cols];
+        initFSM(_colsFSM, COL);
     }
 
     /**
@@ -65,7 +78,7 @@ public class NonogramSolver {
      *
      * @param asyncTask - async task of image converting
      */
-    public void setAsyncTask(AsyncTask<Void, Void, Field> asyncTask) {
+    public void setAsyncTask(AsyncTask<Void, Void, Nonogram> asyncTask) {
         _asyncTask = asyncTask;
     }
 
@@ -76,59 +89,90 @@ public class NonogramSolver {
      *         false, otherwise
      */
     public boolean solve() {
-        boolean isChanged = true;
         init();
-        while (!_asyncTask.isCancelled() && isChanged) {
-            isChanged = applyAlgorithms(_rows, Field.ROW);
+        applyAlgorithmSB(ROW);
+        applyAlgorithmSB(COL);
+        while (!_asyncTask.isCancelled()) {
+            if (!applyAlgorithmFSM(_rows, ROW)) return false;
             _rows.clear();
-            isChanged = applyAlgorithms(_cols, Field.COL) || isChanged;
+            if (!applyAlgorithmFSM(_cols, COL)) return false;
             _cols.clear();
+            if (_rows.isEmpty()) break;
         }
-        return check();
+        if (_asyncTask.isCancelled()) return false;
+        return _nono.checkCorrectness();
+    }
+
+    /**
+     * Method for getting nonogram
+     *
+     * @return nonogram
+     */
+    @VisibleForTesting
+    Nonogram getNonogram() {
+        return _nono;
+    }
+
+    /**
+     * Method for getting _rows or _cols
+     *
+     * @param type - ROW, if _rows
+     *               COL, if _cols
+     * @return _rows or _cols
+     */
+    @VisibleForTesting
+    HashSet<Integer> getSetWithChanges(int type) {
+        if (type == ROW) return _rows;
+        return _cols;
+    }
+
+    /**
+     * Method for getting _statesPrev
+     *
+     * @return _statesPrev
+     */
+    @VisibleForTesting
+    HashSet<Integer> getStatesPrev() {
+        return _statesPrev;
+    }
+
+    /**
+     * Method for getting _statesNext
+     *
+     * @return _statesNext
+     */
+    @VisibleForTesting
+    HashSet<Integer> getStatesNext() {
+        return _statesNext;
+    }
+
+    /**
+     * Method for getting finite-state machine for nonogram
+     * (for rows or columns)
+     *
+     * @param ind - index of finite-state machine
+     * @param type - ROW, if for rows
+     *               COL, if for columns
+     * @return finite-state machines for nonogram (for rows or columns)
+     */
+    @VisibleForTesting
+    StateMachine getFSM(int ind, int type) {
+        StateMachine[] machines = getFSM(type);
+        if (ind < 0 || ind >= machines.length) return null;
+        return machines[ind];
     }
 
     /**
      * Method for initialising class fields before solution start
      */
+    @VisibleForTesting
     void init() {
         int rows = _nono.getLeftRowsLength(), cols = _nono.getTopColsLength();
-        _field = new Field(rows, cols);
-        _left = new boolean[rows][];
-        initBooleanArray(_left, Field.ROW);
-        _top = new boolean[cols][];
-        initBooleanArray(_top, Field.COL);
-        _rows = new HashSet<>();
+        _rows.clear();
         addIntervalHashSet(_rows, 0, rows);
-        _cols = new HashSet<>();
+        _cols.clear();
         addIntervalHashSet(_cols, 0, cols);
-    }
-
-    /**
-     * Method for checking solution
-     *
-     * @return true, if solution is correct
-     *         false, otherwise
-     */
-    boolean check() {
-        return checkIsAllNumbersReady(_left)
-                && checkIsAllNumbersReady(_top)
-                && _nono.isEqual(new Nonogram(_field));
-    }
-
-    /**
-     * Method for getting workspace in row or column:
-     * - each row of result matrix contains start position and
-     * next to last position
-     * of cell and number blocks
-     * - one row - one block
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return workspace
-     */
-    int[][] getWorkspace(int ind, int type) {
-        return null;
+        _nono.clearField();
     }
 
     /**
@@ -140,144 +184,218 @@ public class NonogramSolver {
      * @return true, if any cell was filled
      *         false, otherwise
      */
+    @VisibleForTesting
     boolean applySimpleBoxes(int ind, int type) {
-        return false;
+        int max = 0, count = _nono.getSecondLength(ind, type), len = count - 1;
+        int delta = 0, lineLength = _nono.getField().getLength(type);
+        int value = 0;
+        // HashSet<Integer> set = null;
+        Field field = null;
+        if (count == 0)
+            return false;
+        max = _nono.getValue(ind, 0, type);
+        len += max;
+        for (int i = 1; i < count; ++i) {
+            value = _nono.getValue(ind, i, type);
+            len += value;
+            if (value > max) max = value;
+        }
+        delta = lineLength - len;
+        if (delta < 0 || delta >= max) return false;
+        // set = type == ROW ? _cols : _rows;
+        field = _nono.getField();
+        for (int i = 0, j = 0; i < count; ++i) {
+            value = _nono.getValue(ind, i, type);
+            // addIntervalHashSet(set, j + delta, j + value);
+            for (int k = j + delta; k < j + value; ++k) {
+                field.setColor(ind, k, field.getColorState(BLACK), type);
+            }
+            j += value + 1;
+        }
+        return true;
     }
 
     /**
-     * Implementation of simple spaces algorithm
+     * Method for swapping _statesPrev and _statesNext
+     */
+    @VisibleForTesting
+    void swapStateSets() {
+        HashSet<Integer> tmp = _statesNext;
+        _statesNext = _statesPrev;
+        _statesPrev = tmp;
+    }
+
+    /**
+     * Implementation of the one step (processing one cell) of the forward move
+     * on the line of the solving algorithm using finite-state machine
+     *
+     * @param matrix - matrix for algorithm that uses finite-state machine
+     * @param machine - finite-state machine of the line
+     * @param color - index of color for cell of the line
+     * @param step - index of the cell in the line
+     */
+    @VisibleForTesting
+    void applyStateMachineForwardStep(
+            Cell[][] matrix,
+            StateMachine machine,
+            int color,
+            int step) {
+        int stateNext = 0, dir = HOR;
+        for (int state : _statesPrev) {
+            stateNext = machine.getNextState(state, color);
+            if (stateNext != INVALID) {
+                if (matrix[stateNext][step] == null) {
+                    matrix[stateNext][step] = new Cell();
+                }
+                dir = stateNext == state ? HOR : DIAG;
+                matrix[stateNext][step].addDirection(dir, color);
+                _statesNext.add(stateNext);
+            }
+        }
+    }
+
+    /**
+     * Implementation of forward move on the line of the solving algorithm
+     * using finite-state machine
+     *
+     * @param ind - index of the line
+     * @param type - type of the line
+     * @param matrix - matrix for algorithm that uses finite-state machine
+     */
+    @VisibleForTesting
+    void applyStateMachineForward(int ind, int type, Cell[][] matrix) {
+        StateMachine machine = getFSM(ind, type);
+        Field field = _nono.getField();
+        int length = field.getLength(type), color = EMPTY;
+        clearStateSets();
+        _statesPrev.add(0);
+        for (int i = 0; i < length && !_statesPrev.isEmpty(); ++i) {
+            color = field.getColor(ind, i, type);
+            if (color == EMPTY) {
+                for (int j = 0; j < field.getColorsCount(); ++j) {
+                    applyStateMachineForwardStep(matrix, machine, j, i);
+                }
+            } else {
+                applyStateMachineForwardStep(matrix, machine, color, i);
+            }
+            _statesPrev.clear();
+            swapStateSets();
+        }
+    }
+
+    /**
+     * Implementation of the one step (processing one cell) of the reverse move
+     * on the line of the solving algorithm using finite-state machine
+     *
+     * @param matrix - matrix for algorithm that uses finite-state machine
+     * @param step - index of the cell in the line
+     * @param ind - index of the line
+     * @param type - type of the line
+     */
+    @VisibleForTesting
+    void applyStateMachineReverseStep(
+            Cell[][] matrix,
+            int step,
+            int ind,
+            int type) {
+        int dirsCount = 0;
+        int color = matrix[_statesPrev.iterator().next()][step].getValue(0);
+        Cell cell = null;
+        for (int state : _statesPrev) {
+            cell = matrix[state][step];
+            dirsCount = cell.getDirectionsCount();
+            for (int i = 0; i < dirsCount; ++i) {
+                if (cell.getDirection(i) == DIAG) {
+                    _statesNext.add(state - 1);
+                } else {
+                    _statesNext.add(state);
+                }
+            }
+            if (color != EMPTY && (color != cell.getValue(0)
+                    || !cell.isEqualVals())) {
+                color = EMPTY;
+            }
+        }
+        if (color != EMPTY
+                && _nono.getField().getColor(ind, step, type) == EMPTY) {
+            _nono.getField().setColor(ind, step, color, type);
+            (type == ROW ? _cols : _rows).add(step);
+        }
+    }
+
+    /**
+     * Implementation of reverse move on the line of the solving algorithm
+     * using finite-state machine
+     *
+     * @param ind - index of the line
+     * @param type - type of the line
+     * @param matrix - matrix for algorithm that uses finite-state machine
+     */
+    @VisibleForTesting
+    void applyStateMachineReverse(int ind, int type, Cell[][] matrix) {
+        StateMachine machine = getFSM(ind, type);
+        Field field = _nono.getField();
+        int length = field.getLength(type);
+        if (matrix[machine.getStatesCount() - 1][length - 1] == null) return;
+        clearStateSets();
+        _statesPrev.add(machine.getStatesCount() - 1);
+        for (int i = length - 1; i >= 0; --i) {
+            applyStateMachineReverseStep(matrix, i, ind, type);
+            _statesPrev.clear();
+            swapStateSets();
+        }
+    }
+
+    /**
+     * Implementation of nonogram solving algorithm using finite-state machine
      *
      * @param ind - index of row or column
      * @param type - ROW, if row
      *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
+     * @return false, if this nonogram hasn't solution
+     *         true, otherwise
      */
-    boolean applySimpleSpaces(int ind, int type) {
-        return false;
+    @VisibleForTesting
+    boolean applyStateMachine(int ind, int type) {
+        StateMachine machine = getFSM(ind, type);
+        int length = _nono.getField().getLength(type);
+        int states = machine.getStatesCount();
+        Cell[][] matrix = new Cell[states][length];
+        applyStateMachineForward(ind, type, matrix);
+        if (matrix[states - 1][length - 1] == null) return false;
+        applyStateMachineReverse(ind, type, matrix);
+        return true;
     }
 
     /**
-     * Implementation of forcing algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applyForcing(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * Implementation of glue algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applyGlue(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * Implementation of joining algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applyJoining(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * Implementation of splitting algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applySplitting(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * Implementation of punctuating algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applyPunctuating(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * Implementation of dual position algorithm
-     *
-     * @param ind - index of row or column
-     * @param type - ROW, if row
-     *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
-     */
-    boolean applyDualPosition(int ind, int type) {
-        return false;
-    }
-
-    /**
-     * For every row or column with index in set applies algorithms
+     * For every row or column with index in set applies algorithm
+     * using finite-state machine
      *
      * @param set - set of indexes
      * @param type - ROW, if row
      *               COL, if column
-     * @return true, if any cell was filled
-     *         false, otherwise
+     * @return false, if this nonogram hasn't solution
+     *         true, otherwise
      */
-    private boolean applyAlgorithms(HashSet<Integer> set, int type) {
-        boolean isFilled = false, isChanged;
+    private boolean applyAlgorithmFSM(HashSet<Integer> set, int type) {
         for (int i : set) {
             if (_asyncTask.isCancelled()) break;
-            isChanged = true;
-            while (isChanged) {
-                isChanged = applySimpleBoxes(i, type);
-                isChanged = applySimpleSpaces(i, type) || isChanged;
-                isChanged = applyForcing(i, type) || isChanged;
-                isChanged = applyGlue(i, type) || isChanged;
-                isChanged = applyJoining(i, type) || isChanged;
-                isChanged = applySplitting(i, type) || isChanged;
-                isChanged = applyPunctuating(i, type) || isChanged;
-                isChanged = applyDualPosition(i, type) || isChanged;
-                isFilled = isChanged || isFilled;
-            }
+            if (!applyStateMachine(i, type)) return false;
         }
-        return isFilled;
+        return true;
     }
 
     /**
-     * Method for initialising one of the two boolean arrays
+     * For every row or column applies algorithm simple boxes
      *
-     * @param array - array for initialising
-     * @param type - ROW, if _left
-     *               COL, if _top
+     * @param type - ROW, if row
+     *               COL, if column
      */
-    private void initBooleanArray(boolean[][] array, int type) {
-        int length;
-        for (int i = 0; i < array.length; i++) {
-            length = type == Field.ROW
-                    ? _nono.getLeftRowLength(i) : _nono.getTopColLength(i);
-            array[i] = new boolean[length];
-            Arrays.fill(array[i], false);
+    private void applyAlgorithmSB(int type) {
+        int length = _nono.getFirstLength(type);
+        for (int i = 0; i < length; i++) {
+            if (_asyncTask.isCancelled()) break;
+            applySimpleBoxes(i, type);
         }
     }
 
@@ -295,19 +413,45 @@ public class NonogramSolver {
     }
 
     /**
-     * Method for checking is all numbers are ready
+     * Method for initialising _rowsFSM or _colsFSM
      *
-     * @param array - boolean array
-     * @return true, if all numbers are ready
-     *         false, otherwise
+     * @param array - _rowsFSM or _colsFSM
+     * @param type - ROW, if _rowsFSM
+     *               COL, if _colsFSM
      */
-    private boolean checkIsAllNumbersReady(boolean[][] array) {
-        for(boolean[] a : array) {
-            for(boolean b : a) {
-                if(!b) return false;
+    private void initFSM(StateMachine[] array, int type) {
+        int delim = _nono.getField().getColorState(WHITE);
+        int length;
+        for (int i = 0; i < _nono.getFirstLength(type); i++) {
+            length = _nono.getSecondLength(i, type);
+            int[][] line = new int[length][2];
+            for (int j = 0; j < length; j++) {
+                line[j][0] = _nono.getValue(i, j, type);
+                line[j][1] = _nono.getField().getColorState(BLACK);
             }
+            array[i] = new StateMachine(line, 2, delim);
         }
-        return true;
+    }
+
+    /**
+     * Method for getting finite-state machines for nonogram
+     * (for rows or columns)
+     *
+     * @param type - ROW, if for rows
+     *               COL, if for columns
+     * @return finite-state machines for nonogram (for rows or columns)
+     */
+    private StateMachine[] getFSM(int type) {
+        if (type == ROW) return _rowsFSM;
+        return _colsFSM;
+    }
+
+    /**
+     * Method for clearing _statesPrev and _statesNext
+     */
+    private void clearStateSets() {
+        _statesPrev.clear();
+        _statesNext.clear();
     }
 
 }

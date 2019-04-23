@@ -9,5 +9,6 @@
     <color name="colorBrightGrey">#52565B</color>
     <color name="colorRiverBed">#47525E</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorTransparent">#00000000</color>
 
 </resources>

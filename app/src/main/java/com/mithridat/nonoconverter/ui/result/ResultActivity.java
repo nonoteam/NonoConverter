@@ -1,28 +1,42 @@
 package com.mithridat.nonoconverter.ui.result;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.view.View.OnClickListener;
 
 import com.mithridat.nonoconverter.R;
-import com.mithridat.nonoconverter.backend.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
-import com.mithridat.nonoconverter.ui.start.StartActivity;
+
+import static com.mithridat.nonoconverter.ui.result.SaveImage.saveImage;
+import static com.mithridat.nonoconverter.ui.result.StringKeys.DIALOG_AFTER_SAVE_TAG;
+import static com.mithridat.nonoconverter.ui.result.StringKeys.THUMBNAIL;
 
 /**
  * Class for handling result activity
  */
-public class ResultActivity extends AppCompatActivity implements View.OnClickListener {
+public class ResultActivity extends AppCompatActivity implements OnClickListener {
+
+    /**
+     * Done and Fail dialog fragments.
+     */
+    FragmentAfterSaveDialog _fragmentDoneDialog, _fragmentFailDialog;
+
+    /**
+     * Home-return fragment.
+     */
+    FragmentHomeReturnDialog _fragmentHomeReturnDialog;
+
+    /**
+     * Nonogram from backend
+     */
+    Nonogram _nonogram;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +45,14 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.button_save_thumb).setOnClickListener(this);
         findViewById(R.id.button_save_nng).setOnClickListener(this);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_result));
-        NonogramDrawer nonogramDrawer = findViewById(R.id.nonogram_drawer);
-        Field field =
+        NonogramView nonorgamView = findViewById(R.id.nonogram_view);
+        _nonogram =
                 getIntent()
                         .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);
-        if (nonogramDrawer != null) {
-            nonogramMarginSet(nonogramDrawer);
-            nonogramDrawer.setNonogramField(field);
-        }
+        if (nonorgamView != null) nonorgamView.setNonogram(_nonogram);
+        _fragmentDoneDialog = FragmentAfterSaveDialog.newInstance(true);
+        _fragmentFailDialog = FragmentAfterSaveDialog.newInstance(false);
+        _fragmentHomeReturnDialog = new FragmentHomeReturnDialog();
     }
 
     @Override
@@ -56,7 +70,8 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_home:
-                createDialogHomeReturn();
+                _fragmentHomeReturnDialog.show(getSupportFragmentManager(),
+                        StringKeys.DIALOG_HOME_RETURN_TAG);
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -78,8 +93,12 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_save_thumb:
+                boolean result =
+                        saveImage(_nonogram.getField().getBitmap(), THUMBNAIL);
+                showAfterSaveDialog(result);
+                break;
             case R.id.button_save_nng:
-                createDialogDone();
+                showAfterSaveDialog(false);
                 break;
             default:
                 break;
@@ -87,77 +106,14 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     /**
-     * Create dialog with "Done" message
-     */
-    private void createDialogDone() {
-        OnClickListener listener = new OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.title_dialog_done)
-                .setIcon(R.drawable.ic_done)
-                .setPositiveButton(R.string.action_ok, listener)
-                .create()
-                .show();
-    }
-
-    /**
-     * Create home-return dialog
-     */
-    private void createDialogHomeReturn() {
-        OnClickListener listenerReturn = new OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-                Intent intent = new Intent(ResultActivity.this,
-                        StartActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right,
-                        R.anim.slide_out_right);
-            }
-        };
-
-        OnClickListener listenerCancel = new OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.title_dialog_home_return)
-                .setIcon(R.drawable.ic_info)
-                .setMessage(R.string.msg_home_return)
-                .setPositiveButton(R.string.action_return, listenerReturn)
-                .setNegativeButton(R.string.action_cancel, listenerCancel)
-                .create()
-                .show();
-    }
-
-    /**
-     * Calculate margins according to the toolbar and button layout sizes
-     * and set them for nonogram drawer.
+     * Method for showing dialog after saving thumbnail/nonogram
      *
-     * @param nonogramDrawer instance of NonogramDrawer
+     * @param success - true, if image was saved
+     *                  false, otherwise
      */
-    private void nonogramMarginSet(NonogramDrawer nonogramDrawer) {
-        int marginVer = -50;
-        int marginHor = 50;
-        if (nonogramDrawer == null) return;
-
-        Toolbar toolbar = findViewById(R.id.toolbar_result);
-        if (toolbar != null) {
-            toolbar.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            marginVer += toolbar.getMeasuredHeight();
-        }
-        LinearLayout layout = findViewById(R.id.linear_layout_result_buttons);
-        if (layout != null) {
-            layout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            marginVer += layout.getMeasuredHeight();
-        }
-        nonogramDrawer.setMarginHor(marginHor);
-        nonogramDrawer.setMarginVer(marginVer);
+    private void showAfterSaveDialog(boolean success) {
+        FragmentAfterSaveDialog dialog =
+                success ? _fragmentDoneDialog : _fragmentFailDialog;
+        dialog.show(getSupportFragmentManager(), DIALOG_AFTER_SAVE_TAG);
     }
 }

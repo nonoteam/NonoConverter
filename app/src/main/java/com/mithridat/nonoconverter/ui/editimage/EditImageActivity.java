@@ -23,8 +23,8 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.mithridat.nonoconverter.R;
-import com.mithridat.nonoconverter.backend.Field;
 import com.mithridat.nonoconverter.backend.ImageConverter;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 import com.mithridat.nonoconverter.ui.imagepicker.ImageUpload;
 import com.mithridat.nonoconverter.ui.result.ResultActivity;
@@ -90,9 +90,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final String DIALOG_CONVERT_TAG = "fragmentConvertDialog";
 
     /**
-     * Tag for fragment convert dialog
+     * Tag for cropped image
      */
-    private static final String CROP_LOADED_IMAGE  = "cropLoadedImage";
+    private static final String CROP_LOADED_IMAGE = "cropLoadedImage";
+
+    /**
+     * Tag for _isCropeed flag
+     */
+    private static final String BMP_IS_CROPPED_TAG = "bmpIsCropped";
 
     /**
      * Tag for crop area rect
@@ -189,6 +194,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      */
     boolean _needSaveCropped = false;
 
+    /**
+     * Flag for checking if image is cropped
+     */
+    boolean _isCropped = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,17 +229,24 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             _isSelectedColumns = savedInstanceState
                     .getByte(IS_SELECTED_COLUMNS_TAG, (byte) 0) != 0;
 
+            _pathImage = savedInstanceState.getString(BMP_CURRENT_IMAGE_TAG);
             _uriCurrentImage = (Uri)savedInstanceState
                     .getParcelable(CROP_LOADED_IMAGE);
-            try {
-                _bmpCurrentImage
-                        = getBitmap(this.getContentResolver(),
-                                _uriCurrentImage);
-            } catch (IOException e) {
-                e.printStackTrace();
+            _isCropped = savedInstanceState
+                    .getByte(BMP_IS_CROPPED_TAG, (byte) 0) != 0;
+            if (_isCropped) {
+                try {
+                    _bmpCurrentImage =
+                            getBitmap(getContentResolver(), _uriCurrentImage);
+                } catch (IOException e) {
+                    setImageFromPath(_pathImage);
+                    e.printStackTrace();
+                }
+            }
+            else {
+                setImageFromPath(_pathImage);
             }
             _rectCrop = (Rect) savedInstanceState.getParcelable(RECT);
-            _pathImage = savedInstanceState.getString(BMP_CURRENT_IMAGE_TAG);
         } else if (_bmpCurrentImage == null) {
             _pathImage =
                     getIntent()
@@ -279,6 +296,12 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                     .findViewById(R.id.image_view_main))
                     .setImageBitmap(_bmpCurrentImage);
         }
+        if (_columns == 0) {
+            int bmWidth = _bmpCurrentImage.getWidth();
+            int bmHeight = _bmpCurrentImage.getHeight();
+            _columns = bmWidth < 90 ? bmWidth : 45;
+            _rows = _columns * bmHeight / bmWidth;
+        }
     }
 
     @Override
@@ -300,8 +323,10 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
 
         outState.putString(BMP_CURRENT_IMAGE_TAG, _pathImage);
         _uriCurrentImage = writeTempStateStoreBitmap(this,
-                _bmpCurrentImage, _uriCurrentImage);
+                _bmpCurrentImage,
+                _uriCurrentImage);
         outState.putParcelable(CROP_LOADED_IMAGE, _uriCurrentImage);
+        outState.putByte(BMP_IS_CROPPED_TAG, _isCropped ? (byte) 1 : (byte) 0);
         _rectCrop = _fragmentCrop.getCropRect();
         if (_rectCrop != null) {
             outState.putParcelable(RECT, _fragmentCrop.getCropRect());
@@ -315,15 +340,16 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 onBackPressed();
                 return true;
             case R.id.menu_convert:
-                if (!_isSelectedColumns) {
-                    _fragmentConvertDialog.show(getSupportFragmentManager(),
-                            DIALOG_CONVERT_TAG);
-                } else {
-                    showPd();
-                    _atConvert = new AsyncTaskConvertImage();
-                    _atConvert.link(this);
-                    _atConvert.execute();
+                int bmWidth = _bmpCurrentImage.getWidth();
+                if (_columns > bmWidth) {
+                    int bmHeight = _bmpCurrentImage.getHeight();
+                    _columns = bmWidth;
+                    _rows = _columns * bmWidth / bmHeight;
                 }
+                showPd();
+                _atConvert = new AsyncTaskConvertImage();
+                _atConvert.link(this);
+                _atConvert.execute();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -332,7 +358,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.button_crop:
                 changeFragment(FRAGMENT_CROP);
                 break;
@@ -437,9 +463,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * Reset number of columns and rows in nonogram
      */
     void resetConvertParams() {
-        _rows = 0;
-        _columns = 0;
-        _isSelectedColumns = false;
+        int bmWidth = _bmpCurrentImage.getWidth();
+        int bmHeight = _bmpCurrentImage.getHeight();
+        _columns = bmWidth < 90 ? bmWidth : 45;
+        _rows = _columns * bmHeight / bmWidth;
+        return;
     }
 
     /**
@@ -466,14 +494,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      */
     private Uri writeTempStateStoreBitmap(Context context, Bitmap bitmap, Uri uri) {
         try {
-            if(uri == null) {
+            if (uri == null) {
                 uri =
                         Uri.fromFile(
                                 File.createTempFile("ic_state_store_temp",
                                         ".jpg",
                                         context.getCacheDir()));
             }
-            if(_needSaveCropped) {
+            if (_needSaveCropped) {
                 writeBitmapToUri(context,
                         bitmap,
                         uri,
@@ -490,7 +518,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Write the given bitmap to the given uri using the given compression.
      */
-     private void writeBitmapToUri(
+    private void writeBitmapToUri(
             Context context,
             Bitmap bitmap,
             Uri uri,
@@ -511,10 +539,10 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      *
      * @return true if existing
      */
-     private boolean checkColumns() {
+    private boolean checkColumns() {
         FragmentColumns myFragment1 =
                 (FragmentColumns) getSupportFragmentManager()
-                .findFragmentByTag(FRAGMENT_COLUMNS_TAG);
+                        .findFragmentByTag(FRAGMENT_COLUMNS_TAG);
 
         return myFragment1 != null;
     }
@@ -524,8 +552,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      *
      * @return true if existing
      */
-    private boolean checkCrop()
-    {
+    private boolean checkCrop() {
         FragmentCrop myFragment =
                 (FragmentCrop) getSupportFragmentManager()
                         .findFragmentByTag(FRAGMENT_CROP_TAG);
@@ -585,7 +612,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Inner class for async converting image in background.
      */
-    static class AsyncTaskConvertImage extends AsyncTask<Void, Void, Field> {
+    static class AsyncTaskConvertImage extends AsyncTask<Void, Void, Nonogram> {
 
         /**
          * Reference to activity
@@ -593,7 +620,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         private EditImageActivity _activity;
 
         @Override
-        protected Field doInBackground(Void... params) {
+        protected Nonogram doInBackground(Void... params) {
             try {
                 return ImageConverter.convertImage(_activity._bmpCurrentImage,
                         _activity._rows,
@@ -606,14 +633,20 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         }
 
         @Override
-        protected void onPostExecute(Field result) {
+        protected void onPostExecute(Nonogram result) {
             if (isCancelled()) return;
             _activity._pdLoading.dismiss();
-            Intent intent = new Intent(_activity, ResultActivity.class);
-            intent.putExtra(ActivitiesConstants.EX_NONO_FIELD, result);
-            _activity.startActivity(intent);
-            _activity.overridePendingTransition(R.anim.slide_in_left,
-                    R.anim.slide_out_left);
+            if (result == null) {
+                _activity._fragmentConvertDialog
+                        .show(_activity.getSupportFragmentManager(),
+                                DIALOG_CONVERT_TAG);
+            } else {
+                Intent intent = new Intent(_activity, ResultActivity.class);
+                intent.putExtra(ActivitiesConstants.EX_NONO_FIELD, result);
+                _activity.startActivity(intent);
+                _activity.overridePendingTransition(R.anim.slide_in_left,
+                        R.anim.slide_out_left);
+            }
         }
 
         /**

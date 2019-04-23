@@ -94,13 +94,25 @@ public class Panel extends View {
     }
 
     /**
+     * Set sizes of drawing grid
+     *
+     * @param countRows - count rows rows of the grid
+     * @param countColumns - count columns of the grid
+     */
+    void setGridSizes(int countRows, int countColumns) {
+        _countRows = countRows;
+        _countColumns = countColumns;
+    }
+
+    /**
      * Draw grid
      *
      * @param canvas - canvas received in 'onDraw'
      */
     private void drawGrid(Canvas canvas) {
-        int height = _height / _countRows;
+        if (_countColumns == 0) return;
         int width = _width / _countColumns;
+        int height = _height / _countRows;
         for (int i = 0; i <= _width; i += width) {
             canvas.drawLine(_startWidth + i,
                     _startHeight,

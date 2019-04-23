@@ -14,16 +14,11 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
-    <com.mithridat.nonoconverter.ui.result.NonogramDrawer
-        android:id="@+id/nonogram_drawer"
+    <com.mithridat.nonoconverter.ui.result.NonogramView
+        android:id="@+id/nonogram_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="0dp"
+        android:background="@color/colorTransparent"
         app:layout_constraintBottom_toTopOf="@+id/linear_layout_result_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

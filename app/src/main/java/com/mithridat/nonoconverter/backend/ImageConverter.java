@@ -3,7 +3,7 @@ package com.mithridat.nonoconverter.backend;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-import com.mithridat.nonoconverter.backend.solver.Nonogram;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.backend.solver.NonogramSolver;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -26,25 +26,29 @@ public class ImageConverter {
      * @param asyncTask - async task of image converting
      * @return nonogram field
      */
-    public static Field convertImage(
+    public static Nonogram convertImage(
             Bitmap bmp,
             int rows,
             int cols,
-            AsyncTask<Void, Void, Field> asyncTask) {
+            AsyncTask<Void, Void, Nonogram> asyncTask) {
         rows = min(rows, bmp.getHeight());
         cols = min(cols, bmp.getWidth());
         Bitmap bw = getBlackWhite(bmp.copy(bmp.getConfig(), bmp.isMutable()));
-        Field field = null;
-        NonogramSolver solver = new NonogramSolver(null, asyncTask);
-        for (int p = 128; !asyncTask.isCancelled() && p <= 248; p += 5) {
-            field = getThumbnail(bw, rows, cols, p);
-            solver.setNonogram(new Nonogram(field));
-            if (solver.solve()) return field;
+        if (bw.getWidth() % cols != 0 || bw.getHeight() % rows != 0) {
+            bw =
+                    resize(bw,
+                            bw.getWidth() / cols * cols,
+                            bw.getHeight() / rows * rows);
         }
-        /*
-         *TODO: `field` needs to be replaced by `null` when solver will be ready
-         */
-        return field;
+        Nonogram nono = null;
+        NonogramSolver solver = new NonogramSolver();
+        solver.setAsyncTask(asyncTask);
+        for (int p = 128; !asyncTask.isCancelled() && p <= 248; p += 5) {
+            nono = new Nonogram(bw, rows, cols, p);
+            solver.setNonogram(nono);
+            if (solver.solve()) return nono.translateToColors();
+        }
+        return null;
     }
 
     /**
@@ -66,36 +70,20 @@ public class ImageConverter {
     }
 
     /**
-     * Method for getting thumbnail from black-and-white image
+     * Method for resizing bitmap
      *
-     * @param bmp - black-and-white image
-     * @param rows - number of thumbnail rows
-     * @param cols - number of thumbnail columns
-     * @param p - fill parameter
-     * @return thumbnail
+     * @param bmp - bitmap
+     * @param width - new width
+     * @param height - new height
+     * @return new bitmap
      */
-    private static Field getThumbnail(Bitmap bmp, int rows, int cols, int p) {
-        Field field = new Field(rows, cols);
-        int height = bmp.getHeight(), width = bmp.getWidth();
-        int h = height / rows, w = width / cols;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                int sumColors = 0;
-                for (int x = j * w; x < (j + 1) * w; x++) {
-                    for (int y = i * h; y < (i + 1) * h; y++) {
-                        int color = bmp.getPixel(x, y);
-                        if (color == Colors.WHITE) {
-                            sumColors += 255;
-                        }
-                    }
-                }
-                int avgColor = sumColors / (w * h);
-                if (avgColor <= p) {
-                    field.setColor(i, j, Colors.BLACK);
-                }
-            }
-        }
-        return field;
+    public static Bitmap resize(Bitmap bmp, int width, int height) {
+        Mat imageMat = new Mat();
+        Bitmap resized = Bitmap.createBitmap(width, height, bmp.getConfig());
+        Utils.bitmapToMat(bmp, imageMat);
+        Imgproc.resize(imageMat, imageMat, new Size(width, height));
+        Utils.matToBitmap(imageMat, resized);
+        return resized;
     }
 
 }

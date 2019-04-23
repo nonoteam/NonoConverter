@@ -1,23 +1,18 @@
 package com.mithridat.nonoconverter.ui.editimage;
 
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View.OnClickListener;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+
 import androidx.fragment.app.Fragment;
 
 import com.mithridat.nonoconverter.R;
@@ -25,7 +20,7 @@ import com.mithridat.nonoconverter.R;
 /**
  * Class for the columns fragment
  */
-public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChangeListener {
+public class FragmentColumns extends Fragment implements OnSeekBarChangeListener, OnClickListener {
 
     /**
      * Tag for fragment columns
@@ -38,21 +33,6 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
     private static final String COUNT_ROWS_TAG = "countRows";
 
     /**
-     * Tag for fragment main
-     */
-    private static final String IDENTIFIER_NAME = "status_bar_height";
-
-    /**
-     * Tag for fragment main
-     */
-    private static final String IDENTIFIER_DEF_TYPE = "dimen";
-
-    /**
-     * Tag for fragment main
-     */
-    private static final String IDENTIFIER_DEF_PACKAGE = "android";
-
-    /**
      * Comma
      */
     private static final String COMMA = ", ";
@@ -60,7 +40,7 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
     /**
      * ImageVies for columns fragment
      */
-    private ImageView _ivColumns;
+    private CustomImageView _civColumns;
 
     /**
      * Bitmap for columns fragment
@@ -118,11 +98,6 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
     private int _countRows;
 
     /**
-     * Boolean for orientation
-     */
-    private boolean _isLandscape = false;
-
-    /**
      * Proportional coefficient
      */
     private double _propCoefficient;
@@ -141,6 +116,11 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
      * True if image fulls all ivColumns width
      */
     private boolean _isScreenWidth;
+
+    /**
+     * True if sizes were saved
+     */
+    private boolean _isSaved;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -170,6 +150,24 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
     }
 
     @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.button_add:
+                if (_countColumns < _sbColumns.getMax() + 5) {
+                    _sbColumns.setProgress(_sbColumns.getProgress() + 1);
+                }
+                break;
+            case R.id.button_remove:
+                if (_countColumns > 5) {
+                    _sbColumns.setProgress(_sbColumns.getProgress() - 1);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(COUNT_COLUMNS_TAG, _countColumns);
@@ -181,18 +179,24 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
             LayoutInflater inflater,
             ViewGroup container,
             Bundle savedInstanceState) {
-        boolean isSaved = false;
+        _isSaved = false;
         _vColumnsFragment =
                 inflater.inflate(R.layout.fragment_columns, null);
         _panel = _vColumnsFragment.findViewById(R.id.panel);
-        _ivColumns = _vColumnsFragment.findViewById(R.id.image_view_columns);
-        _sbColumns = _vColumnsFragment.findViewById(R.id.seek_bar_Rows);
+        _civColumns = _vColumnsFragment.findViewById(R.id.image_view_columns);
+        _civColumns.setParent(this);
+        _sbColumns = _vColumnsFragment.findViewById(R.id.seek_bar_rows);
         _sbColumns.setOnSeekBarChangeListener(this);
         _bmpImageColumns = ((EditImageActivity)getActivity())._bmpCurrentImage;
 
-        _ivColumns.setImageBitmap(_bmpImageColumns);
-        _tvRowsAndColumns = _vColumnsFragment
-                .findViewById(R.id.text_view_Rows);
+        _civColumns.setImageBitmap(_bmpImageColumns);
+        _tvRowsAndColumns
+                = _vColumnsFragment.findViewById(R.id.text_view_rows);
+
+        _vColumnsFragment.findViewById(R.id.button_add)
+                .setOnClickListener(this);
+        _vColumnsFragment.findViewById(R.id.button_remove)
+                .setOnClickListener(this);
 
         if (savedInstanceState != null) {
             _countColumns = savedInstanceState.getInt(COUNT_COLUMNS_TAG,
@@ -200,43 +204,47 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
             _countRows = savedInstanceState.getInt(COUNT_ROWS_TAG,
                     0);
             setTextViewRowsAndColumnsText();
-            isSaved = true;
+            _isSaved = true;
         }
-
-        if (getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_LANDSCAPE) _isLandscape = true;
-
-        setSizes(isSaved);
         return _vColumnsFragment;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        _sbColumns.setProgress(_countColumns / 5 - 1);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        _sbColumns.setProgress(0);
     }
 
     @Override
     public void onProgressChanged(
             SeekBar seekBar,
             int progress,
-            boolean fromUser) {}
+            boolean fromUser) {
+        if (_width == 0) return;
+        _countColumns = (progress + 5);
+        updateScreenElements();
+    }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {}
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        _countColumns = (seekBar.getProgress() + 1) * 5;
+    public void onStopTrackingTouch(SeekBar seekBar) {}
+
+    /**
+     * Set sizes of drew image and compute current
+     *
+     * @param width - width of the image
+     * @param height - height of the image
+     */
+    public void setCustomImageViewSizes(int width, int height) {
+        _imageViewWidth = width;
+        _imageViewHeight = height;
+        setSizes();
+    }
+
+    /**
+     * Recompute countRows, redraw sizes and grid
+     */
+    private void updateScreenElements()
+    {
         _countRows = _countColumns * _height / _width;
         setTextViewRowsAndColumnsText();
-        showImage();
+        _panel.setGridSizes(_countRows, _countColumns);
         _panel.invalidate();
     }
 
@@ -285,57 +293,23 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
 
     /**
      * Compute sizes in onCreateView
-     *
-     * @param isSaved - true if SavedInstance != null
      */
-    private void setSizes(boolean isSaved) {
-        Context context = getContext();
-        if (context == null) return;
-        WindowManager wm =
-                (WindowManager) context
-                        .getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        display.getMetrics(metrics);
-
-        int resourceId = getResources()
-                .getIdentifier(IDENTIFIER_NAME,
-                        IDENTIFIER_DEF_TYPE,
-                        IDENTIFIER_DEF_PACKAGE);
-        int statusBarHeight =
-                getResources().getDimensionPixelSize(resourceId);
-
-        Point size = new Point();
-        display.getSize(size);
-        int screenWidth = size.x;
-        int screenHeight = size.y;
-
-        TypedArray styledAttributes = getContext().getTheme()
-                .obtainStyledAttributes(
-                        new int[] { android.R.attr.actionBarSize });
-        int tbHeight =
-                (int) styledAttributes.getDimension(0, 0);
-        styledAttributes.recycle();
-
-        if (!_isLandscape){
-            _imageViewWidth = screenWidth;
-            _imageViewHeight = screenHeight - tbHeight - statusBarHeight
-                    - (int)(60 * metrics.density);
-        }
-        else {
-            _imageViewWidth = (int)(screenWidth - 90 * metrics.density);
-            _imageViewHeight = screenHeight - tbHeight - statusBarHeight;
-        }
-
+    private void setSizes() {
         _isScreenWidth = isScreenWidth();
         computeSizes();
-
-        if (!isSaved) {
+        int bmWidth = _bmpImageColumns.getWidth();
+        if (bmWidth < 90) {
+            _sbColumns.setMax(bmWidth-5);
+        } else {
+            _sbColumns.setMax(85);
+        }
+        if (!_isSaved) {
             _countColumns = ((EditImageActivity)getActivity())._columns;
-
-            if (_countColumns == 0) _countColumns = 5;
-
+            if (bmWidth < 90) {
+                if (_countColumns > bmWidth) {
+                    _countColumns = bmWidth;
+                }
+            }
             _countRows = (int)(_countColumns * _height * 1.0 / (_width * 1.0));
             setTextViewRowsAndColumnsText();
         }
@@ -345,23 +319,6 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
                 _height,
                 _countRows,
                 _countColumns);
-    }
-
-    /**
-     * Compute sizes before showing image
-     */
-    private void showImage() {
-        _imageViewWidth = _ivColumns.getWidth();
-        _imageViewHeight = _ivColumns.getHeight();
-
-        computeSizes();
-
-        _countRows = (int)(_countColumns * _height * 1.0 / (_width * 1.0));
-        _panel.setLengths(_startWidth,
-                _startHeight,
-                _width,
-                _height,
-                _countRows,
-                _countColumns);
+        _sbColumns.setProgress(_countColumns - 5);
     }
 }

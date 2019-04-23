@@ -1,212 +1,150 @@
 package com.mithridat.nonoconverter.ui.result;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.AttributeSet;
-import android.view.Display;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 
-import com.mithridat.nonoconverter.backend.Field;
+import com.mithridat.nonoconverter.backend.nonogram.Field;
 
 /**
  * Class for drawing nonogram.
  */
-public class NonogramDrawer extends View {
+class NonogramDrawer {
 
     /**
-     * Brush, containing painting parameters.
+     * Size of cells in nonogram grid.
      */
-    private Paint _painter;
+    private float _cellSize = 0f;
 
     /**
-     * Nonogram as Field backend class.
+     * Position of the top left corner of nonogram.
      */
-    private Field _nonogram = null;
+    private PointF _position;
+
+    /**
+     * Brush for painting grid.
+     */
+    private Paint _gridPainter;
+
+    /**
+     * Brush for painting filled cells and background.
+     */
+    private Paint _cellsPainter;
+
+    /**
+     * Rectangles for painting background, grid and filled cells.
+     */
+    private RectF _backgroundRect, _gridRect, _cellsRect;
 
     /**
      * Width of the lines in grid.
      */
-    private int _linesWidth = 3;
+    private float _linesWidth = 3f;
 
     /**
-     * Size of cells in screen coordinates.
+     * Indent between round rectangle in filled cell and grid lines.
      */
-    private int _cellSize = 0;
+    private float _cellGap = 0f;
 
     /**
-     * Minimal horizontal and vertical indents from screen borders.
+     * Radius for round rectangles if filled cells.
      */
-    private int _minMarginHor = 0;
-    private int _minMarginVer = 0;
+    private float _radius = 0f;
 
-    public NonogramDrawer(Context context) {
-        super(context);
-        painterInit();
-    }
-
-    public NonogramDrawer(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        painterInit();
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (canvas == null) return;
-        canvas.drawColor(Color.WHITE);
-        drawNng(canvas);
+    NonogramDrawer() {
+        _gridPainter = new Paint();
+        _cellsPainter = new Paint();
+        _backgroundRect = new RectF();
+        _gridRect = new RectF();
+        _cellsRect = new RectF();
+        _position = new PointF(0f, 0f);
+        paintersInit();
     }
 
     /**
-     * Set nonogram, recalculate metrics and redraw view.
+     * Set position of the top left corner of nonogram.
+     * Used to translate the picture.
      *
-     * @param nonogramField nonogram as Field backend class
+     * @param startX - x coordinate
+     * @param startY - y coordinate
      */
-    void setNonogramField(Field nonogramField) {
-        _nonogram = nonogramField;
-        recalculateSizes();
-        invalidate();
+    void setPosition(float startX, float startY) {
+        _position.x = startX;
+        _position.y = startY;
+        _backgroundRect.offsetTo(startX, startY);
     }
 
     /**
-     * Set minimal vertical margin, recalculate metrics and redraw view.
+     * Set size of cells in nonogram grid.
+     * Used to scale the picture from the top left corner.
      *
-     * @param marginVer vertical margin
+     * @param cellSize - size of cells
      */
-    void setMarginVer(int marginVer) {
-        _minMarginVer = marginVer;
-        recalculateSizes();
-        invalidate();
-    }
+    void setCellSize(float cellSize) {
+        _cellSize = cellSize;
 
-    /**
-     * Set minimal horizontal margin, recalculate metrics and redraw view.
-     *
-     * @param marginHor horizontal margin
-     */
-    void setMarginHor(int marginHor) {
-        _minMarginHor = marginHor;
-        recalculateSizes();
-        invalidate();
-    }
+        _gridRect.top = 0f;
+        _gridRect.left = 0f;
+        _gridRect.bottom = cellSize;
+        _gridRect.right = cellSize;
 
-    /**
-     * Set initial painter parameters.
-     */
-    private void painterInit() {
-        _painter = new Paint();
-        _painter.setStyle(Paint.Style.FILL);
-        _painter.setStrokeWidth(_linesWidth);
-        _painter.setColor(Color.BLACK);
-    }
-
-    /**
-     * Recalculate cell size, height and width of view.
-     * Called if nonogram or margins has changed.
-     */
-    private void recalculateSizes() {
-        if (_nonogram == null) return;
-
-        int cellSizeHor =
-                (getDeviceWidth(getContext()) - 2 * _minMarginHor)
-                        / _nonogram.getCols();
-        int cellSizeVer =
-                (getDeviceHeight(getContext()) - 2 * _minMarginVer)
-                        / _nonogram.getRows();
-        _cellSize = Math.min(cellSizeHor, cellSizeVer);
-
-        ViewGroup.LayoutParams params = this.getLayoutParams();
-        params.width =
-                _cellSize * _nonogram.getCols() + _linesWidth;
-        params.height =
-                _cellSize * _nonogram.getRows() + _linesWidth;
-        setLayoutParams(params);
-    }
-
-    /**
-     * Function for getting device width.
-     *
-     * @param context current context
-     * @return current device screen width
-     */
-    private static int getDeviceWidth(Context context) {
-        WindowManager wm = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        return display.getWidth();
-    }
-
-    /**
-     * Function for getting device height.
-     *
-     * @param context current context
-     * @return current device screen height
-     */
-    private static int getDeviceHeight(Context context) {
-        WindowManager wm = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        return display.getHeight();
+        /*
+        "Magical" constants like '10f' or '8f'
+        are the results of the empirical selection.
+         */
+        _cellGap = _linesWidth / 2f + (_cellSize - _linesWidth) / 8f;
+        _cellsRect.top = _cellGap;
+        _cellsRect.left = _cellGap;
+        _cellsRect.bottom = _cellSize - _cellGap;
+        _cellsRect.right = _cellSize - _cellGap;
+        _radius = _cellSize / 10f;
     }
 
     /**
      * Function for drawing nonogram.
      *
-     * @param canvas canvas received in 'onDraw'
+     * @param canvas   - canvas received in 'onDraw'
+     * @param nonogram - nonogram to draw
      */
-    private void drawNng(Canvas canvas) {
-        if (_nonogram == null) return;
-        /*
-        "Magical" constants like '10' or '8'
-        are the results of the empirical selection.
-         */
-        int columns = _nonogram.getCols();
-        int rows = _nonogram.getRows();
-        int cellGap = _linesWidth + (_cellSize - _linesWidth) / 10;
-        int startX = _linesWidth / 2;
-        int startY = _linesWidth / 2;
-        int stopX = startX + _cellSize * columns;
-        int stopY = startY + _cellSize * rows;
-        int radius = _cellSize / 8 + 1;
-        _painter.setColor(Color.BLACK);
+    void drawNonogram(Canvas canvas, final Field nonogram) {
+        if (canvas == null || nonogram == null) return;
 
-        // horizontal lines
-        for (int i = 0; i <= rows; i++) {
-            canvas.drawLine(startX,
-                    startY + i * _cellSize,
-                    stopX,
-                    startY + i * _cellSize,
-                    _painter);
-        }
+        final int columns = nonogram.getCols();
+        final int rows = nonogram.getRows();
 
-        //vertical lines
-        for (int i = 0; i <= columns; i++) {
-            canvas.drawLine(startX + i * _cellSize,
-                    startY,
-                    startX + i * _cellSize,
-                    stopY,
-                    _painter);
-        }
+        // draw white background
+        _backgroundRect.bottom = _position.y + rows * _cellSize;
+        _backgroundRect.right = _position.x + columns * _cellSize;
+        _cellsPainter.setColor(Color.WHITE);
+        canvas.drawRect(_backgroundRect, _cellsPainter);
 
-        //filled cells
-        RectF rect = new RectF();
+        //draw grid and filled cells
+        _gridRect.offsetTo(_position.x, _position.y);
+        _cellsRect.offsetTo(_position.x + _cellGap, _position.y + _cellGap);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                rect.left = startX + j * _cellSize + cellGap;
-                rect.top = startY + i * _cellSize + cellGap;
-                rect.right = rect.left + _cellSize - 2 * cellGap;
-                rect.bottom = rect.top + _cellSize - 2 * cellGap;
-                _painter.setColor(_nonogram.getColor(i, j));
-                canvas.drawRoundRect(rect, radius, radius, _painter);
+                canvas.drawRect(_gridRect, _gridPainter);
+                _cellsPainter.setColor(nonogram.getColor(i, j));
+                canvas.drawRoundRect(_cellsRect, _radius, _radius, _cellsPainter);
+                _gridRect.offset(_cellSize, 0f);
+                _cellsRect.offset(_cellSize, 0f);
             }
+            _gridRect.offset(0f, _cellSize);
+            _cellsRect.offset(0f, _cellSize);
+            _gridRect.offsetTo(_position.x, _gridRect.top);
+            _cellsRect.offsetTo(_position.x + _cellGap, _cellsRect.top);
         }
     }
+
+    /**
+     * Set parameters for painters.
+     */
+    private void paintersInit() {
+        _gridPainter.setStyle(Paint.Style.STROKE);
+        _gridPainter.setStrokeWidth(_linesWidth);
+        _gridPainter.setColor(Color.BLACK);
+        _cellsPainter.setStyle(Paint.Style.FILL);
+    }
 }
-
-
-
