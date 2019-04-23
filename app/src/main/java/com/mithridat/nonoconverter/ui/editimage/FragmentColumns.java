@@ -1,9 +1,7 @@
 package com.mithridat.nonoconverter.ui.editimage;
-import com.mithridat.nonoconverter.R;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
+
+import com.mithridat.nonoconverter.R;
 
 /**
  * Class for the columns fragment
@@ -272,13 +273,16 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
         _isScreenWidth = isScreenWidth();
         computeSizes();
         int bmWidth = _bmpImageColumns.getWidth();
-        if (bmWidth < 90) _sbColumns.setMax(bmWidth-5);
-        else _sbColumns.setMax(85);
+        if (bmWidth < 90) {
+            _sbColumns.setMax(bmWidth-5);
+        } else {
+            _sbColumns.setMax(85);
+        }
         if (!_isSaved) {
             _countColumns = ((EditImageActivity)getActivity())._columns;
             if (bmWidth < 90) {
                 if (_countColumns > bmWidth) {
-                    _countColumns = bmWidth - bmWidth % 5;
+                    _countColumns = bmWidth;
                 }
             }
             _countRows = (int)(_countColumns * _height * 1.0 / (_width * 1.0));

@@ -15,6 +15,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -298,7 +299,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         if (_columns == 0) {
             int bmWidth = _bmpCurrentImage.getWidth();
             int bmHeight = _bmpCurrentImage.getHeight();
-            _columns = bmWidth < 90 ? bmWidth - bmWidth % 5 : 45;
+            _columns = bmWidth < 90 ? bmWidth : 45;
             _rows = _columns * bmHeight / bmWidth;
         }
     }
@@ -342,7 +343,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 int bmWidth = _bmpCurrentImage.getWidth();
                 if (_columns > bmWidth) {
                     int bmHeight = _bmpCurrentImage.getHeight();
-                    _columns = bmWidth - bmWidth % 5;
+                    _columns = bmWidth;
                     _rows = _columns * bmWidth / bmHeight;
                 }
                 showPd();
@@ -464,7 +465,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     void resetConvertParams() {
         int bmWidth = _bmpCurrentImage.getWidth();
         int bmHeight = _bmpCurrentImage.getHeight();
-        _columns = bmWidth < 90 ? bmWidth - bmWidth % 5 : 45;
+        _columns = bmWidth < 90 ? bmWidth : 45;
         _rows = _columns * bmHeight / bmWidth;
         return;
     }
