@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View.OnClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import androidx.fragment.app.Fragment;
 
@@ -18,7 +20,7 @@ import com.mithridat.nonoconverter.R;
 /**
  * Class for the columns fragment
  */
-public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+public class FragmentColumns extends Fragment implements OnSeekBarChangeListener, OnClickListener {
 
     /**
      * Tag for fragment columns
@@ -183,13 +185,13 @@ public class FragmentColumns extends Fragment implements SeekBar.OnSeekBarChange
         _panel = _vColumnsFragment.findViewById(R.id.panel);
         _civColumns = _vColumnsFragment.findViewById(R.id.image_view_columns);
         _civColumns.setParent(this);
-        _sbColumns = _vColumnsFragment.findViewById(R.id.seek_bar_Rows);
+        _sbColumns = _vColumnsFragment.findViewById(R.id.seek_bar_rows);
         _sbColumns.setOnSeekBarChangeListener(this);
         _bmpImageColumns = ((EditImageActivity)getActivity())._bmpCurrentImage;
 
         _civColumns.setImageBitmap(_bmpImageColumns);
         _tvRowsAndColumns = _vColumnsFragment
-                .findViewById(R.id.text_view_Rows);
+                .findViewById(R.id.text_view_rows);
 
         _vColumnsFragment.findViewById(R.id.button_add)
                 .setOnClickListener(this);
