@@ -1,5 +1,6 @@
 package com.mithridat.nonoconverter.ui.result;
 
+import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,19 +15,13 @@ import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 
-import static com.mithridat.nonoconverter.ui.result.SaveImage.saveImage;
-import static com.mithridat.nonoconverter.ui.result.StringKeys.DIALOG_AFTER_SAVE_TAG;
+import static com.mithridat.nonoconverter.ui.result.ImageSaver.saveImage;
 import static com.mithridat.nonoconverter.ui.result.StringKeys.THUMBNAIL;
 
 /**
  * Class for handling result activity
  */
 public class ResultActivity extends AppCompatActivity implements OnClickListener {
-
-    /**
-     * Done and Fail dialog fragments.
-     */
-    FragmentAfterSaveDialog _fragmentDoneDialog, _fragmentFailDialog;
 
     /**
      * Home-return fragment.
@@ -50,8 +45,6 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
                 getIntent()
                         .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);
         if (nonorgamView != null) nonorgamView.setNonogram(_nonogram);
-        _fragmentDoneDialog = FragmentAfterSaveDialog.newInstance(true);
-        _fragmentFailDialog = FragmentAfterSaveDialog.newInstance(false);
         _fragmentHomeReturnDialog = new FragmentHomeReturnDialog();
     }
 
@@ -93,27 +86,32 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_save_thumb:
-                boolean result =
-                        saveImage(_nonogram.getField().getBitmap(), THUMBNAIL);
-                showAfterSaveDialog(result);
+                String path =
+                        saveImage(this,
+                                _nonogram.getField().getBitmap(),
+                                THUMBNAIL);
+                if (path == null) {
+                    Toast.makeText(this,
+                            R.string.msg_save_image_fail,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+                else {
+                    Toast.makeText(this,
+                            getString(R.string.msg_save_image_done) + path,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
                 break;
             case R.id.button_save_nng:
-                showAfterSaveDialog(false);
+                Toast.makeText(this,
+                        getString(R.string.msg_save_nonogram),
+                        Toast.LENGTH_SHORT)
+                        .show();
                 break;
             default:
                 break;
         }
     }
 
-    /**
-     * Method for showing dialog after saving thumbnail/nonogram
-     *
-     * @param success - true, if image was saved
-     *                  false, otherwise
-     */
-    private void showAfterSaveDialog(boolean success) {
-        FragmentAfterSaveDialog dialog =
-                success ? _fragmentDoneDialog : _fragmentFailDialog;
-        dialog.show(getSupportFragmentManager(), DIALOG_AFTER_SAVE_TAG);
-    }
 }
