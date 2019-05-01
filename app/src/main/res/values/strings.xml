@@ -21,11 +21,13 @@
         Nonogram will be lost if you don\'t save it.</string>
     <string name="action_return">RETURN</string>
     <string name="action_cancel">CANCEL</string>
-    <string name="title_dialog_done">Done</string>
-    <string name="title_dialog_fail">Fail</string>
+    <string name="msg_save_image_done">Image saved:</string>
+    <string name="msg_save_image_fail">Failed to save the image</string>
+    <string name="msg_save_nonogram">Functionality unavailable</string>
     <string name="action_ok">OK</string>
     <string name="title_dialog_convert">Conversion failed</string>
-    <string name="msg_convert">Conversion failed.\nYou can try to change the columns count or crop the image.</string>
+    <string name="msg_convert">Conversion failed.\nYou can try to change the
+        columns count or crop the image.</string>
 
     <string name="action_load_image">Load Image</string>
     <string name="action_open_about">About</string>
