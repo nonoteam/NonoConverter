@@ -16,6 +16,7 @@ import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 
 import static com.mithridat.nonoconverter.ui.result.ImageSaver.saveImage;
+import static com.mithridat.nonoconverter.ui.result.StringKeys.NONOGRAM;
 import static com.mithridat.nonoconverter.ui.result.StringKeys.THUMBNAIL;
 
 /**
@@ -84,9 +85,10 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
 
     @Override
     public void onClick(View v) {
+        String path = null;
         switch (v.getId()) {
             case R.id.button_save_thumb:
-                String path =
+                path =
                         saveImage(this,
                                 _nonogram.getField().getBitmap(),
                                 THUMBNAIL);
@@ -104,10 +106,22 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
                 }
                 break;
             case R.id.button_save_nng:
-                Toast.makeText(this,
-                        getString(R.string.msg_save_nonogram),
-                        Toast.LENGTH_SHORT)
-                        .show();
+                path =
+                        saveImage(this,
+                                _nonogram.getBitmap(),
+                                NONOGRAM);
+                if (path == null) {
+                    Toast.makeText(this,
+                            R.string.msg_save_image_fail,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+                else {
+                    Toast.makeText(this,
+                            getString(R.string.msg_save_image_done) + path,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
                 break;
             default:
                 break;
