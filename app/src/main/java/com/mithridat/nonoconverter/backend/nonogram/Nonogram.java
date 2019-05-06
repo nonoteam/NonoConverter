@@ -1,6 +1,11 @@
 package com.mithridat.nonoconverter.backend.nonogram;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,6 +13,10 @@ import androidx.annotation.NonNull;
 
 import java.util.Arrays;
 
+import static com.mithridat.nonoconverter.Utils.drawGrid;
+import static com.mithridat.nonoconverter.Utils.getHeightText;
+import static com.mithridat.nonoconverter.Utils.getRectGrid;
+import static com.mithridat.nonoconverter.Utils.getWidthText;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.COL;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.EMPTY;
@@ -251,6 +260,159 @@ public class Nonogram implements Parcelable {
      */
     public Nonogram translateToColors() {
         return new Nonogram(_field.translateToColors());
+    }
+
+    /**
+     * Method for getting maximum number in the nonogram
+     *
+     * @return maximum value in the nonogram
+     */
+    public int getMaxValue() {
+        int max = _left[0][0];
+        int[][][] nono = new int[][][]{ _left, _top};
+        for (int[][] lines : nono) {
+            for (int[] line : lines) {
+                for (int value : line) {
+                    if (value > max) max = value;
+                }
+            }
+        }
+        return max;
+    }
+
+    /**
+     * Method for getting maximum length of the left rows or top columns
+     *
+     * @param type - ROW, if it needs left rows
+     *               COL, if it needs top columns
+     * @return maximum length of the _left or _top by the type
+     */
+    public int getMaxLength(int type) {
+        int[][] values = type == ROW ? _left : _top;
+        int max = values[0].length;
+        for (int[] line : values) {
+            if (line.length > max) max = line.length;
+        }
+        return max;
+    }
+
+    /**
+     * Method for getting the crossword as image
+     *
+     * @return bitmap - the image that contains crossword
+     */
+    public Bitmap getBitmap() {
+        final int max = getMaxValue(), font = 14, indent = 6;
+        final int leftLength = getMaxLength(ROW), topLength = getMaxLength(COL);
+        int size = 0;
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        String smax = Integer.toString(max);
+        Bitmap nonogram = null;
+        Canvas canvas = null;
+        p.setColor(BLACK);
+        p.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
+        p.setTextSize(font);
+        size =
+                indent
+                        + (int) Math.ceil(Math.max(getHeightText(p, smax),
+                        getWidthText(p, smax)));
+        nonogram =
+                Bitmap.createBitmap(size * (_top.length + leftLength + 2),
+                        size * (_left.length + topLength + 2),
+                        Bitmap.Config.RGB_565);
+        canvas = new Canvas(nonogram);
+        canvas.drawColor(WHITE);
+        drawGrid(canvas,
+                new Point(size * (leftLength + 1), size),
+                new Point(_top.length, topLength),
+                size);
+        drawGrid(canvas,
+                new Point(size, size * (topLength + 1)),
+                new Point(_top.length + leftLength, _left.length),
+                size);
+        drawGridNumbers(canvas,
+                new Point(size, size * (topLength + 1)),
+                p,
+                size,
+                ROW,
+                leftLength);
+        drawGridNumbers(canvas,
+                new Point(size * (leftLength + 1), size),
+                p,
+                size,
+                COL,
+                topLength);
+        return nonogram;
+    }
+
+    /**
+     * Method for drawing numbers in the grid on the canvas
+     *
+     * @param canvas - the Canvas
+     * @param pos - position of the left-top corner of the grid on the canvas
+     * @param p - the Paint for drawing numbers
+     * @param cellSize - size of the one cell
+     * @param type - ROW, if it needs to draw left rows
+     *               COL, if it needs to draw top columns
+     * @param maxLength - maximum length of the rows or columns
+     */
+    public void drawGridNumbers(
+            Canvas canvas,
+            Point pos,
+            Paint p,
+            int cellSize,
+            int type,
+            int maxLength) {
+        final boolean isRow = type == ROW;
+        final int dx = isRow ? cellSize : 0, dy = isRow ? 0 : cellSize;
+        final int[][] numbers = isRow ? _left : _top;
+        float w = 0f, h = 0f;
+        int newLeft = 0, newTop = 0;
+        String s = null;
+        Rect grid = getRectGrid(cellSize);
+        grid.offsetTo(pos.x, pos.y);
+        for (int[] line : numbers) {
+            newLeft = isRow ? pos.x + (maxLength - line.length) * cellSize
+                    : grid.left;
+            newTop = !isRow ? pos.y + (maxLength - line.length) * cellSize
+                    : grid.top;
+            grid.offsetTo(newLeft, newTop);
+            for (int value : line) {
+                s = Integer.toString(value);
+                w = getWidthText(p, s);
+                h = getHeightText(p, s);
+                canvas.drawText(s,
+                        grid.left + (cellSize - w) / 2,
+                        grid.bottom - (cellSize - h) / 2,
+                        p);
+                grid.offset(dx, dy);
+            }
+            grid.offset(dy, dx);
+        }
+    }
+
+    /**
+     * Method for drawing numbers in the grid on the canvas
+     *
+     * @param canvas - the Canvas
+     * @param pos - position of the left-top corner of the grid on the canvas
+     * @param p - the Paint for drawing numbers
+     * @param cellSize - size of the one cell
+     * @param type - ROW, if it needs to draw left rows
+     *               COL, if it needs to draw top columns
+     */
+    public void drawGridNumbers(
+            Canvas canvas,
+            Point pos,
+            Paint p,
+            int cellSize,
+            int type) {
+        drawGridNumbers(canvas,
+                pos,
+                p,
+                cellSize,
+                type,
+                getMaxLength(type));
     }
 
     /**
