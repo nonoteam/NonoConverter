@@ -23,7 +23,7 @@
     <string name="action_cancel">CANCEL</string>
     <string name="msg_save_image_done">Image saved:</string>
     <string name="msg_save_image_fail">Failed to save the image</string>
-    <string name="msg_save_nonogram">Functionality unavailable</string>
+    <string name="msg_func_unavailable">Functionality unavailable</string>
     <string name="action_ok">OK</string>
     <string name="title_dialog_convert">Conversion failed</string>
     <string name="msg_convert">Conversion failed.\nYou can try to change the
