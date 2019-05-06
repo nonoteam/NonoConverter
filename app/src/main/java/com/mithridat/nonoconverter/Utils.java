@@ -26,10 +26,10 @@ public class Utils {
     }
 
     /**
-     * Method for getting width of the text by specific paint
+     * Method for getting height of the text by specific paint
      *
      * @param paint - the Paint for drawing
-     * @param text - the text height width is unknown
+     * @param text - the text which height is unknown
      * @return height of the text
      */
     public static int getHeightText(Paint paint, String text) {
