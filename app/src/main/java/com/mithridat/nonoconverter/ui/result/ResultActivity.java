@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
+import com.mithridat.nonoconverter.ui.result.nonogramDrawable.NonogramDrawable;
 
 import static com.mithridat.nonoconverter.ui.result.ImageSaver.saveImage;
 import static com.mithridat.nonoconverter.ui.result.StringKeys.NONOGRAM;
@@ -41,11 +42,13 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
         findViewById(R.id.button_save_thumb).setOnClickListener(this);
         findViewById(R.id.button_save_nng).setOnClickListener(this);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_result));
-        NonogramView nonorgamView = findViewById(R.id.nonogram_view);
+        ResultImageView resultImageView = findViewById(R.id.result_image_view);
         _nonogram =
                 getIntent()
                         .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);
-        if (nonorgamView != null) nonorgamView.setNonogram(_nonogram);
+        if (resultImageView != null) {
+            resultImageView.setDrawable(new NonogramDrawable(_nonogram));
+        }
         _fragmentHomeReturnDialog = new FragmentHomeReturnDialog();
     }
 
