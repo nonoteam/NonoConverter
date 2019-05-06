@@ -14,8 +14,8 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
-    <com.mithridat.nonoconverter.ui.result.NonogramView
-        android:id="@+id/nonogram_view"
+    <com.mithridat.nonoconverter.ui.result.ResultImageView
+        android:id="@+id/result_image_view"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:background="@color/colorTransparent"
