@@ -92,11 +92,12 @@
         check mark in the upper right corner on the action bar</string>
     <string name="help_columns">To set the size of the crossword, click on
         the \'COLUMNS\' button in the lower right corner.\n\nYou can view an
-        approximate result. There is a slider that provides a choice of the
-        number of columns at the bottom of the screen. The number of rows is
-        calculated automatically. There is the selected image for conversion
-        in the center of the screen, over of which a grid is drawn. To
-        fixate your choice, you need to click on the check mark in the upper
+        approximate result. Also you can see current size and range of possible
+        sizes after converting above image. There is a slider that provides a
+        choice of the number of columns at the bottom of the screen. The number 
+        of rows is calculated automatically. There is the selected image for
+        conversion in the center of the screen, over of which a grid is drawn.
+        To fixate your choice, you need to click on the check mark in the upper
         right corner on the action bar.</string>
     <string name="help_convert">After you have configured everything you need
         to click on \'Convert\' in the upper right corner on the action bar.
