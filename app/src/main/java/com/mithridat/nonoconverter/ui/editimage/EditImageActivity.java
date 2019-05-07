@@ -503,8 +503,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         _arrRows = new int[length];
         for(int i = 0; i < length; ++i) {
             _arrColumns[i] = minColumns + i;
-            int rowsRound = (int)(_arrColumns[i] * coefBitmap);
-            _arrRows[i] = rowsRound;
+            _arrRows[i] = (int) (_arrColumns[i] * coefBitmap);
         }
     }
 

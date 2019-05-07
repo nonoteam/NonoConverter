@@ -304,7 +304,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                     "\u00F7",
                     String.valueOf(maxColumns),
                     COMMA,
-                    String.valueOf((int)(minColumns * _coefBitmap)),
+                    String.valueOf((int) (minColumns * _coefBitmap)),
                     "\u00F7",
                     String.valueOf(maxRowsRound)));
         }
@@ -330,14 +330,14 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
             _width = _imageViewWidth;
             _propCoefficient =
                     _width * 1.0 / _bmpImageColumns.getWidth();
-            _height = (int)(_bmpImageColumns.getHeight() * _propCoefficient);
+            _height = (int) (_bmpImageColumns.getHeight() * _propCoefficient);
             _startHeight = (_imageViewHeight - _height) / 2;
             _startWidth = 0;
         } else {
             _height = _imageViewHeight;
             _propCoefficient =
                     (_height) * 1.0 / _bmpImageColumns.getHeight();
-            _width = (int)(_bmpImageColumns.getWidth() * _propCoefficient);
+            _width = (int) (_bmpImageColumns.getWidth() * _propCoefficient);
             _startHeight = 0;
             _startWidth = (_imageViewWidth - _width) / 2;
         }
