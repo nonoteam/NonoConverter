@@ -128,7 +128,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     private boolean _isSaved;
 
     /**
-     * Proprotional coefficient
+     * Proportional coefficient
      */
     private double _coefBitmap;
 
@@ -259,13 +259,11 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      */
     private void updateScreenElements()
     {
-        _countRows = (int)Math.round((_countColumns * _coefBitmap));
+        _countRows = (int) (_countColumns * _coefBitmap);
         setTextViews();
         _panel.setGridSizes(_countRows, _countColumns);
         _panel.invalidate();
     }
-
-
 
     /**
      * Set columns and rows count to the _tvRowsAndColumns
@@ -300,14 +298,13 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                     ? 90 : (_countColumns + remainder);
             int minColumns = (_countColumns - remainder) < 5
                     ? 5 : (_countColumns - remainder);
-            int maxRowsRound = (int)Math.round((maxColumns) * _coefBitmap);
+            int maxRowsRound = (int) (maxColumns * _coefBitmap);
             _tvOutRowsAndColumns.setText(String.format("%s%s%s%s%s%s%s",
                     String.valueOf(minColumns),
                     "\u00F7",
                     String.valueOf(maxColumns),
                     COMMA,
-                    String.valueOf(
-                            Math.round(minColumns * _coefBitmap)),
+                    String.valueOf((int)(minColumns * _coefBitmap)),
                     "\u00F7",
                     String.valueOf(maxRowsRound)));
         }
@@ -319,9 +316,9 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      * @return true if views length ratio bigger than bitmaps
      */
     private boolean isScreenWidth() {
-        double coefView = _imageViewWidth *1.0 / _imageViewHeight;
-        double coefBitmap = _bmpImageColumns.getWidth() * 1.0
-                / _bmpImageColumns.getHeight();
+        double coefView = _imageViewWidth * 1.0 / _imageViewHeight;
+        double coefBitmap =
+                _bmpImageColumns.getWidth() * 1.0 / _bmpImageColumns.getHeight();
         return !(coefView > coefBitmap);
     }
 
@@ -365,7 +362,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                     _countColumns = bmWidth;
                 }
             }
-            _countRows = (int)Math.round((_countColumns * _coefBitmap));
+            _countRows = (int) (_countColumns * _coefBitmap);
             setTextViews();
         }
         _panel.setLengths(_startWidth,
