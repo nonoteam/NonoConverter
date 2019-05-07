@@ -265,7 +265,7 @@ public class Nonogram implements Parcelable {
      * @return maximum value in the nonogram
      */
     public int getMaxValue() {
-        int max = _left[0][0];
+        int max = -1;
         int[][][] nono = new int[][][]{ _left, _top};
         for (int[][] lines : nono) {
             for (int[] line : lines) {

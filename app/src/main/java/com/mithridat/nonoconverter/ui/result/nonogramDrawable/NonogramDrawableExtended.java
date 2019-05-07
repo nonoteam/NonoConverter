@@ -54,7 +54,7 @@ public class NonogramDrawableExtended extends NonogramDrawable implements INonog
 
     @Override
     public void draw(Canvas canvas) {
-        NonogramDrawer.drawNonogramExtended(canvas, this);
+        NonogramDrawer.drawNonogram(canvas, this);
     }
 
     /* -------------- IDrawableExtended methods:  -------------- */
