@@ -213,8 +213,8 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         _vColumnsFragment.findViewById(R.id.button_remove)
                 .setOnClickListener(this);
 
-        _coefBitmap =  _bmpImageColumns.getHeight() * 1.0
-                / (_bmpImageColumns.getWidth());
+        _coefBitmap =
+                _bmpImageColumns.getHeight() * 1.0 / _bmpImageColumns.getWidth();
         if (savedInstanceState != null) {
             _countColumns = savedInstanceState.getInt(COUNT_COLUMNS_TAG,
                     0);
