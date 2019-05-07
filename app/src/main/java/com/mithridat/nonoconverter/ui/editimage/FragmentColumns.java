@@ -53,6 +53,11 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     private TextView _tvRowsAndColumns;
 
     /**
+     * TextView for current number of columns and rows count
+     */
+    private TextView _tvOutRowsAndColumns;
+
+    /**
      * View of columns fragment
      */
     private View _vColumnsFragment;
@@ -122,6 +127,11 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      */
     private boolean _isSaved;
 
+    /**
+     * Proprotional coefficient
+     */
+    private double _coefBitmap;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -140,8 +150,11 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
             case R.id.menu_done:
                 EditImageActivity editImageActivity =
                         (EditImageActivity)getActivity();
-                editImageActivity.setSizes(_countRows, _countColumns);
+                int old_columns = editImageActivity._columns;
                 editImageActivity._isSelectedColumns = true;
+                if (old_columns != _countColumns) {
+                    editImageActivity.setSizes(_countRows, _countColumns);
+                }
                 editImageActivity.getSupportFragmentManager().popBackStack();
                 return true;
             default:
@@ -191,19 +204,23 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
 
         _civColumns.setImageBitmap(_bmpImageColumns);
         _tvRowsAndColumns
-                = _vColumnsFragment.findViewById(R.id.text_view_rows);
+                = _vColumnsFragment.findViewById(R.id.text_view_exact);
+        _tvOutRowsAndColumns
+                = _vColumnsFragment.findViewById(R.id.text_view_range);
 
         _vColumnsFragment.findViewById(R.id.button_add)
                 .setOnClickListener(this);
         _vColumnsFragment.findViewById(R.id.button_remove)
                 .setOnClickListener(this);
 
+        _coefBitmap =  _bmpImageColumns.getHeight() * 1.0 /
+                (_bmpImageColumns.getWidth());
         if (savedInstanceState != null) {
             _countColumns = savedInstanceState.getInt(COUNT_COLUMNS_TAG,
                     0);
             _countRows = savedInstanceState.getInt(COUNT_ROWS_TAG,
                     0);
-            setTextViewRowsAndColumnsText();
+            setTextViews();
             _isSaved = true;
         }
         return _vColumnsFragment;
@@ -242,10 +259,20 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      */
     private void updateScreenElements()
     {
-        _countRows = _countColumns * _height / _width;
-        setTextViewRowsAndColumnsText();
+        _countRows = (int)Math.round((_countColumns * _coefBitmap));
+        setTextViews();
         _panel.setGridSizes(_countRows, _countColumns);
         _panel.invalidate();
+    }
+
+
+
+    /**
+     * Set columns and rows count to the _tvRowsAndColumns
+     */
+    private void setTextViews() {
+        setTextViewRowsAndColumnsText();
+        setOutTextViewRowsAndColumnsText();
     }
 
     /**
@@ -259,14 +286,42 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     }
 
     /**
+     * Set columns and rows count to the _tvOutRowsAndColumns
+     */
+    private void setOutTextViewRowsAndColumnsText() {
+        int remainder = Math.round(_countColumns / 10f);
+        if (remainder == 0) {
+            _tvOutRowsAndColumns.setText(String.format("%s%s%s",
+                    String.valueOf(_countColumns),
+                    COMMA,
+                    String.valueOf(_countRows)));
+        } else {
+            int maxColumns = (_countColumns + remainder) > 90
+                    ? 90 : (_countColumns + remainder);
+            int minColumns = (_countColumns - remainder) < 5
+                    ? 5 : (_countColumns - remainder);
+            int maxRowsRound = (int)Math.round((maxColumns) * _coefBitmap);
+            _tvOutRowsAndColumns.setText(String.format("%s%s%s%s%s%s%s",
+                    String.valueOf(minColumns),
+                    "\u00F7",
+                    String.valueOf(maxColumns),
+                    COMMA,
+                    String.valueOf(
+                            Math.round(minColumns * _coefBitmap)),
+                    "\u00F7",
+                    String.valueOf(maxRowsRound)));
+        }
+    }
+
+    /**
      * Compare view rectangle with bitmap rectangle
      *
      * @return true if views length ratio bigger than bitmaps
      */
     private boolean isScreenWidth() {
-        double coefView = _imageViewWidth *1.0/(_imageViewHeight *1.0);
+        double coefView = _imageViewWidth *1.0 / _imageViewHeight;
         double coefBitmap = _bmpImageColumns.getWidth() * 1.0
-                / (_bmpImageColumns.getHeight() * 1.0);
+                / _bmpImageColumns.getHeight();
         return !(coefView > coefBitmap);
     }
 
@@ -277,14 +332,14 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         if(_isScreenWidth) {
             _width = _imageViewWidth;
             _propCoefficient =
-                    _width * 1.0 / (_bmpImageColumns.getWidth() * 1.0);
+                    _width * 1.0 / _bmpImageColumns.getWidth();
             _height = (int)(_bmpImageColumns.getHeight() * _propCoefficient);
-            _startHeight = (_imageViewHeight - _height)/2;
+            _startHeight = (_imageViewHeight - _height) / 2;
             _startWidth = 0;
         } else {
             _height = _imageViewHeight;
             _propCoefficient =
-                    (_height) * 1.0 / (_bmpImageColumns.getHeight() * 1.0);
+                    (_height) * 1.0 / _bmpImageColumns.getHeight();
             _width = (int)(_bmpImageColumns.getWidth() * _propCoefficient);
             _startHeight = 0;
             _startWidth = (_imageViewWidth - _width) / 2;
@@ -310,8 +365,8 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                     _countColumns = bmWidth;
                 }
             }
-            _countRows = (int)(_countColumns * _height * 1.0 / (_width * 1.0));
-            setTextViewRowsAndColumnsText();
+            _countRows = (int)Math.round((_countColumns * _coefBitmap));
+            setTextViews();
         }
         _panel.setLengths(_startWidth,
                 _startHeight,

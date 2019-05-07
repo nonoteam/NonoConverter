@@ -122,5 +122,8 @@
 
     <string name="action_rotate">Rotate</string>
     <string name="action_flip">Flip</string>
-
+    <string name="exact_columns_title">exact:</string>
+    <string name="range_columns_title">range:</string>
+    <string name="range_columns">(10&#247;45;20&#247;50)</string>
+    <string name="exact_columns">(90,90)</string>
 </resources>

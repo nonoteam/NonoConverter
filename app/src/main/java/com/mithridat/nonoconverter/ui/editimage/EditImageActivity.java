@@ -175,6 +175,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     int _columns = 0;
 
     /**
+     * Exact index
+     */
+    int _exactIndex = 0;
+
+    /**
      * Convert dialog fragment
      */
     FragmentConvertDialog _fragmentConvertDialog;
@@ -198,6 +203,16 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * Flag for checking if image is cropped
      */
     boolean _isCropped = false;
+
+    /**
+     * Possible columns
+     */
+    int[] _arrColumns;
+
+    /**
+     * Possible rows
+     */
+    int[] _arrRows;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -300,7 +315,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             int bmWidth = _bmpCurrentImage.getWidth();
             int bmHeight = _bmpCurrentImage.getHeight();
             _columns = bmWidth < 90 ? bmWidth : 45;
-            _rows = _columns * bmHeight / bmWidth;
+            _rows = (int)Math.round(_columns * 1.0 * bmHeight / bmWidth);
         }
     }
 
@@ -344,8 +359,9 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 if (_columns > bmWidth) {
                     int bmHeight = _bmpCurrentImage.getHeight();
                     _columns = bmWidth;
-                    _rows = _columns * bmWidth / bmHeight;
+                    _rows = (int)Math.round(_columns * 1.0 * bmWidth / bmHeight);
                 }
+                SetArrays();
                 showPd();
                 _atConvert = new AsyncTaskConvertImage();
                 _atConvert.link(this);
@@ -466,8 +482,29 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         int bmWidth = _bmpCurrentImage.getWidth();
         int bmHeight = _bmpCurrentImage.getHeight();
         _columns = bmWidth < 90 ? bmWidth : 45;
-        _rows = _columns * bmHeight / bmWidth;
+        _rows = (int)Math.round(_columns*1.0 * bmHeight / bmWidth);
         return;
+    }
+
+    /**
+     * Fills arrays of rows and columns
+     */
+    void SetArrays() {
+        int bmWidth = _bmpCurrentImage.getWidth();
+        int bmHeight = _bmpCurrentImage.getHeight();
+        double coefBitmap = bmHeight * 1.0 / bmWidth;
+        int remainder = Math.round(_columns / 10f);
+        int minColumns = (_columns-remainder) < 5 ? 5 : (_columns-remainder);
+        int maxColumns = (_columns+remainder) > 90 ? 90 : (_columns+remainder);
+        int length = maxColumns - minColumns + 1;
+        _exactIndex = _columns - minColumns;
+        _arrColumns = new int[length];
+        _arrRows = new int[length];
+        for(int i = 0; i < length; ++i) {
+            _arrColumns[i] = minColumns + i;
+            int rowsRound = (int)Math.round((_arrColumns[i]) * coefBitmap);
+            _arrRows[i] = rowsRound;
+        }
     }
 
     /**
@@ -623,8 +660,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         protected Nonogram doInBackground(Void... params) {
             try {
                 return ImageConverter.convertImage(_activity._bmpCurrentImage,
-                        _activity._rows,
-                        _activity._columns,
+                        _activity._arrRows[0],
+                        _activity._arrColumns[0],
                         this);
             } catch (NullPointerException e) {
                 e.printStackTrace();
