@@ -17,27 +17,27 @@ class NonogramDrawer {
     /**
      * Brush for painting grid.
      */
-    static private Paint _gridPainter;
+    private static Paint _gridPainter;
 
     /**
      * Brush for painting filled cells and background.
      */
-    static private Paint _cellsPainter;
+    private static Paint _cellsPainter;
 
     /**
      * Brush for painting numbers.
      */
-    static private Paint _numbersPainter;
+    private static Paint _numbersPainter;
 
     /**
      * Rectangles for painting background, grid and filled cells.
      */
-    static private RectF _backgroundRect, _gridRect, _cellsRect;
+    private static RectF _backgroundRect, _gridRect, _cellsRect;
 
     /**
      * Width of the lines in grid.
      */
-    static private float _linesWidth = 3f;
+    private static float _linesWidth = 3f;
 
     static {
         _gridPainter = new Paint();
@@ -125,7 +125,9 @@ class NonogramDrawer {
      * @param canvas   - canvas received in 'onDraw'
      * @param nonogram - nonogram to draw
      */
-    private static void drawLeftField(Canvas canvas, final INonogramExtended nonogram) {
+    private static void drawLeftField(
+            Canvas canvas,
+            final INonogramExtended nonogram) {
         if (canvas == null || nonogram == null) return;
 
         final float cellSize = nonogram.getCellSize();
@@ -178,7 +180,9 @@ class NonogramDrawer {
      * @param canvas   - canvas received in 'onDraw'
      * @param nonogram - nonogram to draw
      */
-    private static void drawTopField(Canvas canvas, final INonogramExtended nonogram) {
+    private static void drawTopField(
+            Canvas canvas,
+            final INonogramExtended nonogram) {
         if (canvas == null || nonogram == null) return;
 
         final float cellSize = nonogram.getCellSize();
@@ -194,8 +198,10 @@ class NonogramDrawer {
         _cellsPainter.setColor(Color.WHITE);
         _backgroundRect.top = startY - nonogram.getTopFieldHeight();
         _backgroundRect.left = startX;
-        _backgroundRect.bottom = _backgroundRect.top + nonogram.getTopFieldHeight();
-        _backgroundRect.right = _backgroundRect.left + nonogram.getTopFieldWidth();
+        _backgroundRect.bottom =
+                _backgroundRect.top + nonogram.getTopFieldHeight();
+        _backgroundRect.right =
+                _backgroundRect.left + nonogram.getTopFieldWidth();
         canvas.drawRect(_backgroundRect, _cellsPainter);
 
         _gridRect.top = _backgroundRect.top;
@@ -231,6 +237,7 @@ class NonogramDrawer {
         _gridPainter.setStrokeWidth(_linesWidth);
         _gridPainter.setColor(Color.BLACK);
         _cellsPainter.setStyle(Paint.Style.FILL);
-        _numbersPainter.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
+        _numbersPainter.setTypeface(Typeface
+                .create(Typeface.MONOSPACE, Typeface.NORMAL));
     }
 }
