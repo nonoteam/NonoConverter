@@ -199,11 +199,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      */
     boolean _isCropped = false;
 
-    /**
-     * Flag for checking if crop screen is opened
-     */
-    boolean _isCropOpened = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -365,7 +360,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_crop:
-                _isCropOpened = true;
                 changeFragment(FRAGMENT_CROP);
                 break;
             case R.id.button_columns:
@@ -379,13 +373,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
 
     @Override
     public void onBackPressed() {
-        if(!_isCropOpened) {
-            _isCropped = false;
-        }
-        else {
-            _isCropOpened = false;
-        }
-        
         int countFragments =
                 getSupportFragmentManager().getBackStackEntryCount();
 
@@ -428,6 +415,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                     data.getParcelableArrayListExtra(Config.EXTRA_IMAGES);
 
             if (images.size() > 0) {
+                _isCropped = false;
                 _pathImage = images.get(0).getPath();
                 setImageFromPath(_pathImage);
             }
