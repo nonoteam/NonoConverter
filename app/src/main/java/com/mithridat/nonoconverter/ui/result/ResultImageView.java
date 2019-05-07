@@ -212,14 +212,18 @@ public class ResultImageView extends View implements View.OnTouchListener {
            (Distance if calculated as infinite norm, different for X and Y
             directions)
          */
-        if (centerDistanceX > drawableWidth / 2f)
+        if (centerDistanceX > drawableWidth / 2f) {
             offsetX += centerDistanceX - drawableWidth / 2f;
-        if (centerDistanceX < -drawableWidth / 2f)
+        }
+        if (centerDistanceX < -drawableWidth / 2f) {
             offsetX += centerDistanceX + drawableWidth / 2f;
-        if (centerDistanceY > drawableHeight / 2f)
+        }
+        if (centerDistanceY > drawableHeight / 2f) {
             offsetY += centerDistanceY - drawableHeight / 2f;
-        if (centerDistanceY < -drawableHeight / 2f)
+        }
+        if (centerDistanceY < -drawableHeight / 2f) {
             offsetY += centerDistanceY + drawableHeight / 2f;
+        }
 
         _drawable.offset(offsetX, offsetY);
         if (drawableHeight == 0 || drawableWidth == 0) {
