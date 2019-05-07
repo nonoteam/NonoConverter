@@ -315,7 +315,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             int bmWidth = _bmpCurrentImage.getWidth();
             int bmHeight = _bmpCurrentImage.getHeight();
             _columns = bmWidth < 90 ? bmWidth : 45;
-            _rows = (int)Math.round(_columns * 1.0 * bmHeight / bmWidth);
+            _rows = _columns * bmHeight / bmWidth;
         }
     }
 
@@ -359,7 +359,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 if (_columns > bmWidth) {
                     int bmHeight = _bmpCurrentImage.getHeight();
                     _columns = bmWidth;
-                    _rows = (int)Math.round(_columns * 1.0 * bmWidth / bmHeight);
+                    _rows = _columns * bmHeight / bmWidth;
                 }
                 SetArrays();
                 showPd();
@@ -483,7 +483,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         int bmWidth = _bmpCurrentImage.getWidth();
         int bmHeight = _bmpCurrentImage.getHeight();
         _columns = bmWidth < 90 ? bmWidth : 45;
-        _rows = (int)Math.round(_columns*1.0 * bmHeight / bmWidth);
+        _rows = _columns * bmHeight / bmWidth;
         return;
     }
 
@@ -503,7 +503,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         _arrRows = new int[length];
         for(int i = 0; i < length; ++i) {
             _arrColumns[i] = minColumns + i;
-            int rowsRound = (int)Math.round((_arrColumns[i]) * coefBitmap);
+            int rowsRound = (int)(_arrColumns[i] * coefBitmap);
             _arrRows[i] = rowsRound;
         }
     }
