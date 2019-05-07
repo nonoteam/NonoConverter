@@ -52,12 +52,9 @@ public class Nonogram implements Parcelable {
      * Constructor by black-and-white image
      *
      * @param bmp - black-and-white image
-     * @param rows - number of thumbnail rows
-     * @param cols - number of thumbnail columns
-     * @param p - fill parameter
      */
-    public Nonogram(Bitmap bmp, int rows, int cols, int p) {
-        _field = new Field(bmp, rows, cols, p);
+    public Nonogram(Bitmap bmp) {
+        _field = new Field(bmp);
         initGrid();
     }
 
