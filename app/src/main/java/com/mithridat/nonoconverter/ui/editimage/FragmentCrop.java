@@ -43,6 +43,7 @@ public class FragmentCrop extends Fragment implements View.OnClickListener {
                 editImageActivity._bmpCurrentImage = _myView.getCroppedImage();
                 editImageActivity._needSaveCropped = true;
                 editImageActivity._isCropped = true;
+                editImageActivity._isCropOpened = false;
                 editImageActivity.getSupportFragmentManager().popBackStack();
                 editImageActivity.resetConvertParams();
                 return true;
