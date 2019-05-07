@@ -237,7 +237,7 @@ class NonogramDrawer {
         _gridPainter.setStrokeWidth(_linesWidth);
         _gridPainter.setColor(Color.BLACK);
         _cellsPainter.setStyle(Paint.Style.FILL);
-        _numbersPainter.setTypeface(Typeface
-                .create(Typeface.MONOSPACE, Typeface.NORMAL));
+        _numbersPainter.setTypeface(Typeface.create(Typeface.MONOSPACE,
+                Typeface.NORMAL));
     }
 }
