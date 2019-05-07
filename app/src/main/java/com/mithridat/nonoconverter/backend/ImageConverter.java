@@ -33,21 +33,13 @@ public class ImageConverter {
             AsyncTask<Void, Void, Nonogram> asyncTask) {
         rows = min(rows, bmp.getHeight());
         cols = min(cols, bmp.getWidth());
-        Bitmap bw = getBlackWhite(bmp.copy(bmp.getConfig(), bmp.isMutable()));
-        if (bw.getWidth() % cols != 0 || bw.getHeight() % rows != 0) {
-            bw =
-                    resize(bw,
-                            bw.getWidth() / cols * cols,
-                            bw.getHeight() / rows * rows);
-        }
+        Bitmap bw = getBlackWhite(bmp, cols, rows);
         Nonogram nono = null;
         NonogramSolver solver = new NonogramSolver();
         solver.setAsyncTask(asyncTask);
-        for (int p = 128; !asyncTask.isCancelled() && p <= 248; p += 5) {
-            nono = new Nonogram(bw, rows, cols, p);
-            solver.setNonogram(nono);
-            if (solver.solve()) return nono.translateToColors();
-        }
+        nono = new Nonogram(bw);
+        solver.setNonogram(nono);
+        if (solver.solve()) return nono.translateToColors();
         return null;
     }
 
@@ -55,18 +47,26 @@ public class ImageConverter {
      * Method for getting black-and-white image from color image
      *
      * @param bmp - color image
+     * @param w - width of black-and-white image
+     * @param h - height of black-and-white image
      * @return black-and-white image
      */
-    public static Bitmap getBlackWhite(Bitmap bmp) {
+    public static Bitmap getBlackWhite(Bitmap bmp, int w, int h) {
         Mat imageMat = new Mat();
         Utils.bitmapToMat(bmp, imageMat);
         Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_RGB2GRAY);
-        Imgproc.GaussianBlur(imageMat, imageMat, new Size(5, 5), 0);
+        Imgproc.resize(imageMat,
+                imageMat,
+                new Size(w, h),
+                0,
+                0,
+                Imgproc.INTER_AREA);
         Imgproc.threshold(imageMat, imageMat, 0, 255, Imgproc.THRESH_OTSU);
 
-        Utils.matToBitmap(imageMat, bmp);
+        Bitmap nbmp = Bitmap.createBitmap(w, h, bmp.getConfig());
+        Utils.matToBitmap(imageMat, nbmp);
 
-        return bmp;
+        return nbmp;
     }
 
     /**

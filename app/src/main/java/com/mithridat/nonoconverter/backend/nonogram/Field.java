@@ -68,11 +68,9 @@ public class Field implements Parcelable {
      * Constructor by black-and-white image
      *
      * @param bmp - black-and-white image
-     * @param rows - number of thumbnail rows
-     * @param cols - number of thumbnail columns
-     * @param p - fill parameter
      */
-    public Field(Bitmap bmp, int rows, int cols, int p) {
+    public Field(Bitmap bmp) {
+        int rows = bmp.getHeight(), cols = bmp.getWidth();
         _colors = new int[]{ BLACK, WHITE };
         Arrays.sort(_colors);
         _colorsCount = _colors.length;
@@ -81,19 +79,10 @@ public class Field implements Parcelable {
         _cols = cols;
         _field = new int[rows][cols];
         fillField(getColorState(WHITE));
-        int height = bmp.getHeight(), width = bmp.getWidth();
-        int h = height / rows, w = width / cols;
-        int sumColors;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                sumColors = 0;
-                for (int x = j * w; x < (j + 1) * w; x++) {
-                    for (int y = i * h; y < (i + 1) * h; y++) {
-                        if (bmp.getPixel(x, y) == WHITE) sumColors += 255;
-                    }
-                }
-                if (sumColors <= p * w * h) {
-                    _field[i][j] = Arrays.binarySearch(_colors, BLACK);
+        for (int x = 0; x < cols; x++) {
+            for (int y = 0; y < rows; y++) {
+                if (bmp.getPixel(x, y) == BLACK) {
+                    _field[y][x] = Arrays.binarySearch(_colors, BLACK);
                 }
             }
         }
