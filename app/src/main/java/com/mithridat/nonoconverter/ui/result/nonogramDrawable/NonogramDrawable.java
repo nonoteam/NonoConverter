@@ -9,35 +9,34 @@ import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.result.StringKeys;
 
 /**
- * Class implementing INonogramDrawable interface.
- * Represents nonogram solution with no numbers left or top.
+ * Class for the drawable nonogram.
  */
-public class NonogramDrawable implements INonogramDrawable {
+public class NonogramDrawable implements INonogram, IDrawable {
 
     /**
      * Nonogram as backend class.
      */
-    private Nonogram _nonogram;
+    protected Nonogram _nonogram;
 
     /**
      * Size of cells in nonogram grid.
      */
-    private float _cellSize;
+    protected float _cellSize;
 
     /**
      * Total scale.
      */
-    private float _totalScale;
+    protected float _totalScale;
 
     /**
      * Position of the top left corner of nonogram.
      */
-    private PointF _topLeftPos;
+    protected PointF _topLeftPos;
 
     /**
      * Position of the center of nonogram.
      */
-    private PointF _centerPos;
+    protected PointF _centerPos;
 
     public NonogramDrawable(Nonogram nonogram) {
         _topLeftPos = new PointF();
@@ -45,6 +44,8 @@ public class NonogramDrawable implements INonogramDrawable {
         _nonogram = nonogram;
         restoreDefaultState();
     }
+
+    /* -------------- INonogram methods:  -------------- */
 
     @Override
     public int getRows() {
@@ -65,14 +66,42 @@ public class NonogramDrawable implements INonogramDrawable {
     }
 
     @Override
-    public float getHeight() {
+    public float getMainFieldWidth() {
+        return getColumns() * _cellSize;
+    }
+
+    @Override
+    public float getMainFieldHeight() {
         return getRows() * _cellSize;
     }
 
     @Override
-    public float getWidth() {
-        return getColumns() * _cellSize;
+    public float getMainFieldTopLeftX() {
+        return _topLeftPos.x;
     }
+
+    @Override
+    public float getMainFieldTopLeftY() {
+        return _topLeftPos.y;
+    }
+
+    @Override
+    public float getCellSize() {
+        return _cellSize;
+    }
+
+    /* -------------- IDrawable methods:  -------------- */
+
+    @Override
+    public float getWidth() {
+        return getMainFieldWidth();
+    }
+
+    @Override
+    public float getHeight() {
+        return getMainFieldHeight();
+    }
+
 
     @Override
     public float getTopLeftX() {
@@ -99,10 +128,6 @@ public class NonogramDrawable implements INonogramDrawable {
         return _totalScale;
     }
 
-    @Override
-    public float getCellSize() {
-        return _cellSize;
-    }
 
     @Override
     public void offset(float offsetX, float offsetY) {
