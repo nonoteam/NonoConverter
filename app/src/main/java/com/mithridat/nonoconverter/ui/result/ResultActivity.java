@@ -1,6 +1,5 @@
 package com.mithridat.nonoconverter.ui.result;
 
-import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -10,11 +9,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
-import com.mithridat.nonoconverter.ui.result.nonogramDrawable.NonogramDrawable;
+import com.mithridat.nonoconverter.ui.result.nonogramDrawable.IDrawable;
+import com.mithridat.nonoconverter.ui.result.nonogramDrawable.NonogramDrawableExtended;
 
 import static com.mithridat.nonoconverter.ui.result.ImageSaver.saveImage;
 import static com.mithridat.nonoconverter.ui.result.StringKeys.NONOGRAM;
@@ -35,6 +36,11 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
      */
     Nonogram _nonogram;
 
+    /**
+     * Nonogram as drawable for ResultImageView
+     */
+    IDrawable _nonogramDrawable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +52,9 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
         _nonogram =
                 getIntent()
                         .getParcelableExtra(ActivitiesConstants.EX_NONO_FIELD);
+        _nonogramDrawable = new NonogramDrawableExtended(_nonogram);
         if (resultImageView != null) {
-            resultImageView.setDrawable(new NonogramDrawable(_nonogram));
+            resultImageView.setDrawable(_nonogramDrawable);
         }
         _fragmentHomeReturnDialog = new FragmentHomeReturnDialog();
     }
@@ -100,8 +107,7 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
                             R.string.msg_save_image_fail,
                             Toast.LENGTH_SHORT)
                             .show();
-                }
-                else {
+                } else {
                     Toast.makeText(this,
                             getString(R.string.msg_save_image_done) + path,
                             Toast.LENGTH_SHORT)
@@ -118,8 +124,7 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
                             R.string.msg_save_image_fail,
                             Toast.LENGTH_SHORT)
                             .show();
-                }
-                else {
+                } else {
                     Toast.makeText(this,
                             getString(R.string.msg_save_image_done) + path,
                             Toast.LENGTH_SHORT)
