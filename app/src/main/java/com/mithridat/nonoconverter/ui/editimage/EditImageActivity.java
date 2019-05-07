@@ -361,7 +361,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                     _columns = bmWidth;
                     _rows = _columns * bmHeight / bmWidth;
                 }
-                SetArrays();
+                setArrays();
                 showPd();
                 _atConvert = new AsyncTaskConvertImage();
                 _atConvert.link(this);
@@ -487,26 +487,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     /**
-     * Fills arrays of rows and columns
-     */
-    void SetArrays() {
-        int bmWidth = _bmpCurrentImage.getWidth();
-        int bmHeight = _bmpCurrentImage.getHeight();
-        double coefBitmap = bmHeight * 1.0 / bmWidth;
-        int remainder = Math.round(_columns / 10f);
-        int minColumns = (_columns-remainder) < 5 ? 5 : (_columns-remainder);
-        int maxColumns = (_columns+remainder) > 90 ? 90 : (_columns+remainder);
-        int length = maxColumns - minColumns + 1;
-        _exactIndex = _columns - minColumns;
-        _arrColumns = new int[length];
-        _arrRows = new int[length];
-        for(int i = 0; i < length; ++i) {
-            _arrColumns[i] = minColumns + i;
-            _arrRows[i] = (int) (_arrColumns[i] * coefBitmap);
-        }
-    }
-
-    /**
      * Close the given closeable object (Stream) in a safe way:
      * check if it is null and catch.
      *
@@ -625,6 +605,28 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 _fragmentTransaction.addToBackStack(null);
                 _fragmentTransaction.commit();
                 break;
+        }
+    }
+
+    /**
+     * Fill arrays of rows and columns
+     */
+    private void setArrays() {
+        int bmWidth = _bmpCurrentImage.getWidth();
+        int bmHeight = _bmpCurrentImage.getHeight();
+        double coefBitmap = bmHeight * 1.0 / bmWidth;
+        int remainder = Math.round(_columns / 10f);
+        int minColumns =
+                (_columns - remainder) < 5 ? 5 : (_columns - remainder);
+        int maxColumns =
+                (_columns + remainder) > 90 ? 90 : (_columns + remainder);
+        int length = maxColumns - minColumns + 1;
+        _exactIndex = _columns - minColumns;
+        _arrColumns = new int[length];
+        _arrRows = new int[length];
+        for (int i = 0; i < length; ++i) {
+            _arrColumns[i] = minColumns + i;
+            _arrRows[i] = (int) (_arrColumns[i] * coefBitmap);
         }
     }
 
