@@ -9,18 +9,18 @@ import android.os.Parcelable;
 public interface IDrawable {
 
     /**
-     * Function for getting height of image.
-     *
-     * @return height of image
-     */
-    float getHeight();
-
-    /**
      * Function for getting width of image.
      *
      * @return width of image
      */
     float getWidth();
+
+    /**
+     * Function for getting height of image.
+     *
+     * @return height of image
+     */
+    float getHeight();
 
     /**
      * Method for getting X coordinate of the top left corner.
