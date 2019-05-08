@@ -29,8 +29,8 @@ public class ImageConverter {
      */
     public static Nonogram convertImage(
             Bitmap bmp,
-            int[] arrRows,
-            int[] arrColumns,
+            final int[] arrRows,
+            final int[] arrColumns,
             int exactIndex,
             AsyncTask<Void, Void, Nonogram> asyncTask) {
         int[] idxOrder = indexOrder(exactIndex, arrColumns.length);
@@ -38,11 +38,11 @@ public class ImageConverter {
         Bitmap bw = null;
         Nonogram nono = null;
         NonogramSolver solver = new NonogramSolver();
+        solver.setAsyncTask(asyncTask);
         for (int i : idxOrder) {
             rows = min(arrRows[i], bmp.getHeight());
             cols = min(arrColumns[i], bmp.getWidth());
             bw = getBlackWhite(bmp, cols, rows);
-            solver.setAsyncTask(asyncTask);
             nono = new Nonogram(bw);
             solver.setNonogram(nono);
             if (solver.solve()) return nono.translateToColors();
@@ -74,23 +74,6 @@ public class ImageConverter {
         Utils.matToBitmap(imageMat, nbmp);
 
         return nbmp;
-    }
-
-    /**
-     * Method for resizing bitmap
-     *
-     * @param bmp - bitmap
-     * @param width - new width
-     * @param height - new height
-     * @return new bitmap
-     */
-    public static Bitmap resize(Bitmap bmp, int width, int height) {
-        Mat imageMat = new Mat();
-        Bitmap resized = Bitmap.createBitmap(width, height, bmp.getConfig());
-        Utils.bitmapToMat(bmp, imageMat);
-        Imgproc.resize(imageMat, imageMat, new Size(width, height));
-        Utils.matToBitmap(imageMat, resized);
-        return resized;
     }
 
     /**
