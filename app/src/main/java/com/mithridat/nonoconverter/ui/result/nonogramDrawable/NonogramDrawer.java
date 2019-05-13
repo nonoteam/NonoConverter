@@ -30,19 +30,20 @@ class NonogramDrawer {
     private static Paint _numbersPainter;
 
     /**
+     * Brush for painting numbers.
+     */
+    private static Paint _boldLinesPainter;
+
+    /**
      * Rectangles for painting background, grid and filled cells.
      */
     private static RectF _backgroundRect, _gridRect, _cellsRect;
-
-    /**
-     * Width of the lines in grid.
-     */
-    private static float _linesWidth = 3f;
 
     static {
         _gridPainter = new Paint();
         _cellsPainter = new Paint();
         _numbersPainter = new Paint();
+        _boldLinesPainter = new Paint();
         _backgroundRect = new RectF();
         _gridRect = new RectF();
         _cellsRect = new RectF();
@@ -76,7 +77,7 @@ class NonogramDrawer {
         if (canvas == null || nonogram == null) return;
 
         /*
-        "Magical" constants like '10f' or '8f'
+        "Magical" constants like '10f', '8f' or '15f'
         are the results of the empirical selection.
          */
         final int columns = nonogram.getColumns();
@@ -84,9 +85,12 @@ class NonogramDrawer {
         final float startX = nonogram.getMainFieldTopLeftX();
         final float startY = nonogram.getMainFieldTopLeftY();
         final float cellSize = nonogram.getCellSize();
-        final float cellGap = _linesWidth / 2f + (cellSize - _linesWidth) / 8f;
+        final float linesWidth = cellSize / 15f + 1f;
+        final float cellGap = linesWidth / 2f + (cellSize - linesWidth) / 8f;
         final float radius = cellSize / 10f;
 
+        _boldLinesPainter.setStrokeWidth(linesWidth * 2f);
+        _gridPainter.setStrokeWidth(linesWidth);
         // draw white background
         _backgroundRect.top = startY;
         _backgroundRect.left = startX;
@@ -94,6 +98,9 @@ class NonogramDrawer {
         _backgroundRect.right = startX + nonogram.getMainFieldWidth();
         _cellsPainter.setColor(Color.WHITE);
         canvas.drawRect(_backgroundRect, _cellsPainter);
+        canvas.drawRect(_backgroundRect, _boldLinesPainter);
+        drawBoldLinesVertical(_backgroundRect, canvas, nonogram);
+        drawBoldLinesHorizontal(_backgroundRect, canvas, nonogram);
 
         //draw grid and filled cells
         _gridRect.top = startY;
@@ -135,11 +142,13 @@ class NonogramDrawer {
         final int leftFieldColumns = nonogram.getLeftFieldColumns();
         final float startX = nonogram.getMainFieldTopLeftX();
         final float startY = nonogram.getMainFieldTopLeftY();
+        final float linesWidth = cellSize / 15f + 1f;
 
         String text;
         int length, index;
         int textWidth, textHeight;
 
+        _gridPainter.setStrokeWidth(linesWidth);
         _cellsPainter.setColor(Color.WHITE);
         _backgroundRect.top = startY;
         _backgroundRect.left = startX - nonogram.getLeftFieldWidth();
@@ -148,6 +157,8 @@ class NonogramDrawer {
         _backgroundRect.right =
                 _backgroundRect.left + nonogram.getLeftFieldWidth();
         canvas.drawRect(_backgroundRect, _cellsPainter);
+        canvas.drawRect(_backgroundRect, _boldLinesPainter);
+        drawBoldLinesHorizontal(_backgroundRect, canvas, nonogram);
 
         _gridRect.top = _backgroundRect.top;
         _gridRect.left = _backgroundRect.left;
@@ -190,11 +201,13 @@ class NonogramDrawer {
         final int topFieldRows = nonogram.getTopFieldRows();
         final float startX = nonogram.getMainFieldTopLeftX();
         final float startY = nonogram.getMainFieldTopLeftY();
+        final float linesWidth = cellSize / 15f + 1f;
 
         String text;
         int length, index;
         int textWidth, textHeight;
 
+        _gridPainter.setStrokeWidth(linesWidth);
         _cellsPainter.setColor(Color.WHITE);
         _backgroundRect.top = startY - nonogram.getTopFieldHeight();
         _backgroundRect.left = startX;
@@ -203,6 +216,8 @@ class NonogramDrawer {
         _backgroundRect.right =
                 _backgroundRect.left + nonogram.getTopFieldWidth();
         canvas.drawRect(_backgroundRect, _cellsPainter);
+        canvas.drawRect(_backgroundRect, _boldLinesPainter);
+        drawBoldLinesVertical(_backgroundRect, canvas, nonogram);
 
         _gridRect.top = _backgroundRect.top;
         _gridRect.left = _backgroundRect.left;
@@ -230,14 +245,65 @@ class NonogramDrawer {
     }
 
     /**
+     * Function for drawing vertical bold lines.
+     *
+     * @param background - rectangle, which will be filled with lines
+     * @param canvas     - canvas received in 'onDraw'
+     * @param nonogram   - nonogram to draw
+     */
+    private static void drawBoldLinesVertical(RectF background,
+                                              Canvas canvas,
+                                              final INonogram nonogram) {
+        if (canvas == null || nonogram == null) return;
+        final float cellSize = nonogram.getCellSize();
+        final int columns = nonogram.getColumns();
+        final float linesWidth = cellSize / 15f + 1f;
+
+        _boldLinesPainter.setStrokeWidth(linesWidth * 2f);
+        for (int i = 0; i < columns; i += 5) {
+            canvas.drawLine(background.left + i * cellSize,
+                    background.top,
+                    background.left + i * cellSize,
+                    background.bottom,
+                    _boldLinesPainter);
+        }
+    }
+
+    /**
+     * Function for drawing horizontal bold lines.
+     *
+     * @param background - rectangle, which will be filled with lines
+     * @param canvas     - canvas received in 'onDraw'
+     * @param nonogram   - nonogram to draw
+     */
+    private static void drawBoldLinesHorizontal(RectF background,
+                                                Canvas canvas,
+                                                final INonogram nonogram) {
+        if (canvas == null || nonogram == null) return;
+        final float cellSize = nonogram.getCellSize();
+        final int rows = nonogram.getRows();
+        final float linesWidth = cellSize / 15f + 1f;
+
+        _boldLinesPainter.setStrokeWidth(linesWidth * 2f);
+        for (int i = 0; i < rows; i += 5) {
+            canvas.drawLine(background.left,
+                    background.top + i * cellSize,
+                    background.right,
+                    background.top + i * cellSize,
+                    _boldLinesPainter);
+        }
+    }
+
+    /**
      * Set parameters for painters.
      */
     private static void paintersInit() {
         _gridPainter.setStyle(Paint.Style.STROKE);
-        _gridPainter.setStrokeWidth(_linesWidth);
         _gridPainter.setColor(Color.BLACK);
         _cellsPainter.setStyle(Paint.Style.FILL);
         _numbersPainter.setTypeface(Typeface.create(Typeface.MONOSPACE,
                 Typeface.NORMAL));
+        _boldLinesPainter.setStyle(Paint.Style.STROKE);
+        _boldLinesPainter.setColor(Color.BLACK);
     }
 }
