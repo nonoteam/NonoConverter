@@ -236,7 +236,8 @@ public class ImagePicker {
             config.setShowCamera(true);
             config.setMaxSize(Config.MAX_SIZE);
             config.setDoneTitle(resources.getString(R.string.imagepicker_action_done));
-            config.setFolderTitle(resources.getString(R.string.imagepicker_title_folder));
+            config.setFolderTitle(resources
+                    .getString(com.mithridat.nonoconverter.R.string.title_image_picker));
             config.setImageTitle(resources.getString(R.string.imagepicker_title_image));
             config.setLimitMessage(resources.getString(R.string.imagepicker_msg_limit_images));
             config.setSavePath(SavePath.DEFAULT);

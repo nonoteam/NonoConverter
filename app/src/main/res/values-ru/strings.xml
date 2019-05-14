@@ -123,4 +123,6 @@
     <string name="action_flip">Отразить</string>
     <string name="exact_columns_title">точный:</string>
     <string name="range_columns_title">диапозон:</string>
+
+    <string name="title_image_picker">Альбомы</string>
 </resources>
