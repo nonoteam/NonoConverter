@@ -4,7 +4,7 @@
     <string name="title_edit_image_activity">Editing</string>
     <string name="action_convert">Convert</string>
     <string name="action_open_crop">Crop</string>
-    <string name="action_open_columns">Columns</string>
+    <string name="action_open_columns">Size</string>
     <string name="edit_image_view_description">Convertible image</string>
     <string name="title_dialog_columns">Columns and rows</string>
     <string name="edit_image_columns">Columns</string>
@@ -86,12 +86,12 @@
         Crossword, you need to set the dimensions of the crossword.</string>
     <string name="help_crop">To crop, rotate and flip the image, click on the
         \'CROP\' button in the lower left corner.\n\nYou can rotate the image
-        90, 180 and 270 degrees and flip the image vertically. To do this,
+        90, 180 and 270 degrees and flip the image horizontally. To do this,
         click on the icons at the bottom.\n\nYou can crop the image by selecting
         the desired rectangle. To fixate your choice, you need to click on the
         check mark in the upper right corner on the action bar</string>
     <string name="help_columns">To set the size of the crossword, click on
-        the \'COLUMNS\' button in the lower right corner.\n\nYou can view an
+        the \'SIZE\' button in the lower right corner.\n\nYou can view an
         approximate result. Also you can see current size and range of possible
         sizes after converting above image. There is a slider that provides a
         choice of the number of columns at the bottom of the screen. The number 
