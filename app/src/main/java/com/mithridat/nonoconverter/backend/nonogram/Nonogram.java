@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import java.util.Arrays;
 
 import static com.mithridat.nonoconverter.Utils.drawGrid;
+import static com.mithridat.nonoconverter.Utils.drawLines;
 import static com.mithridat.nonoconverter.Utils.getHeightText;
 import static com.mithridat.nonoconverter.Utils.getRectFGrid;
 import static com.mithridat.nonoconverter.Utils.getWidthText;
@@ -324,12 +325,14 @@ public class Nonogram implements Parcelable {
                 new PointF(size * (leftLength + 1), size),
                 new Point(_top.length, topLength),
                 size,
-                1);
+                1,
+                true);
         drawGrid(canvas,
                 new PointF(size, size * (topLength + 1)),
                 new Point(_top.length + leftLength, _left.length),
                 size,
-                1);
+                1,
+                true);
         drawGridNumbers(canvas,
                 new PointF(size, size * (topLength + 1)),
                 p,
@@ -342,6 +345,22 @@ public class Nonogram implements Parcelable {
                 size,
                 COL,
                 topLength);
+        drawLines(canvas,
+                new PointF(size, size * (topLength + 1)),
+                5 * size,
+                (leftLength + _top.length) * size,
+                2,
+                _left.length / 5 + (_left.length % 5 == 0 ? 0 : 1),
+                BLACK,
+                ROW);
+        drawLines(canvas,
+                new PointF(size * (leftLength + 1), size),
+                5 * size,
+                (topLength + _left.length) * size,
+                2,
+                _top.length / 5 + (_top.length % 5 == 0 ? 0 : 1),
+                BLACK,
+                COL);
         return nonogram;
     }
 
@@ -370,7 +389,7 @@ public class Nonogram implements Parcelable {
         float w = 0f, h = 0f;
         float newLeft = 0f, newTop = 0f;
         String s = null;
-        RectF grid = getRectFGrid(cellSize);
+        RectF grid = getRectFGrid(cellSize, cellSize);
         grid.offsetTo(pos.x, pos.y);
         for (int[] line : numbers) {
             newLeft = isRow ? pos.x + (maxLength - line.length) * cellSize
