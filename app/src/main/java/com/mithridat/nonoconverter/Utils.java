@@ -3,7 +3,9 @@ package com.mithridat.nonoconverter;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 
 import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
 
@@ -45,16 +47,19 @@ public class Utils {
      * @param pos - position of the left-top corner of the grid on the canvas
      * @param sizes - sizes of the grid
      * @param cellSize - size of the one cell
+     * @param linesWidth - width of the lines
      */
     public static void drawGrid(
             Canvas canvas,
-            Point pos,
+            PointF pos,
             Point sizes,
-            int cellSize) {
-        Rect grid = getRectGrid(cellSize);
+            float cellSize,
+            float linesWidth) {
+        if (canvas == null || pos == null || sizes == null) return;
+        RectF grid = getRectFGrid(cellSize);
         Paint p = new Paint();
         p.setColor(BLACK);
-        p.setStrokeWidth(1);
+        p.setStrokeWidth(linesWidth);
         p.setStyle(Paint.Style.STROKE);
         grid.offsetTo(pos.x, pos.y);
         for (int i = 0; i < sizes.y; i++) {
@@ -73,8 +78,8 @@ public class Utils {
      * @param cellSize - size of the one cell
      * @return rectangle
      */
-    public static Rect getRectGrid(int cellSize) {
-        Rect grid = new Rect();
+    public static RectF getRectFGrid(float cellSize) {
+        RectF grid = new RectF();
         grid.top = 0;
         grid.left = 0;
         grid.bottom = cellSize;
