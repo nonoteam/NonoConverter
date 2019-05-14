@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
+import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
 
 /**
  * Class with some helpful functions
@@ -48,15 +49,17 @@ public class Utils {
      * @param sizes - sizes of the grid
      * @param cellSize - size of the one cell
      * @param linesWidth - width of the lines
+     * @param border - is it needs to draw bold border
      */
     public static void drawGrid(
             Canvas canvas,
             PointF pos,
             Point sizes,
             float cellSize,
-            float linesWidth) {
+            float linesWidth,
+            boolean border) {
         if (canvas == null || pos == null || sizes == null) return;
-        RectF grid = getRectFGrid(cellSize);
+        RectF grid = getRectFGrid(cellSize, cellSize);
         Paint p = new Paint();
         p.setColor(BLACK);
         p.setStrokeWidth(linesWidth);
@@ -70,21 +73,69 @@ public class Utils {
             grid.offset(0, cellSize);
             grid.offsetTo(pos.x, grid.top);
         }
+        if (border) {
+            grid = getRectFGrid(sizes.x * cellSize, sizes.y * cellSize);
+            grid.offsetTo(pos.x, pos.y);
+            p.setStrokeWidth(2 * linesWidth);
+            canvas.drawRect(grid, p);
+        }
     }
 
     /**
      * Method for creating rectangle for grid lines
      *
-     * @param cellSize - size of the one cell
+     * @param w - width of the one cell
+     * @param h - height of the one cell
      * @return rectangle
      */
-    public static RectF getRectFGrid(float cellSize) {
+    public static RectF getRectFGrid(float w, float h) {
         RectF grid = new RectF();
         grid.top = 0;
         grid.left = 0;
-        grid.bottom = cellSize;
-        grid.right = cellSize;
+        grid.bottom = h;
+        grid.right = w;
         return grid;
+    }
+
+    /**
+     * Method for drawing lines on the canvas
+     *
+     * @param canvas - the Canvas
+     * @param pos - the position of the left-top corner of the first line on
+     *            the canvas
+     * @param distance - the distance between lines
+     * @param length - the length of the one line
+     * @param linesWidth - the width of the lines
+     * @param count - the count of the lines
+     * @param color - the color of the lines
+     * @param type - the type of the lines
+     */
+    public static void drawLines(
+            Canvas canvas,
+            PointF pos,
+            float distance,
+            float length,
+            float linesWidth,
+            int count,
+            int color,
+            int type) {
+        if (canvas == null || pos == null) return;
+        final boolean isRow = type == ROW;
+        final float dx = isRow ? 0f : distance;
+        final float dy = isRow ? distance : 0f;
+        final float dposx = isRow ? length : 0f;
+        final float dposy = isRow ? 0f : length;
+        Paint p = new Paint();
+        p.setColor(color);
+        p.setStrokeWidth(linesWidth);
+        for (int i = 0; i < count; i++) {
+            canvas.drawLine(pos.x,
+                    pos.y,
+                    pos.x + dposx,
+                    pos.y + dposy,
+                    p);
+            pos.offset(dx, dy);
+        }
     }
 
 }
