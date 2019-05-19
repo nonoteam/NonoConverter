@@ -15,11 +15,11 @@
 
     <string name="title_result_activity">Результат</string>
     <string name="action_save">Сохранить</string>
-    <string name="msg_save">Что вы хотите сохранить?</string>
+    <string name="msg_save">Что Вы хотите сохранить?</string>
     <string name="action_save_thumbnail">Сохранить миниатюру</string>
     <string name="action_save_nonogram">Сохранить кроссворд</string>
     <string name="action_share">Поделиться</string>
-    <string name="msg_share">Чем вы хотите поделиться?</string>
+    <string name="msg_share">Чем Вы хотите поделиться?</string>
     <string name="action_share_thumbnail">Поделиться миниатюрой</string>
     <string name="action_share_nonogram">Поделиться кроссвордом</string>
     <string name="action_home_return">Домой</string>

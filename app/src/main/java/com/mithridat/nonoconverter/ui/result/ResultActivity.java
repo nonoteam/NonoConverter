@@ -46,7 +46,7 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
      * Nonogram as drawable for ResultImageView
      */
     IDrawable _nonogramDrawable;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
