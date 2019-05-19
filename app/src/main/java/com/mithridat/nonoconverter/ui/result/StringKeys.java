@@ -42,6 +42,16 @@ public class StringKeys {
     static final String DIALOG_HOME_RETURN_TAG = "Fragment home-return dialog";
 
     /**
+     * Fragment save dialog string tag.
+     */
+    static final String DIALOG_SAVE_TAG = "Fragment save dialog";
+
+    /**
+     * Fragment share dialog string tag.
+     */
+    static final String DIALOG_SHARE_TAG = "Fragment share dialog";
+
+    /**
      * Prefixes for titles of saved images
      */
     static String THUMBNAIL = "NONOTHUMB", NONOGRAM = "NONOGRAM";
