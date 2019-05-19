@@ -14,14 +14,21 @@
     <string name="action_change">Изменить</string>
 
     <string name="title_result_activity">Результат</string>
+    <string name="action_save">Сохранить</string>
+    <string name="msg_save">Что вы хотите сохранить?</string>
     <string name="action_save_thumbnail">Сохранить миниатюру</string>
     <string name="action_save_nonogram">Сохранить кроссворд</string>
+    <string name="action_share">Поделиться</string>
+    <string name="msg_share">Чем вы хотите поделиться?</string>
+    <string name="action_share_thumbnail">Поделиться миниатюрой</string>
+    <string name="action_share_nonogram">Поделиться кроссвордом</string>
     <string name="action_home_return">Домой</string>
     <string name="title_dialog_home_return">Вернуться домой</string>
     <string name="msg_home_return">Вы уверены, что хотите вернуться домой?
         Кроссворд будет потерян, если вы его не сохранили.</string>
     <string name="action_return">ВЕРНУТЬСЯ</string>
     <string name="action_cancel">ОТМЕНА</string>
+
     <string name="msg_save_image_done">Изображение сохранено:</string>
     <string name="msg_save_image_fail">Не удалось сохранить изображение</string>
     <string name="msg_func_unavailable">Функциональность недоступна</string>
