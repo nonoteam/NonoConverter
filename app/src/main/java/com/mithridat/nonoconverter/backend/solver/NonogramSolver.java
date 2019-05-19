@@ -30,7 +30,7 @@ public class NonogramSolver {
     /**
      * Async task of image converting
      */
-    private AsyncTask<Void, Void, Nonogram> _asyncTask;
+    private AsyncTask<Void, Integer, Nonogram> _asyncTask;
 
     /**
      * Show rows and columns in which there were changes during
@@ -78,7 +78,7 @@ public class NonogramSolver {
      *
      * @param asyncTask - async task of image converting
      */
-    public void setAsyncTask(AsyncTask<Void, Void, Nonogram> asyncTask) {
+    public void setAsyncTask(AsyncTask<Void, Integer, Nonogram> asyncTask) {
         _asyncTask = asyncTask;
     }
 

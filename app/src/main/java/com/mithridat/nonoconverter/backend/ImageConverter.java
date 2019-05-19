@@ -1,10 +1,11 @@
 package com.mithridat.nonoconverter.backend;
 
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.backend.solver.NonogramSolver;
+import com.mithridat.nonoconverter.ui.editimage.EditImageActivity;
+
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -32,20 +33,32 @@ public class ImageConverter {
             final int[] arrRows,
             final int[] arrColumns,
             int exactIndex,
-            AsyncTask<Void, Void, Nonogram> asyncTask) {
+            EditImageActivity.AsyncTaskConvertImage asyncTask) {
         int[] idxOrder = indexOrder(exactIndex, arrColumns.length);
         int rows, cols;
+        int length = idxOrder.length;
+        asyncTask.setMax(length);
         Bitmap bw = null;
         Nonogram nono = null;
         NonogramSolver solver = new NonogramSolver();
         solver.setAsyncTask(asyncTask);
+        int count = 0;
         for (int i : idxOrder) {
             rows = min(arrRows[i], bmp.getHeight());
             cols = min(arrColumns[i], bmp.getWidth());
             bw = getBlackWhite(bmp, cols, rows);
             nono = new Nonogram(bw);
             solver.setNonogram(nono);
-            if (solver.solve()) return nono.translateToColors();
+            asyncTask.publish(++count);
+            if (solver.solve()) {
+                    asyncTask.publish(length);
+                    try {
+                        Thread.sleep(100);
+                    } catch(InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                    return nono.translateToColors();
+            }
         }
         return null;
     }

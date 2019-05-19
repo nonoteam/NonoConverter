@@ -75,6 +75,16 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final String COUNT_ROWS_TAG = "countRows";
 
     /**
+     * Tag for _pdLoading progress
+     */
+    private static final String COUNT_PD_PROGRESS = "countPDProgress";
+
+    /**
+     * Tag for _pdLoading max
+     */
+    private static final String COUNT_PD_MAX = "countPDMax";
+
+    /**
      * Tag for fragment columns
      */
     private static final String IS_SELECTED_COLUMNS_TAG = "isSelectedColumns";
@@ -222,15 +232,16 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         Toolbar toolbar = findViewById(R.id.toolbar_edit);
         setSupportActionBar(toolbar);
 
-        _pdLoading = new ProgressDialog(this);
-        _pdLoading.setMessage(
-                getResources().getString(R.string.msg_process_image));
-
         _atConvert =
                 (AsyncTaskConvertImage) getLastCustomNonConfigurationInstance();
         if (_atConvert != null && !_atConvert.isCancelled()
                 && _atConvert.getStatus() == AsyncTask.Status.RUNNING) {
             _atConvert.link(this);
+            int progress =
+                    savedInstanceState.getInt(COUNT_PD_PROGRESS, 0);
+            int max =
+                    savedInstanceState.getInt(COUNT_PD_MAX, 0);
+            createPD(progress, max);
             showPd();
         }
 
@@ -333,6 +344,10 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         super.onSaveInstanceState(outState);
         outState.putInt(COUNT_COLUMNS_TAG, _columns);
         outState.putInt(COUNT_ROWS_TAG, _rows);
+        if (_pdLoading != null) {
+            outState.putInt(COUNT_PD_PROGRESS, _pdLoading.getProgress());
+            outState.putInt(COUNT_PD_MAX, _pdLoading.getMax());
+        }
         outState.putByte(IS_SELECTED_COLUMNS_TAG,
                 _isSelectedColumns ? (byte) 1 : (byte) 0);
 
@@ -362,6 +377,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                     _rows = _columns * bmHeight / bmWidth;
                 }
                 setArrays();
+                createPD(0, 10);
                 showPd();
                 _atConvert = new AsyncTaskConvertImage();
                 _atConvert.link(this);
@@ -632,6 +648,24 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     /**
+     * Creates Progress Dialog
+     *
+     * @param progress - progess of loading
+     * @param max - maximum progress
+     */
+    private void createPD(int progress, int max) {
+        _pdLoading = new ProgressDialog(this);
+        _pdLoading.setMessage(
+                getResources().getString(R.string.msg_process_image));
+        _pdLoading.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        _pdLoading.setProgress(progress);
+        _pdLoading.setMax(max);
+        _pdLoading.setProgress(progress);
+        _pdLoading.setIndeterminate(false);
+        _pdLoading.setCanceledOnTouchOutside(false);
+    }
+
+    /**
      * Show progress dialog
      */
     private void showPd() {
@@ -651,7 +685,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Inner class for async converting image in background.
      */
-    static class AsyncTaskConvertImage extends AsyncTask<Void, Void, Nonogram> {
+    public static class AsyncTaskConvertImage extends AsyncTask<Void, Integer, Nonogram> {
 
         /**
          * Reference to activity
@@ -673,6 +707,12 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         }
 
         @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            _activity._pdLoading.setProgress(values[0]);
+        }
+
+        @Override
         protected void onPostExecute(Nonogram result) {
             if (isCancelled()) return;
             _activity._pdLoading.dismiss();
@@ -687,6 +727,22 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 _activity.overridePendingTransition(R.anim.slide_in_left,
                         R.anim.slide_out_left);
             }
+        }
+
+        /**
+         * Call publish progress
+         * @param progress - current progress
+         */
+        public void publish(int progress) {
+            publishProgress(progress);
+        }
+
+        /**
+         * Set max progress
+         * @param length - max progress
+         */
+        public void setMax(int length) {
+            _activity._pdLoading.setMax(length);
         }
 
         /**
