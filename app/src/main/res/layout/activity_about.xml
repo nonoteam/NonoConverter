@@ -48,11 +48,11 @@
                     android:textSize="24sp" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:srcCompat="@drawable/img_panda_thumbnail"
-                    android:contentDescription="@string/app_name" />
+                    android:layout_width="220dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="@string/app_name"
+                    app:srcCompat="@drawable/img_logo" />
 
                 <TextView
                     android:layout_width="wrap_content"
