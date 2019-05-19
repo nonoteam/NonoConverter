@@ -5,6 +5,7 @@ import androidx.fragment.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -13,7 +14,7 @@ import com.mithridat.nonoconverter.R;
 /**
  * Class for share dialog fragment.
  */
-public class FragmentShareDialog extends DialogFragment implements View.OnClickListener {
+public class FragmentShareDialog extends DialogFragment implements OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +34,7 @@ public class FragmentShareDialog extends DialogFragment implements View.OnClickL
                         R.string.msg_func_unavailable,
                         Toast.LENGTH_SHORT)
                         .show();
+                getDialog().cancel();
                 break;
             default:
                 break;

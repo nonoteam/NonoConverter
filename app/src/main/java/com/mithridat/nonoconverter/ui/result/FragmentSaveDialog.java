@@ -7,7 +7,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+
 import android.widget.Toast;
 
 import com.mithridat.nonoconverter.R;
@@ -21,7 +23,7 @@ import static com.mithridat.nonoconverter.ui.ActivitiesConstants.EX_NONO_FIELD;
 /**
  * Class for save dialog fragment.
  */
-public class FragmentSaveDialog extends DialogFragment implements View.OnClickListener {
+public class FragmentSaveDialog extends DialogFragment implements OnClickListener {
 
     /**
      * Nonogram from result activity.
@@ -64,6 +66,7 @@ public class FragmentSaveDialog extends DialogFragment implements View.OnClickLi
                             Toast.LENGTH_SHORT)
                             .show();
                 }
+                getDialog().cancel();
                 break;
 
             case R.id.button_save_nng:
@@ -82,6 +85,7 @@ public class FragmentSaveDialog extends DialogFragment implements View.OnClickLi
                             Toast.LENGTH_SHORT)
                             .show();
                 }
+                getDialog().cancel();
                 break;
             default:
                 break;
