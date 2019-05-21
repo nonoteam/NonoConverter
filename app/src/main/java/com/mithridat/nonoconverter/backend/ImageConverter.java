@@ -40,10 +40,10 @@ public class ImageConverter {
         int length = idxOrder.length;
         Bitmap bw = null;
         Nonogram nono = null;
-        NonogramSolver solver = new NonogramSolver();
-        solver.setAsyncTask(asyncTask);
         Nonogram res = null;
         int count = 0;
+        NonogramSolver solver = new NonogramSolver();
+        solver.setAsyncTask(asyncTask);
         for (int i : idxOrder) {
             rows = min(arrRows[i], bmp.getHeight());
             cols = min(arrColumns[i], bmp.getWidth());
@@ -51,9 +51,9 @@ public class ImageConverter {
             nono = new Nonogram(bw);
             solver.setNonogram(nono);
             if (solver.solve()) {
-                count = length - 1;
-                asyncTask.publish(length);
+                asyncTask.publish(++count);
                 res = nono.translateToColors();
+                break;
             }
             asyncTask.publish(++count);
         }
