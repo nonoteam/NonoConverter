@@ -12,10 +12,8 @@ android {
     }
     buildTypes {
         debug{
-            resValue "string", "msg_version", "Version: " + PUBLISH_VERSION
         }
         release {
-            resValue "string", "msg_version", "Version: " + PUBLISH_VERSION
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
