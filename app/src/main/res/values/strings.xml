@@ -4,26 +4,34 @@
     <string name="title_edit_image_activity">Editing</string>
     <string name="action_convert">Convert</string>
     <string name="action_open_crop">Crop</string>
-    <string name="action_open_columns">Columns</string>
+    <string name="action_open_columns">Size</string>
     <string name="edit_image_view_description">Convertible image</string>
-    <string name="title_dialog_columns">Columns and rows</string>
-    <string name="edit_image_columns">Columns</string>
-    <string name="edit_image_rows">Rows</string>
     <string name="msg_process_image">Processing image…</string>
     <string name="action_change">Change</string>
 
     <string name="title_result_activity">Result</string>
-    <string name="action_save_thumbnail">Save thumbnail</string>
-    <string name="action_save_nonogram">Save nonogram</string>
+    <string name="action_save">Save</string>
+    <string name="msg_save">What would you like to save?</string>
+    <string name="msg_open_image">Open image via</string>
+    <string name="action_share">Share</string>
+    <string name="msg_share">What would you like to share?</string>
+    <string name="msg_share_image">Share image via</string>
+    <string name="action_thumbnail">Thumbnail</string>
+    <string name="action_nonogram">Nonogram</string>
     <string name="action_home_return">Home</string>
     <string name="title_dialog_home_return">Return home</string>
     <string name="msg_home_return">Are you sure that you want to return home?
         Nonogram will be lost if you don\'t save it.</string>
     <string name="action_return">RETURN</string>
     <string name="action_cancel">CANCEL</string>
-    <string name="msg_save_image_done">Image saved:</string>
+    <string name="msg_save_image_done">Image saved in %1$s</string>
     <string name="msg_save_image_fail">Failed to save the image</string>
     <string name="msg_func_unavailable">Functionality unavailable</string>
+    <string name="msg_share_image_fail">Failed to prepare the image for the
+        sharing</string>
+    <string name="action_open">OPEN</string>
+    <string name="action_retry">RETRY</string>
+
     <string name="action_ok">OK</string>
     <string name="title_dialog_convert">Conversion failed</string>
     <string name="msg_convert">Conversion failed.\nYou can try to change the
@@ -42,6 +50,7 @@
         logical solution\n
         - Save nonogram and its thumbnail
     </string>
+    <string name="msg_version">Version %1$s</string>
     <string name="title_about_activity">About</string>
     <string name="msg_contact">If you have any questions,\nplease contact us:\n
         nonoconverter@gmail.com</string>
@@ -86,12 +95,12 @@
         Crossword, you need to set the dimensions of the crossword.</string>
     <string name="help_crop">To crop, rotate and flip the image, click on the
         \'CROP\' button in the lower left corner.\n\nYou can rotate the image
-        90, 180 and 270 degrees and flip the image vertically. To do this,
+        90, 180 and 270 degrees and flip the image horizontally. To do this,
         click on the icons at the bottom.\n\nYou can crop the image by selecting
         the desired rectangle. To fixate your choice, you need to click on the
         check mark in the upper right corner on the action bar</string>
     <string name="help_columns">To set the size of the crossword, click on
-        the \'COLUMNS\' button in the lower right corner.\n\nYou can view an
+        the \'SIZE\' button in the lower right corner.\n\nYou can view an
         approximate result. Also you can see current size and range of possible
         sizes after converting above image. There is a slider that provides a
         choice of the number of columns at the bottom of the screen. The number 
@@ -101,19 +110,32 @@
         right corner on the action bar.</string>
     <string name="help_convert">After you have configured everything you need
         to click on \'Convert\' in the upper right corner on the action bar.
-        After that, a pop-up window will appear informing you that the
-        conversion has begun. You have the opportunity to click on the
-        standard \'back\' button in the navigation bar or click on any place
-        around the window to cancel the conversion.</string>
+        After that, a pop-up window with a progress bar will appear.\n\nProgress
+        bar displays a conversion progress - how many crossword puzzles with
+        sizes from a given range have already been tested for solvability.
+        As soon as the solvable crossword found, the conversion finishes.
+        You may click on the standard \'back\' button in the navigation bar
+        to cancel the conversion.</string>
+    <string name="title_help_save_result">Save result</string>
+    <string name="title_help_share_result">Share result</string>
     <string name="help_info_result">After converting the image into the
-        Japanese Crossword, you can see the result and save it.</string>
-    <string name="help_save_thumbnail">You can save the result as a
-        thumbnail. The image size in pixels is equal to the size of the
-        crossword puzzle. To do this, click on the button \'SAVE THUMBNAIL\'
-        in the lower left corner.</string>
-    <string name="help_save_nonogram">You can save the result in the form of
-        an unsolved Japanese Crossword. To do this, click on the button
-        \'SAVE NONOGRAM\' in the lower right corner.</string>
+        Japanese Crossword, you can see the result, save and share it.</string>
+    <string name="help_save">You can save thumbnail (the solution of the
+        crossword)or unsolved Japanese Crossword by clicking on the \'SAVE\'
+        button in the lower left corner and choosing the appropriate item
+        in the dialog.\n\nOn saving the miniature, the image size in pixels
+        is equal to the size of the crossword puzzle.\n\nIf the save fails,
+        you can try again by pressing the \'RETRY\' button on the pop-up bar
+        in the lower part of the screen.\n\nIf the save succeed, this bar will
+        contain the path to the file and the \'OPEN\' button. By clicking it and
+        choosing the view-application, you can view the saved image.</string>
+    <string name="help_share">You can share thumbnail or unsolved
+        Japanese Crossword by clicking on the \'SHARE\' button in the lower
+        right corner and choosing the appropriate item in the dialog.
+        You will be offered with a list of applications through which you can
+        share the image.\n\nIn case of failure, you can try again by pressing
+        the \'RETRY\' button on the pop-up bar in the lower part of the screen.
+    </string>
     <string name="help_view_result">You can look at the resulting crossword
         puzzle. In the center of the screen is a solved Japanese Crossword.
         It can be moved and increased or decreased.</string>
@@ -125,4 +147,6 @@
     <string name="action_flip">Flip</string>
     <string name="exact_columns_title">exact:</string>
     <string name="range_columns_title">range:</string>
+
+    <string name="title_image_picker">Albums</string>
 </resources>

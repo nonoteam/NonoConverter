@@ -4,7 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,8 +15,9 @@ import androidx.annotation.NonNull;
 import java.util.Arrays;
 
 import static com.mithridat.nonoconverter.Utils.drawGrid;
+import static com.mithridat.nonoconverter.Utils.drawLines;
 import static com.mithridat.nonoconverter.Utils.getHeightText;
-import static com.mithridat.nonoconverter.Utils.getRectGrid;
+import static com.mithridat.nonoconverter.Utils.getRectFGrid;
 import static com.mithridat.nonoconverter.Utils.getWidthText;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.COL;
@@ -320,25 +322,45 @@ public class Nonogram implements Parcelable {
         canvas = new Canvas(nonogram);
         canvas.drawColor(WHITE);
         drawGrid(canvas,
-                new Point(size * (leftLength + 1), size),
+                new PointF(size * (leftLength + 1), size),
                 new Point(_top.length, topLength),
-                size);
+                size,
+                1,
+                true);
         drawGrid(canvas,
-                new Point(size, size * (topLength + 1)),
+                new PointF(size, size * (topLength + 1)),
                 new Point(_top.length + leftLength, _left.length),
-                size);
+                size,
+                1,
+                true);
         drawGridNumbers(canvas,
-                new Point(size, size * (topLength + 1)),
+                new PointF(size, size * (topLength + 1)),
                 p,
                 size,
                 ROW,
                 leftLength);
         drawGridNumbers(canvas,
-                new Point(size * (leftLength + 1), size),
+                new PointF(size * (leftLength + 1), size),
                 p,
                 size,
                 COL,
                 topLength);
+        drawLines(canvas,
+                new PointF(size, size * (topLength + 1)),
+                5 * size,
+                (leftLength + _top.length) * size,
+                2,
+                _left.length / 5 + (_left.length % 5 == 0 ? 0 : 1),
+                BLACK,
+                ROW);
+        drawLines(canvas,
+                new PointF(size * (leftLength + 1), size),
+                5 * size,
+                (topLength + _left.length) * size,
+                2,
+                _top.length / 5 + (_top.length % 5 == 0 ? 0 : 1),
+                BLACK,
+                COL);
         return nonogram;
     }
 
@@ -355,18 +377,19 @@ public class Nonogram implements Parcelable {
      */
     public void drawGridNumbers(
             Canvas canvas,
-            Point pos,
+            PointF pos,
             Paint p,
-            int cellSize,
+            float cellSize,
             int type,
             int maxLength) {
+        if (canvas == null || pos == null || p == null) return;
         final boolean isRow = type == ROW;
-        final int dx = isRow ? cellSize : 0, dy = isRow ? 0 : cellSize;
+        final float dx = isRow ? cellSize : 0, dy = isRow ? 0 : cellSize;
         final int[][] numbers = isRow ? _left : _top;
         float w = 0f, h = 0f;
-        int newLeft = 0, newTop = 0;
+        float newLeft = 0f, newTop = 0f;
         String s = null;
-        Rect grid = getRectGrid(cellSize);
+        RectF grid = getRectFGrid(cellSize, cellSize);
         grid.offsetTo(pos.x, pos.y);
         for (int[] line : numbers) {
             newLeft = isRow ? pos.x + (maxLength - line.length) * cellSize
@@ -400,9 +423,9 @@ public class Nonogram implements Parcelable {
      */
     public void drawGridNumbers(
             Canvas canvas,
-            Point pos,
+            PointF pos,
             Paint p,
-            int cellSize,
+            float cellSize,
             int type) {
         drawGridNumbers(canvas,
                 pos,

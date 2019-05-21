@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorLightBlue"
+    android:background="@color/colorWhite"
     tools:context=".ui.about.AboutActivity">
 
     <include
@@ -48,13 +48,14 @@
                     android:textSize="24sp" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:srcCompat="@drawable/img_panda_thumbnail"
-                    android:contentDescription="@string/app_name" />
+                    android:layout_width="220dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="8dp"
+                    android:contentDescription="@string/app_name"
+                    app:srcCompat="@drawable/img_logo" />
 
                 <TextView
+                    android:id="@+id/text_view_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -63,7 +64,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/msg_version" />
+                    android:text="" />
 
                 <TextView
                     android:layout_width="wrap_content"
