@@ -36,12 +36,9 @@ public class ImageConverter {
             int exactIndex,
             AsyncTaskPublish asyncTask) {
         int[] idxOrder = indexOrder(exactIndex, arrColumns.length);
-        int rows, cols;
-        int length = idxOrder.length;
+        int rows, cols, count = 0;
         Bitmap bw = null;
-        Nonogram nono = null;
-        Nonogram res = null;
-        int count = 0;
+        Nonogram nono = null, res = null;
         NonogramSolver solver = new NonogramSolver();
         solver.setAsyncTask(asyncTask);
         for (int i : idxOrder) {
