@@ -7,9 +7,6 @@
     <string name="action_open_columns">Размер</string>
     <string name="edit_image_view_description">Конвертируемое
         изображение</string>
-    <string name="title_dialog_columns">Столбцы и строки</string>
-    <string name="edit_image_columns">Столбцы</string>
-    <string name="edit_image_rows">Строки</string>
     <string name="msg_process_image">Обработка изображения…</string>
     <string name="action_change">Изменить</string>
 

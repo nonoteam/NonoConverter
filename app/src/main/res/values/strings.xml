@@ -6,9 +6,6 @@
     <string name="action_open_crop">Crop</string>
     <string name="action_open_columns">Size</string>
     <string name="edit_image_view_description">Convertible image</string>
-    <string name="title_dialog_columns">Columns and rows</string>
-    <string name="edit_image_columns">Columns</string>
-    <string name="edit_image_rows">Rows</string>
     <string name="msg_process_image">Processing image…</string>
     <string name="action_change">Change</string>
 
