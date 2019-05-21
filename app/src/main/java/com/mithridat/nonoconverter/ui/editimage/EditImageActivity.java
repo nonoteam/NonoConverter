@@ -23,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.mithridat.nonoconverter.R;
+import com.mithridat.nonoconverter.Utils.AsyncTaskPublish;
 import com.mithridat.nonoconverter.backend.ImageConverter;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
@@ -73,6 +74,16 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * Tag for fragment main
      */
     private static final String COUNT_ROWS_TAG = "countRows";
+
+    /**
+     * Tag for _pdLoading progress
+     */
+    private static final String COUNT_PD_PROGRESS = "countPDProgress";
+
+    /**
+     * Tag for _pdLoading max
+     */
+    private static final String COUNT_PD_MAX = "countPDMax";
 
     /**
      * Tag for fragment columns
@@ -222,15 +233,16 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         Toolbar toolbar = findViewById(R.id.toolbar_edit);
         setSupportActionBar(toolbar);
 
-        _pdLoading = new ProgressDialog(this);
-        _pdLoading.setMessage(
-                getResources().getString(R.string.msg_process_image));
-
         _atConvert =
                 (AsyncTaskConvertImage) getLastCustomNonConfigurationInstance();
         if (_atConvert != null && !_atConvert.isCancelled()
                 && _atConvert.getStatus() == AsyncTask.Status.RUNNING) {
             _atConvert.link(this);
+            int progress =
+                    savedInstanceState.getInt(COUNT_PD_PROGRESS, 0);
+            int max =
+                    savedInstanceState.getInt(COUNT_PD_MAX, 0);
+            createPD(progress, max);
             showPd();
         }
 
@@ -333,6 +345,10 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         super.onSaveInstanceState(outState);
         outState.putInt(COUNT_COLUMNS_TAG, _columns);
         outState.putInt(COUNT_ROWS_TAG, _rows);
+        if (_pdLoading != null) {
+            outState.putInt(COUNT_PD_PROGRESS, _pdLoading.getProgress());
+            outState.putInt(COUNT_PD_MAX, _pdLoading.getMax());
+        }
         outState.putByte(IS_SELECTED_COLUMNS_TAG,
                 _isSelectedColumns ? (byte) 1 : (byte) 0);
 
@@ -362,6 +378,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                     _rows = _columns * bmHeight / bmWidth;
                 }
                 setArrays();
+                createPD(0, _arrColumns.length);
                 showPd();
                 _atConvert = new AsyncTaskConvertImage();
                 _atConvert.link(this);
@@ -632,6 +649,22 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     }
 
     /**
+     * Creates Progress Dialog
+     *
+     * @param progress - progess of loading
+     * @param max - maximum progress
+     */
+    private void createPD(int progress, int max) {
+        _pdLoading = new ProgressDialog(this);
+        _pdLoading.setMessage(getString(R.string.msg_process_image));
+        _pdLoading.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        _pdLoading.setMax(max);
+        _pdLoading.setProgress(progress);
+        _pdLoading.setIndeterminate(false);
+        _pdLoading.setCanceledOnTouchOutside(false);
+    }
+
+    /**
      * Show progress dialog
      */
     private void showPd() {
@@ -651,7 +684,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Inner class for async converting image in background.
      */
-    static class AsyncTaskConvertImage extends AsyncTask<Void, Void, Nonogram> {
+    static class AsyncTaskConvertImage extends AsyncTaskPublish {
 
         /**
          * Reference to activity
@@ -670,6 +703,12 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            _activity._pdLoading.setProgress(values[0]);
         }
 
         @Override

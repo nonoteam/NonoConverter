@@ -11,10 +11,12 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.view.View;
 import android.widget.TextView;
 import androidx.core.content.FileProvider;
 import com.google.android.material.snackbar.Snackbar;
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -160,6 +162,19 @@ public class Utils {
                     pos.y + dposy,
                     p);
             pos.offset(dx, dy);
+        }
+    }
+
+    /**
+     * Sleep exact time
+     *
+     * @param time - time in milliseconds
+     */
+    public static void sleepMillisec(int time) {
+        try {
+            Thread.sleep(time);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -330,6 +345,26 @@ public class Utils {
                 snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
         textView.setMaxLines(5);
         return snackbar;
+    }
+  
+    /**
+     * Inner class for async converting image in background.
+     */
+    public static class AsyncTaskPublish extends AsyncTask<Void, Integer, Nonogram> {
+
+        @Override
+        protected Nonogram doInBackground(Void... voids) {
+            return null;
+        }
+
+        /**
+         * Call publish progress
+         *
+         * @param progress - current progress
+         */
+        public void publish(int progress) {
+            publishProgress(progress);
+        }
     }
 
     /**
