@@ -17,8 +17,10 @@ import com.mithridat.nonoconverter.R;
 public class FragmentShareDialog extends DialogFragment implements OnClickListener {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dialog_share, null);
         v.findViewById(R.id.button_share_nng).setOnClickListener(this);
         v.findViewById(R.id.button_share_thumb).setOnClickListener(this);
@@ -34,7 +36,7 @@ public class FragmentShareDialog extends DialogFragment implements OnClickListen
                         R.string.msg_func_unavailable,
                         Toast.LENGTH_SHORT)
                         .show();
-                getDialog().cancel();
+                dismiss();
                 break;
             default:
                 break;

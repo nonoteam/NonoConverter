@@ -19,8 +19,8 @@
     <string name="action_save_nonogram">Save nonogram</string>
     <string name="action_share">Share</string>
     <string name="msg_share">What would you like to share?</string>
-    <string name="action_share_thumbnail">Share thumbnail</string>
-    <string name="action_share_nonogram">Share nonogram</string>
+    <string name="action_thumbnail">Thumbnail</string>
+    <string name="action_nonogram">Nonogram</string>
     <string name="action_home_return">Home</string>
     <string name="title_dialog_home_return">Return home</string>
     <string name="msg_home_return">Are you sure that you want to return home?

@@ -31,8 +31,10 @@ public class FragmentSaveDialog extends DialogFragment implements OnClickListene
     private Nonogram _nonogram = null;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dialog_save, null);
         v.findViewById(R.id.button_save_nng).setOnClickListener(this);
         v.findViewById(R.id.button_save_thumb).setOnClickListener(this);
@@ -66,7 +68,7 @@ public class FragmentSaveDialog extends DialogFragment implements OnClickListene
                             Toast.LENGTH_SHORT)
                             .show();
                 }
-                getDialog().cancel();
+                dismiss();
                 break;
 
             case R.id.button_save_nng:
@@ -85,7 +87,7 @@ public class FragmentSaveDialog extends DialogFragment implements OnClickListene
                             Toast.LENGTH_SHORT)
                             .show();
                 }
-                getDialog().cancel();
+                dismiss();
                 break;
             default:
                 break;
