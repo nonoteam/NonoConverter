@@ -656,10 +656,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      */
     private void createPD(int progress, int max) {
         _pdLoading = new ProgressDialog(this);
-        _pdLoading.setMessage(
-                getResources().getString(R.string.msg_process_image));
+        _pdLoading.setMessage(getString(R.string.msg_process_image));
         _pdLoading.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        _pdLoading.setProgress(progress);
         _pdLoading.setMax(max);
         _pdLoading.setProgress(progress);
         _pdLoading.setIndeterminate(false);
@@ -686,7 +684,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Inner class for async converting image in background.
      */
-    public static class AsyncTaskConvertImage extends AsyncTaskPublish {
+    static class AsyncTaskConvertImage extends AsyncTaskPublish {
 
         /**
          * Reference to activity
