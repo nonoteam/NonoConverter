@@ -27,22 +27,16 @@
 
         <Button
             android:id="@+id/button_load_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             style="@style/AppTheme.Button.Start"
             android:text="@string/action_load_image" />
 
         <Button
             android:id="@+id/button_about"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             style="@style/AppTheme.Button.Start"
             android:text="@string/action_open_about" />
 
         <Button
             android:id="@+id/button_help"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             style="@style/AppTheme.Button.Start"
             android:text="@string/action_open_help" />
 
