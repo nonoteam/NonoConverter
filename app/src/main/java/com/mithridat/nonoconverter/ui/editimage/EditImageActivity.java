@@ -638,6 +638,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                 (_columns - remainder) < 5 ? 5 : (_columns - remainder);
         int maxColumns =
                 (_columns + remainder) > 90 ? 90 : (_columns + remainder);
+        maxColumns = maxColumns > bmWidth ? bmWidth : maxColumns;
         int length = maxColumns - minColumns + 1;
         _exactIndex = _columns - minColumns;
         _arrColumns = new int[length];
