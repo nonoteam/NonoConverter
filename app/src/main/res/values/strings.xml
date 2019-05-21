@@ -114,24 +114,30 @@
         right corner on the action bar.</string>
     <string name="help_convert">After you have configured everything you need
         to click on \'Convert\' in the upper right corner on the action bar.
-        After that, a pop-up window will appear informing you that the
-        conversion has begun. You have the opportunity to click on the
-        standard \'back\' button in the navigation bar or click on any place
-        around the window to cancel the conversion.</string>
-    <string name="help_info_result">After converting the image into the Japanese Crossword,
-        you can see the result, save and share it.</string>
-    <string name="help_save">You can save thumbnail (the solution of the crossword)
-        or unsolved Japanese Crossword by clicking on the \'SAVE\' button in the lower left corner
-        and choosing the appropriate item in the dialog.\nOn saving the miniature, the image size
-        in pixels is equal to the size of the crossword puzzle.\nIf the save fails, you can try
-        again by pressing the \'RETRY\' button on the pop-up bar in thelower part of the screen.
-        \nIf the save succeed, this bar will contain the path to the file and the \'OPEN\' button.
-        By clicking it and choosing the view-application, you can view the saved image.</string>
-    <string name="help_share">You can share thumbnail or unsolved Japanese Crossword
-        by clicking on the \'SHARE\' button in the lower right corner and choosing the appropriate
-        item in the dialog. You will be offered with a list of applications through which you can
-        share the image.\nIn case of failure, you can try again by pressing the \'RETRY\' button
-        on the pop-up bar in the lower part of the screen.</string>
+        After that, a pop-up window with a progress bar will appear.\n\nProgress
+        bar displays a conversion progress - how many crossword puzzles with
+        sizes from a given range have already been tested for solvability.
+        As soon as the solvable crossword found, the conversion finishes.
+        You may click on the standard \'back\' button in the navigation bar
+        to cancel the conversion.</string>
+    <string name="help_info_result">After converting the image into the
+        Japanese Crossword, you can see the result, save and share it.</string>
+    <string name="help_save">You can save thumbnail (the solution of the
+        crossword)or unsolved Japanese Crossword by clicking on the \'SAVE\'
+        button in the lower left corner and choosing the appropriate item
+        in the dialog.\n\nOn saving the miniature, the image size in pixels
+        is equal to the size of the crossword puzzle.\n\nIf the save fails,
+        you can try again by pressing the \'RETRY\' button on the pop-up bar
+        in the lower part of the screen.\n\nIf the save succeed, this bar will
+        contain the path to the file and the \'OPEN\' button. By clicking it and
+        choosing the view-application, you can view the saved image.</string>
+    <string name="help_share">You can share thumbnail or unsolved
+        Japanese Crossword by clicking on the \'SHARE\' button in the lower
+        right corner and choosing the appropriate item in the dialog.
+        You will be offered with a list of applications through which you can
+        share the image.\n\nIn case of failure, you can try again by pressing
+        the \'RETRY\' button on the pop-up bar in the lower part of the screen.
+    </string>
     <string name="help_view_result">You can look at the resulting crossword
         puzzle. In the center of the screen is a solved Japanese Crossword.
         It can be moved and increased or decreased.</string>
