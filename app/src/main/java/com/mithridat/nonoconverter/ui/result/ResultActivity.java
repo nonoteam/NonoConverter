@@ -3,13 +3,13 @@ package com.mithridat.nonoconverter.ui.result;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
@@ -17,19 +17,25 @@ import com.mithridat.nonoconverter.ui.ActivitiesConstants;
 import com.mithridat.nonoconverter.ui.result.nonogramDrawable.IDrawable;
 import com.mithridat.nonoconverter.ui.result.nonogramDrawable.NonogramDrawableExtended;
 
-import static com.mithridat.nonoconverter.ui.result.ImageSaver.saveImage;
-import static com.mithridat.nonoconverter.ui.result.StringKeys.NONOGRAM;
-import static com.mithridat.nonoconverter.ui.result.StringKeys.THUMBNAIL;
-
 /**
  * Class for handling result activity
  */
 public class ResultActivity extends AppCompatActivity implements OnClickListener {
 
     /**
-     * Home-return fragment.
+     * Home-return fragment dialog.
      */
-    FragmentHomeReturnDialog _fragmentHomeReturnDialog;
+    DialogFragment _fragmentHomeReturnDialog;
+
+    /**
+     * Save fragment dialog.
+     */
+    DialogFragment _fragmentSaveDialog;
+
+    /**
+     * Share fragment dialog.
+     */
+    DialogFragment _fragmentShareDialog;
 
     /**
      * Nonogram from backend
@@ -45,8 +51,8 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-        findViewById(R.id.button_save_thumb).setOnClickListener(this);
-        findViewById(R.id.button_save_nng).setOnClickListener(this);
+        findViewById(R.id.button_save).setOnClickListener(this);
+        findViewById(R.id.button_share).setOnClickListener(this);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_result));
         ResultImageView resultImageView = findViewById(R.id.result_image_view);
         _nonogram =
@@ -57,6 +63,8 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
             resultImageView.setDrawable(_nonogramDrawable);
         }
         _fragmentHomeReturnDialog = new FragmentHomeReturnDialog();
+        _fragmentSaveDialog = new FragmentSaveDialog();
+        _fragmentShareDialog = new FragmentShareDialog();
     }
 
     @Override
@@ -95,40 +103,17 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
 
     @Override
     public void onClick(View v) {
-        String path = null;
         switch (v.getId()) {
-            case R.id.button_save_thumb:
-                path =
-                        saveImage(this,
-                                _nonogram.getField().getBitmap(),
-                                THUMBNAIL);
-                if (path == null) {
-                    Toast.makeText(this,
-                            R.string.msg_save_image_fail,
-                            Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    Toast.makeText(this,
-                            getString(R.string.msg_save_image_done) + path,
-                            Toast.LENGTH_SHORT)
-                            .show();
+            case R.id.button_save:
+                if (checkFragmentAbsence(StringKeys.DIALOG_SAVE_TAG)) {
+                    _fragmentSaveDialog.show(getSupportFragmentManager(),
+                            StringKeys.DIALOG_SAVE_TAG);
                 }
                 break;
-            case R.id.button_save_nng:
-                path =
-                        saveImage(this,
-                                _nonogram.getBitmap(),
-                                NONOGRAM);
-                if (path == null) {
-                    Toast.makeText(this,
-                            R.string.msg_save_image_fail,
-                            Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    Toast.makeText(this,
-                            getString(R.string.msg_save_image_done) + path,
-                            Toast.LENGTH_SHORT)
-                            .show();
+            case R.id.button_share:
+                if (checkFragmentAbsence(StringKeys.DIALOG_SHARE_TAG)) {
+                    _fragmentShareDialog.show(getSupportFragmentManager(),
+                            StringKeys.DIALOG_SHARE_TAG);
                 }
                 break;
             default:
@@ -136,4 +121,12 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
         }
     }
 
+    /**
+     * Function for checking absence of the fragment by tag.
+     * @param tag - tag of the fragment
+     * @return false if fragment exists and true otherwise
+     */
+    private boolean checkFragmentAbsence(String tag) {
+        return getSupportFragmentManager().findFragmentByTag(tag) == null;
+    }
 }
