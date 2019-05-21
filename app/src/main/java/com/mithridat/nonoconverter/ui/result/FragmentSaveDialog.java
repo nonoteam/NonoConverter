@@ -1,21 +1,20 @@
 package com.mithridat.nonoconverter.ui.result;
 
-import androidx.fragment.app.DialogFragment;
-
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-
-import android.widget.Toast;
+import androidx.fragment.app.DialogFragment;
 
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
-import static com.mithridat.nonoconverter.ui.result.ImageSaver.saveImage;
+import static com.mithridat.nonoconverter.Utils.getSnackbar;
+import static com.mithridat.nonoconverter.Utils.openImage;
+import static com.mithridat.nonoconverter.Utils.saveImage;
 import static com.mithridat.nonoconverter.ui.result.StringKeys.NONOGRAM;
 import static com.mithridat.nonoconverter.ui.result.StringKeys.THUMBNAIL;
 import static com.mithridat.nonoconverter.ui.ActivitiesConstants.EX_NONO_FIELD;
@@ -49,48 +48,53 @@ public class FragmentSaveDialog extends DialogFragment implements OnClickListene
     public void onClick(View v) {
         if (_nonogram == null) return;
 
-        String path;
-        Context context = getContext();
         switch (v.getId()) {
             case R.id.button_save_thumb:
-                path =
-                        saveImage(context,
-                                _nonogram.getField().getBitmap(),
-                                THUMBNAIL);
-                if (path == null) {
-                    Toast.makeText(context,
-                            R.string.msg_save_image_fail,
-                            Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    Toast.makeText(context,
-                            getString(R.string.msg_save_image_done) + path,
-                            Toast.LENGTH_SHORT)
-                            .show();
-                }
+                saveImageAction(getActivity(),
+                        _nonogram.getField().getBitmap(),
+                        THUMBNAIL);
                 dismiss();
                 break;
-
             case R.id.button_save_nng:
-                path =
-                        saveImage(context,
-                                _nonogram.getBitmap(),
-                                NONOGRAM);
-                if (path == null) {
-                    Toast.makeText(context,
-                            R.string.msg_save_image_fail,
-                            Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    Toast.makeText(context,
-                            getString(R.string.msg_save_image_done) + path,
-                            Toast.LENGTH_SHORT)
-                            .show();
-                }
+                saveImageAction(getActivity(),
+                        _nonogram.getBitmap(),
+                        NONOGRAM);
                 dismiss();
                 break;
             default:
                 break;
         }
     }
+
+    private void saveImageAction(
+            final Activity activity,
+            final Bitmap bitmap,
+            final String title) {
+        final String path = saveImage(activity, bitmap, title);
+        if (path == null) {
+            getSnackbar(activity,
+                    getString(R.string.msg_save_image_fail),
+                    R.id.coordinator).setAction(R.string.action_retry,
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            saveImageAction(activity, bitmap, title);
+                        }
+                    })
+                    .show();
+        } else {
+            getSnackbar(activity,
+                    getString(R.string.msg_save_image_done,
+                            path),
+                    R.id.coordinator).setAction(R.string.action_open,
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openImage(activity, path);
+                        }
+                    })
+                    .show();
+        }
+    }
+
 }
