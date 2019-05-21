@@ -21,27 +21,27 @@
 
     <TextView
         style="@style/AppTheme.TextView.Help.Separate"
-        android:text="@string/action_save_thumbnail" />
+        android:text="@string/action_save_result" />
 
     <LinearLayout
         style="@style/AppTheme.LinearLayout.Help">
 
         <TextView
             style="@style/AppTheme.TextView.Help"
-            android:text="@string/help_save_thumbnail" />
+            android:text="@string/help_save" />
 
     </LinearLayout>
 
     <TextView
         style="@style/AppTheme.TextView.Help.Separate"
-        android:text="@string/action_save_nonogram" />
+        android:text="@string/action_share_result" />
 
     <LinearLayout
         style="@style/AppTheme.LinearLayout.Help">
 
         <TextView
             style="@style/AppTheme.TextView.Help"
-            android:text="@string/help_save_nonogram" />
+            android:text="@string/help_share" />
 
     </LinearLayout>
 
