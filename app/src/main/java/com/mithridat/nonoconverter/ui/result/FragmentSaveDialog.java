@@ -66,6 +66,13 @@ public class FragmentSaveDialog extends DialogFragment implements OnClickListene
         }
     }
 
+    /**
+     * Method for saving image
+     *
+     * @param activity - the Activity
+     * @param bitmap - image for saving
+     * @param title - title of the image
+     */
     private void saveImageAction(
             final Activity activity,
             final Bitmap bitmap,
