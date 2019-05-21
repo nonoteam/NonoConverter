@@ -105,15 +105,28 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_save:
-                _fragmentSaveDialog.show(getSupportFragmentManager(),
-                        StringKeys.DIALOG_SAVE_TAG);
+                if (!checkFragmentExistence(StringKeys.DIALOG_SAVE_TAG)) {
+                    _fragmentSaveDialog.show(getSupportFragmentManager(),
+                            StringKeys.DIALOG_SAVE_TAG);
+                }
                 break;
             case R.id.button_share:
-                _fragmentShareDialog.show(getSupportFragmentManager(),
-                        StringKeys.DIALOG_SHARE_TAG);
+                if (!checkFragmentExistence(StringKeys.DIALOG_SHARE_TAG)) {
+                    _fragmentShareDialog.show(getSupportFragmentManager(),
+                            StringKeys.DIALOG_SHARE_TAG);
+                }
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * Function for checking existence of the fragment by tag.
+     * @param tag - tag of the fragment
+     * @return true if fragment exists and false otherwise
+     */
+    private boolean checkFragmentExistence(String tag) {
+        return getSupportFragmentManager().findFragmentByTag(tag) != null;
     }
 }
