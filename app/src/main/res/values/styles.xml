@@ -28,6 +28,9 @@
 
     <style name="AppTheme.Button.Start"
         parent="Widget.AppCompat.Button.Colored">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        android:layout_height="wrap_content"
         <item name="android:background">@drawable/btn_background</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginLeft">0dp</item>
