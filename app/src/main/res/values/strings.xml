@@ -15,6 +15,7 @@
     <string name="title_result_activity">Result</string>
     <string name="action_save">Save</string>
     <string name="msg_save">What would you like to save?</string>
+    <string name="msg_open_image">Open image via</string>
     <string name="action_save_thumbnail">Save thumbnail</string>
     <string name="action_save_nonogram">Save nonogram</string>
     <string name="action_share">Share</string>
@@ -28,12 +29,14 @@
         Nonogram will be lost if you don\'t save it.</string>
     <string name="action_return">RETURN</string>
     <string name="action_cancel">CANCEL</string>
-
-    <string name="msg_save_image_done">Image saved:</string>
+    <string name="msg_save_image_done">Image saved in %1$s</string>
     <string name="msg_save_image_fail">Failed to save the image</string>
     <string name="msg_func_unavailable">Functionality unavailable</string>
     <string name="msg_share_image_fail">Failed to prepare the image for the
         sharing</string>
+    <string name="action_open">OPEN</string>
+    <string name="action_retry">RETRY</string>
+
     <string name="action_ok">OK</string>
     <string name="title_dialog_convert">Conversion failed</string>
     <string name="msg_convert">Conversion failed.\nYou can try to change the

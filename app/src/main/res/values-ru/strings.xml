@@ -16,6 +16,7 @@
     <string name="title_result_activity">Результат</string>
     <string name="action_save">Сохранить</string>
     <string name="msg_save">Что Вы хотите сохранить?</string>
+    <string name="msg_open_image">Открыть изображение через</string>
     <string name="action_save_thumbnail">Сохранить миниатюру</string>
     <string name="action_save_nonogram">Сохранить кроссворд</string>
     <string name="action_share">Поделиться</string>
@@ -29,12 +30,14 @@
         Кроссворд будет потерян, если вы его не сохранили.</string>
     <string name="action_return">ВЕРНУТЬСЯ</string>
     <string name="action_cancel">ОТМЕНА</string>
-
-    <string name="msg_save_image_done">Изображение сохранено:</string>
+    <string name="msg_save_image_done">Изображение сохранено в %1$s</string>
     <string name="msg_save_image_fail">Не удалось сохранить изображение</string>
     <string name="msg_share_image_fail">Не удалось подготовить изображение для
         отправки</string>
     <string name="msg_func_unavailable">Функциональность недоступна</string>
+    <string name="action_open">ОТКРЫТЬ</string>
+    <string name="action_retry">ПОВТОРИТЬ</string>
+
     <string name="action_ok">ОК</string>
     <string name="title_dialog_convert">Конвертация не удалась</string>
     <string name="msg_convert">Конвертация не удалась.\nВы можете попробовать

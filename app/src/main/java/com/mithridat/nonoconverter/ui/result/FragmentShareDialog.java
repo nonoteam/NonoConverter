@@ -1,20 +1,18 @@
 package com.mithridat.nonoconverter.ui.result;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
-import androidx.fragment.app.DialogFragment;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import androidx.fragment.app.DialogFragment;
 
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
+import static com.mithridat.nonoconverter.Utils.getSnackbar;
 import static com.mithridat.nonoconverter.Utils.shareImage;
 import static com.mithridat.nonoconverter.ui.ActivitiesConstants.EX_NONO_FIELD;
 import static com.mithridat.nonoconverter.ui.result.StringKeys.NONOGRAM;
@@ -49,13 +47,13 @@ public class FragmentShareDialog extends DialogFragment implements OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_share_thumb:
-                shareImageAction(getContext(),
+                shareImageAction(getActivity(),
                         _nonogram.getField().getBitmap(),
                         THUMBNAIL);
                 dismiss();
                 break;
             case R.id.button_share_nng:
-                shareImageAction(getContext(),
+                shareImageAction(getActivity(),
                         _nonogram.getBitmap(),
                         NONOGRAM);
                 dismiss();
@@ -68,21 +66,28 @@ public class FragmentShareDialog extends DialogFragment implements OnClickListen
     /**
      * Method for sharing image
      *
-     * @param context - the Context
+     * @param activity - the Activity
      * @param bitmap - image for sharing
      * @param title - title of the image
      */
-    private static void shareImageAction(
-            final Context context,
+    private void shareImageAction(
+            final Activity activity,
             final Bitmap bitmap,
             final String title) {
-        final boolean result = shareImage(context, bitmap, title);
+        final boolean result = shareImage(activity, bitmap, title);
         if (!result) {
-            Toast.makeText(context,
-                    R.string.msg_share_image_fail,
-                    Toast.LENGTH_LONG)
+            getSnackbar(activity,
+                    getString(R.string.msg_share_image_fail),
+                    R.id.coordinator).setAction(R.string.action_retry,
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            shareImageAction(activity, bitmap, title);
+                        }
+                    })
                     .show();
         }
     }
+
 }
 
