@@ -15,22 +15,22 @@ public class Panel extends View {
     /**
      * Width of view
      */
-    private int _width;
+    private float _width;
 
     /**
      * Height of view
      */
-    private int _height;
+    private float _height;
 
     /**
      * Start height of view
      */
-    private int _startHeight;
+    private float _startHeight;
 
     /**
      * Start width of view
      */
-    private int _startWidth;
+    private float _startWidth;
 
     /**
      * Count of rows
@@ -79,10 +79,10 @@ public class Panel extends View {
      * @param countColumns - count columns of the grid
      */
     void setLengths(
-            int startWidth,
-            int startHeight,
-            int width,
-            int height,
+            float startWidth,
+            float startHeight,
+            float width,
+            float height,
             int countRows,
             int countColumns) {
         _width = width;
@@ -111,16 +111,16 @@ public class Panel extends View {
      */
     private void drawGrid(Canvas canvas) {
         if (_countColumns == 0) return;
-        int width = _width / _countColumns;
-        int height = _height / _countRows;
-        for (int i = 0; i <= _width; i += width) {
+        float width = _width / _countColumns;
+        float height = _height / _countRows;
+        for (float i = 0; i <= _width; i += width) {
             canvas.drawLine(_startWidth + i,
                     _startHeight,
                     _startWidth + i,
                     _startHeight + _height,
                     _paint);
         }
-        for (int i = 0; i <= _height; i += height) {
+        for (float i = 0; i <= _height; i += height) {
             canvas.drawLine(_startWidth,
                     _startHeight + i,
                     _startWidth + _width,

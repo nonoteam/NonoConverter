@@ -75,22 +75,22 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     /**
      * Image width
      */
-    private int _width;
+    private float _width;
 
     /**
      * Image height
      */
-    private int _height;
+    private float _height;
 
     /**
      * Where start draw in OY
      */
-    private int _startHeight;
+    private float _startHeight;
 
     /**
      * Where start draw in OX
      */
-    private int _startWidth;
+    private float _startWidth;
 
     /**
      * Columns count
@@ -105,7 +105,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     /**
      * Proportional coefficient
      */
-    private double _propCoefficient;
+    private float _propCoefficient;
 
     /**
      * Width of the Image View
@@ -130,7 +130,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     /**
      * Proportional coefficient
      */
-    private double _coefBitmap;
+    private float _coefBitmap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -214,7 +214,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                 .setOnClickListener(this);
 
         _coefBitmap =
-                _bmpImageColumns.getHeight() * 1.0 / _bmpImageColumns.getWidth();
+                _bmpImageColumns.getHeight() * 1f / _bmpImageColumns.getWidth();
         if (savedInstanceState != null) {
             _countColumns = savedInstanceState.getInt(COUNT_COLUMNS_TAG,
                     0);
@@ -288,6 +288,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      */
     private void setOutTextViewRowsAndColumnsText() {
         int remainder = Math.round(_countColumns / 10f);
+        int bmWidth = _bmpImageColumns.getWidth();
         if (remainder == 0) {
             _tvOutRowsAndColumns.setText(String.format("%s%s%s",
                     String.valueOf(_countColumns),
@@ -296,6 +297,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         } else {
             int maxColumns = (_countColumns + remainder) > 90
                     ? 90 : (_countColumns + remainder);
+            maxColumns = maxColumns > bmWidth ? bmWidth : maxColumns;
             int minColumns = (_countColumns - remainder) < 5
                     ? 5 : (_countColumns - remainder);
             int maxRowsRound = (int) (maxColumns * _coefBitmap);
@@ -328,16 +330,14 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     private void computeSizes() {
         if(_isScreenWidth) {
             _width = _imageViewWidth;
-            _propCoefficient =
-                    _width * 1.0 / _bmpImageColumns.getWidth();
-            _height = (int) (_bmpImageColumns.getHeight() * _propCoefficient);
+            _propCoefficient = _width / _bmpImageColumns.getWidth();
+            _height = _bmpImageColumns.getHeight() * _propCoefficient;
             _startHeight = (_imageViewHeight - _height) / 2;
             _startWidth = 0;
         } else {
             _height = _imageViewHeight;
-            _propCoefficient =
-                    (_height) * 1.0 / _bmpImageColumns.getHeight();
-            _width = (int) (_bmpImageColumns.getWidth() * _propCoefficient);
+            _propCoefficient = _height / _bmpImageColumns.getHeight();
+            _width = _bmpImageColumns.getWidth() * _propCoefficient;
             _startHeight = 0;
             _startWidth = (_imageViewWidth - _width) / 2;
         }
