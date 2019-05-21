@@ -731,14 +731,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         }
 
         /**
-         * Call publish progress
-         * @param progress - current progress
-         */
-        public void publish(int progress) {
-            publishProgress(progress);
-        }
-
-        /**
          * Get link to EditImageActivity
          *
          * @param act - activity which link we get

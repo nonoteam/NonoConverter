@@ -141,7 +141,12 @@ public class Utils {
         }
     }
 
-    public static void sleepMilisec(int time) {
+    /**
+     * Sleep exact time
+     *
+     * @param time - time in milliseconds
+     */
+    public static void sleepMillisec(int time) {
         try {
             Thread.sleep(time);
         } catch(InterruptedException ex) {
@@ -164,7 +169,9 @@ public class Utils {
          *
          * @param progress - current progress
          */
-        public void publish(int progress) { }
+        public void publish(int progress) {
+            publishProgress(progress);
+        }
     }
 
 }

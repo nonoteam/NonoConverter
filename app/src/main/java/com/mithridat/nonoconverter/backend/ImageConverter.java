@@ -11,7 +11,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import static com.mithridat.nonoconverter.Utils.sleepMilisec;
+import static com.mithridat.nonoconverter.Utils.sleepMillisec;
 import static java.lang.Math.min;
 
 /**
@@ -42,6 +42,7 @@ public class ImageConverter {
         Nonogram nono = null;
         NonogramSolver solver = new NonogramSolver();
         solver.setAsyncTask(asyncTask);
+        Nonogram res = null;
         int count = 0;
         for (int i : idxOrder) {
             rows = min(arrRows[i], bmp.getHeight());
@@ -50,13 +51,14 @@ public class ImageConverter {
             nono = new Nonogram(bw);
             solver.setNonogram(nono);
             if (solver.solve()) {
-                    asyncTask.publish(length);
-                    sleepMilisec(100);
-                    return nono.translateToColors();
+                count = length - 1;
+                asyncTask.publish(length);
+                res = nono.translateToColors();
             }
             asyncTask.publish(++count);
         }
-        return null;
+        sleepMillisec(100);
+        return res;
     }
 
     /**
