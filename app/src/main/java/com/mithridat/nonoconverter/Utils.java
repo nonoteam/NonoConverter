@@ -6,6 +6,9 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.AsyncTask;
+
+import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 
 import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
@@ -136,6 +139,32 @@ public class Utils {
                     p);
             pos.offset(dx, dy);
         }
+    }
+
+    public static void sleepMilisec(int time) {
+        try {
+            Thread.sleep(time);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /**
+     * Inner class for async converting image in background.
+     */
+    public static class AsyncTaskPublish extends AsyncTask<Void, Integer, Nonogram> {
+
+        @Override
+        protected Nonogram doInBackground(Void... voids) {
+            return null;
+        }
+
+        /**
+         * Call publish progress
+         *
+         * @param progress - current progress
+         */
+        public void publish(int progress) { }
     }
 
 }

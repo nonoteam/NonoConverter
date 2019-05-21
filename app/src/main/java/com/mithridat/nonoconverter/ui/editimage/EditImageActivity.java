@@ -23,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.mithridat.nonoconverter.R;
+import com.mithridat.nonoconverter.Utils.AsyncTaskPublish;
 import com.mithridat.nonoconverter.backend.ImageConverter;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
 import com.mithridat.nonoconverter.ui.ActivitiesConstants;
@@ -377,7 +378,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                     _rows = _columns * bmHeight / bmWidth;
                 }
                 setArrays();
-                createPD(0, 10);
+                createPD(0, _arrColumns.length);
                 showPd();
                 _atConvert = new AsyncTaskConvertImage();
                 _atConvert.link(this);
@@ -685,7 +686,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     /**
      * Inner class for async converting image in background.
      */
-    public static class AsyncTaskConvertImage extends AsyncTask<Void, Integer, Nonogram> {
+    public static class AsyncTaskConvertImage extends AsyncTaskPublish {
 
         /**
          * Reference to activity
@@ -735,14 +736,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
          */
         public void publish(int progress) {
             publishProgress(progress);
-        }
-
-        /**
-         * Set max progress
-         * @param length - max progress
-         */
-        public void setMax(int length) {
-            _activity._pdLoading.setMax(length);
         }
 
         /**
