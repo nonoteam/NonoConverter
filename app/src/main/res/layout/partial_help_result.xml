@@ -21,7 +21,7 @@
 
     <TextView
         style="@style/AppTheme.TextView.Help.Separate"
-        android:text="@string/action_save_result" />
+        android:text="@string/title_help_save_result" />
 
     <LinearLayout
         style="@style/AppTheme.LinearLayout.Help">
@@ -34,7 +34,7 @@
 
     <TextView
         style="@style/AppTheme.TextView.Help.Separate"
-        android:text="@string/action_share_result" />
+        android:text="@string/title_help_share_result" />
 
     <LinearLayout
         style="@style/AppTheme.LinearLayout.Help">

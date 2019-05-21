@@ -16,13 +16,11 @@
     <string name="action_save">Save</string>
     <string name="msg_save">What would you like to save?</string>
     <string name="msg_open_image">Open image via</string>
-    <string name="action_save_result">Save result</string>
     <string name="action_share">Share</string>
     <string name="msg_share">What would you like to share?</string>
     <string name="msg_share_image">Share image via</string>
     <string name="action_thumbnail">Thumbnail</string>
     <string name="action_nonogram">Nonogram</string>
-    <string name="action_share_result">Share result</string>
     <string name="action_home_return">Home</string>
     <string name="title_dialog_home_return">Return home</string>
     <string name="msg_home_return">Are you sure that you want to return home?
@@ -120,6 +118,8 @@
         As soon as the solvable crossword found, the conversion finishes.
         You may click on the standard \'back\' button in the navigation bar
         to cancel the conversion.</string>
+    <string name="title_help_save_result">Save result</string>
+    <string name="title_help_share_result">Share result</string>
     <string name="help_info_result">After converting the image into the
         Japanese Crossword, you can see the result, save and share it.</string>
     <string name="help_save">You can save thumbnail (the solution of the

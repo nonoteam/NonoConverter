@@ -17,13 +17,11 @@
     <string name="action_save">Сохранить</string>
     <string name="msg_save">Что Вы хотите сохранить?</string>
     <string name="msg_open_image">Открыть изображение через</string>
-    <string name="action_save_result">Сохранить результат</string>
     <string name="action_share">Поделиться</string>
     <string name="msg_share">Чем Вы хотите поделиться?</string>
     <string name="msg_share_image">Поделиться изображением через</string>
     <string name="action_thumbnail">Миниатюра</string>
     <string name="action_nonogram">Кроссворд</string>
-    <string name="action_share_result">Поделиться результатом</string>
     <string name="action_home_return">Домой</string>
     <string name="title_dialog_home_return">Вернуться домой</string>
     <string name="msg_home_return">Вы уверены, что хотите вернуться домой?
@@ -120,6 +118,8 @@
         Как только решаемый кроссворд будет найден, преобразование закончится.
         Вы можете нажать на стандартную кнопку \'назад\' чтобы отменить
         преобразование.</string>
+    <string name="title_help_save_result">Сохранить рзультат</string>
+    <string name="title_help_share_result">Поделиться результатом</string>
     <string name="help_info_result">После конвертации изображения в
         японский кроссворд Вы можете увидеть результат,
         сохранить его и поделиться им.</string>
