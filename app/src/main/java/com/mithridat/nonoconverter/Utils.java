@@ -1,11 +1,24 @@
 package com.mithridat.nonoconverter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.net.Uri;
+import androidx.core.content.FileProvider;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import static com.mithridat.nonoconverter.backend.nonogram.Field.BLACK;
 import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
@@ -14,6 +27,11 @@ import static com.mithridat.nonoconverter.backend.nonogram.Field.ROW;
  * Class with some helpful functions
  */
 public class Utils {
+
+    /**
+     * Identifier of the PNG format file
+     */
+    public static final String PNG_TYPE = ".png";
 
     /**
      * Method for getting width of the text by specific paint
@@ -137,5 +155,83 @@ public class Utils {
             pos.offset(dx, dy);
         }
     }
+
+    /**
+     * Method for getting string resource by its id
+     *
+     * @param context - the Context
+     * @param id - id of string resource
+     * @return - string
+     */
+    public static String getString(Context context, int id) {
+        return context.getString(id);
+    }
+
+    /**
+     * Method for correct closing stream
+     *
+     * @param stream - stream to close
+     */
+    public static void closeStream(OutputStream stream) {
+        try {
+            stream.close();
+        } catch (IOException e) {}
+    }
+
+    /**
+     * Method for creating title of file with date
+     *
+     * @param title - title of file without date
+     * @return title of file with date
+     */
+    public static String getTitle(String title) {
+        String strDate =
+                new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
+                        .format(new Date());
+        return title + "_" + strDate;
+    }
+
+    /**
+     * Method for sharing image
+     *
+     * @param context - the Context
+     * @param source - shared bitmap
+     * @param title - title of image (thumbnail or nonogram)
+     * @return true, if image was prepared for the sharing
+     *         false, otherwise
+     */
+    public static boolean shareImage(
+            Context context,
+            Bitmap source,
+            String title) {
+        File file;
+        OutputStream stream = null;
+        try {
+            file =
+                    File.createTempFile(getTitle(title),
+                            PNG_TYPE,
+                            context.getCacheDir());
+            stream = new FileOutputStream(file);
+            source.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            stream.flush();
+            stream.close();
+        } catch (IOException e) {
+            if (stream != null) closeStream(stream);
+            return false;
+        }
+        Uri uri =
+                FileProvider.getUriForFile(context,
+                        BuildConfig.APPLICATION_ID + ".provider",
+                        file);
+        final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setType("image/png");
+        context.startActivity(Intent.createChooser(intent,
+                getString(context, R.string.msg_share_image)));
+        return true;
+    }
+
+    public static class MyFileProvider extends FileProvider {}
 
 }

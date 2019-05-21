@@ -19,6 +19,7 @@
     <string name="action_save_nonogram">Save nonogram</string>
     <string name="action_share">Share</string>
     <string name="msg_share">What would you like to share?</string>
+    <string name="msg_share_image">Share image via</string>
     <string name="action_thumbnail">Thumbnail</string>
     <string name="action_nonogram">Nonogram</string>
     <string name="action_home_return">Home</string>
@@ -31,6 +32,8 @@
     <string name="msg_save_image_done">Image saved:</string>
     <string name="msg_save_image_fail">Failed to save the image</string>
     <string name="msg_func_unavailable">Functionality unavailable</string>
+    <string name="msg_share_image_fail">Failed to prepare the image for the
+        sharing</string>
     <string name="action_ok">OK</string>
     <string name="title_dialog_convert">Conversion failed</string>
     <string name="msg_convert">Conversion failed.\nYou can try to change the
