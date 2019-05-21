@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.backend.nonogram.Nonogram;
@@ -104,7 +103,6 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
 
     @Override
     public void onClick(View v) {
-        String path = null;
         switch (v.getId()) {
             case R.id.button_save:
                 if (checkFragmentAbsence(StringKeys.DIALOG_SAVE_TAG)) {
