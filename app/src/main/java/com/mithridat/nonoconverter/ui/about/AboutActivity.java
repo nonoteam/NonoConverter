@@ -1,13 +1,14 @@
 package com.mithridat.nonoconverter.ui.about;
 
+import android.widget.TextView;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-
+import com.mithridat.nonoconverter.BuildConfig;
 import com.mithridat.nonoconverter.R;
 
 /**
@@ -23,6 +24,10 @@ public class AboutActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_about);
         setSupportActionBar(toolbar);
+
+        TextView tvVersion = (TextView) findViewById(R.id.text_view_version);
+        tvVersion.setText(getString(R.string.msg_version,
+                BuildConfig.VERSION_NAME));
     }
 
     @Override

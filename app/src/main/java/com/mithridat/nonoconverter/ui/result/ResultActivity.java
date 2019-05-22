@@ -129,4 +129,5 @@ public class ResultActivity extends AppCompatActivity implements OnClickListener
     private boolean checkFragmentAbsence(String tag) {
         return getSupportFragmentManager().findFragmentByTag(tag) == null;
     }
+
 }

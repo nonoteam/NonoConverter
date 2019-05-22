@@ -7,9 +7,6 @@
     <string name="action_open_columns">Размер</string>
     <string name="edit_image_view_description">Конвертируемое
         изображение</string>
-    <string name="title_dialog_columns">Столбцы и строки</string>
-    <string name="edit_image_columns">Столбцы</string>
-    <string name="edit_image_rows">Строки</string>
     <string name="msg_process_image">Обработка изображения…</string>
     <string name="action_change">Изменить</string>
 
@@ -53,6 +50,7 @@
         - Приложение преобразует выбранное изображение в кроссворд, который
         имеет единственное логическое решение\n
         - Сохранить кроссворд и его миниатюру</string>
+    <string name="msg_version">Версия %1$s</string>
     <string name="title_about_activity">О приложении</string>
     <string name="msg_contact">Если у Вас имеются вопросы,\nпожалуйста,
         свяжитесь нами:\nnonoconverter@gmail.com</string>
@@ -133,7 +131,7 @@
         этом уведомлении будет находиться путь к файлу и кнопка \'ОТКРЫТЬ\'.
         Нажав на неё и выбрав приложение для просмотра, вы сможете просмотреть
         сохранённое изображение.</string>
-    <string name="help_share">Вы можете поделиться миниатюрой или нерешенным
+    <string name="help_share">Вы можете поделиться миниатюрой или нерешённым
         кроссвордом, нажав на кнопку \'ПОДЕЛИТЬСЯ\' в правом нижнем углу и
         выбрав соответствующий пункт воткрывшемся диалоге. Вам будет предложен
         список приложений, через которые можно поделиться изображением.\n\nВ
@@ -149,7 +147,7 @@
     <string name="action_rotate">Повернуть</string>
     <string name="action_flip">Отразить</string>
     <string name="exact_columns_title">точный:</string>
-    <string name="range_columns_title">диапозон:</string>
+    <string name="range_columns_title">диапазон:</string>
 
     <string name="title_image_picker">Альбомы</string>
 </resources>
