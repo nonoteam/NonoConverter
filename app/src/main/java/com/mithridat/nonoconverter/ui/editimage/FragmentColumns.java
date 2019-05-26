@@ -223,7 +223,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                 .setOnClickListener(this);
         vColumnsFragment.findViewById(R.id.button_remove)
                 .setOnClickListener(this);
-        _sInvert = _vColumnsFragment.findViewById(R.id.switch_invert);
+        _sInvert = vColumnsFragment.findViewById(R.id.switch_invert);
         _isInvert = ((EditImageActivity)getActivity())._isInvert;
         _coefBitmap =
                 _bmpImageColumns.getHeight() * 1f / _bmpImageColumns.getWidth();
