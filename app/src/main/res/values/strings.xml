@@ -145,7 +145,7 @@
     <string name="action_rotate">Rotate</string>
     <string name="action_flip">Flip</string>
     <string name="action_switch">Invert nonogram</string>
-    <string name="exact_columns_title">exact:</string>
+    <string name="exact_columns_title">current:</string>
     <string name="range_columns_title">range:</string>
 
     <string name="title_image_picker">Albums</string>

@@ -28,14 +28,14 @@ import static com.mithridat.nonoconverter.backend.ImageConverter.getBlackWhite;
 public class FragmentColumns extends Fragment implements OnSeekBarChangeListener, OnClickListener, OnCheckedChangeListener {
 
     /**
-     * Tag for fragment columns
+     * Tag for count of columns
      */
-    private static final String COUNT_COLUMNS_TAG = "countColumns";
+    private static final String COUNT_COLUMNS_TAG = "countColumnsFragment";
 
     /**
-     * Tag for fragment main
+     * Tag for count of rows
      */
-    private static final String COUNT_ROWS_TAG = "countRows";
+    private static final String COUNT_ROWS_TAG = "countRowsFragment";
 
     /**
      * Tag for the inversion
@@ -46,7 +46,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      * Comma
      */
     private static final String COMMA = ", ";
-
+  
     /**
      * ImageVies for columns fragment
      */
@@ -66,11 +66,6 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      * TextView for current number of columns and rows count
      */
     private TextView _tvOutRowsAndColumns;
-
-    /**
-     * View of columns fragment
-     */
-    private View _vColumnsFragment;
 
     /**
      * Seekbar for changing columns count
@@ -116,11 +111,6 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      * Rows count
      */
     private int _countRows;
-
-    /**
-     * Proportional coefficient
-     */
-    private float _propCoefficient;
 
     /**
      * Width of the Image View
@@ -215,23 +205,23 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
             ViewGroup container,
             Bundle savedInstanceState) {
         _isSaved = false;
-        _vColumnsFragment =
+        View vColumnsFragment =
                 inflater.inflate(R.layout.fragment_columns, null);
-        _panel = _vColumnsFragment.findViewById(R.id.panel);
-        _civColumns = _vColumnsFragment.findViewById(R.id.image_view_columns);
+        _panel = vColumnsFragment.findViewById(R.id.panel);
+        _civColumns = vColumnsFragment.findViewById(R.id.image_view_columns);
         _civColumns.setParent(this);
-        _sbColumns = _vColumnsFragment.findViewById(R.id.seek_bar_rows);
+        _sbColumns = vColumnsFragment.findViewById(R.id.seek_bar_rows);
         _sbColumns.setOnSeekBarChangeListener(this);
         _bmpImageColumns = ((EditImageActivity)getActivity())._bmpCurrentImage;
 
         _tvRowsAndColumns =
-                _vColumnsFragment.findViewById(R.id.text_view_exact);
+                vColumnsFragment.findViewById(R.id.text_view_exact);
         _tvOutRowsAndColumns =
-                _vColumnsFragment.findViewById(R.id.text_view_range);
+                vColumnsFragment.findViewById(R.id.text_view_range);
 
-        _vColumnsFragment.findViewById(R.id.button_add)
+        vColumnsFragment.findViewById(R.id.button_add)
                 .setOnClickListener(this);
-        _vColumnsFragment.findViewById(R.id.button_remove)
+        vColumnsFragment.findViewById(R.id.button_remove)
                 .setOnClickListener(this);
         _sInvert = _vColumnsFragment.findViewById(R.id.switch_invert);
         _isInvert = ((EditImageActivity)getActivity())._isInvert;
@@ -248,7 +238,21 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
             _isSaved = true;
         }
         _sInvert.setOnCheckedChangeListener(this);
-        return _vColumnsFragment;
+        return vColumnsFragment;
+    }
+  
+    @Override
+    public void onPause() {
+        super.onPause();
+        _isSaved = true;
+        _isInvert = _sInvert.isChecked();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        _sInvert.setChecked(_isInvert);
+        _civColumns.setImageSimple(getBlackWhite(_bmpImageColumns));
     }
 
     @Override
@@ -272,26 +276,13 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         _civColumns.setImageComp(getBlackWhite(_bmpImageColumns));
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        _isInvert = _sInvert.isChecked();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        _sInvert.setChecked(_isInvert);
-        _civColumns.setImageSimple(getBlackWhite(_bmpImageColumns));
-    }
-
     /**
      * Set sizes of drew image and compute current
      *
      * @param width - width of the image
      * @param height - height of the image
      */
-    public void setCustomImageViewSizes(int width, int height) {
+    void setCustomImageViewSizes(int width, int height) {
         _imageViewWidth = width;
         _imageViewHeight = height;
         setSizes();
@@ -300,8 +291,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     /**
      * Recompute countRows, redraw sizes and grid
      */
-    private void updateScreenElements()
-    {
+    private void updateScreenElements() {
         _countRows = (int) (_countColumns * _coefBitmap);
         setTextViews();
         _panel.setGridSizes(_countRows, _countColumns);
@@ -371,16 +361,17 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      * Compute sizes of drawing grid
      */
     private void computeSizes() {
+        float propCoefficient;
         if(_isScreenWidth) {
             _width = _imageViewWidth;
-            _propCoefficient = _width / _bmpImageColumns.getWidth();
-            _height = _bmpImageColumns.getHeight() * _propCoefficient;
+            propCoefficient = _width / _bmpImageColumns.getWidth();
+            _height = _bmpImageColumns.getHeight() * propCoefficient;
             _startHeight = (_imageViewHeight - _height) / 2;
             _startWidth = 0;
         } else {
             _height = _imageViewHeight;
-            _propCoefficient = _height / _bmpImageColumns.getHeight();
-            _width = _bmpImageColumns.getWidth() * _propCoefficient;
+            propCoefficient = _height / _bmpImageColumns.getHeight();
+            _width = _bmpImageColumns.getWidth() * propCoefficient;
             _startHeight = 0;
             _startWidth = (_imageViewWidth - _width) / 2;
         }
