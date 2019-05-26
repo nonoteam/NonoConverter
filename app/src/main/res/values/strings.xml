@@ -42,14 +42,13 @@
     <string name="action_open_help">Help</string>
 
     <string name="msg_description">Android mobile application for converting
-        images to black-and-white nonogram\n
+        images to black-and-white nonogram. You can:\n
         - Select an image from the gallery or take a photo\n
-        - You can crop selected image\n
+        - Crop and rotate selected image\n
         - Select size of nonogram\n
-        - Application converts selected image to a nonogram, which has a single
-        logical solution\n
-        - Save nonogram and its thumbnail
-    </string>
+        - Save nonogram and its thumbnail\n
+        - Share nonogram and its thumbnail\nApplication converts selected image
+        to a nonogram, which has a single logical solution.</string>
     <string name="msg_version">Version %1$s</string>
     <string name="title_about_activity">About</string>
     <string name="msg_contact">If you have any questions,\nplease contact us:\n
