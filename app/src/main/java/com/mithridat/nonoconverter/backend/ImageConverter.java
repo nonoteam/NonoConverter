@@ -59,7 +59,7 @@ public class ImageConverter {
     }
 
     /**
-     * Method for getting black-and-white image from color image
+     * Method for getting resized black-and-white image from color image
      *
      * @param bmp - color image
      * @param w - width of black-and-white image
@@ -82,6 +82,16 @@ public class ImageConverter {
         Utils.matToBitmap(imageMat, nbmp);
 
         return nbmp;
+    }
+
+    /**
+     * Method for getting black-and-white image from color image
+     *
+     * @param bmp - color image
+     * @return black-and-white image
+     */
+    public static Bitmap getBlackWhite(Bitmap bmp) {
+        return getBlackWhite(bmp, bmp.getWidth(), bmp.getHeight());
     }
 
     /**

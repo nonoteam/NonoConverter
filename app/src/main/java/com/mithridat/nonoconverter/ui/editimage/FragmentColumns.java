@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment;
 
 import com.mithridat.nonoconverter.R;
 
+import static com.mithridat.nonoconverter.backend.ImageConverter.getBlackWhite;
+
 /**
  * Class for the columns fragment
  */
@@ -202,7 +204,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         _sbColumns.setOnSeekBarChangeListener(this);
         _bmpImageColumns = ((EditImageActivity)getActivity())._bmpCurrentImage;
 
-        _civColumns.setImageBitmap(_bmpImageColumns);
+        _civColumns.setImageBitmap(getBlackWhite(_bmpImageColumns));
         _tvRowsAndColumns =
                 _vColumnsFragment.findViewById(R.id.text_view_exact);
         _tvOutRowsAndColumns =
