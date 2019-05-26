@@ -113,14 +113,14 @@ public class Panel extends View {
         if (_countColumns == 0) return;
         float width = _width / _countColumns;
         float height = _height / _countRows;
-        for (float i = 0; i <= _width; i += width) {
+        for (float i = 0; i < _width; i += width) {
             canvas.drawLine(_startWidth + i,
                     _startHeight,
                     _startWidth + i,
                     _startHeight + _height,
                     _paint);
         }
-        for (float i = 0; i <= _height; i += height) {
+        for (float i = 0; i < _height; i += height) {
             canvas.drawLine(_startWidth,
                     _startHeight + i,
                     _startWidth + _width,
