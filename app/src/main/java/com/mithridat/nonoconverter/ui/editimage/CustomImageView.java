@@ -1,6 +1,7 @@
 package com.mithridat.nonoconverter.ui.editimage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import android.graphics.Canvas;
@@ -15,6 +16,11 @@ public class CustomImageView extends AppCompatImageView {
      * Parent of CustomImageView
      */
     FragmentColumns _fragmentColumns;
+
+    /**
+     * Field for setting image bitmap with updating image view sizes
+     */
+    boolean _isSetSizes = false;
 
     /**
      * Constructor for CustomImageView
@@ -49,7 +55,9 @@ public class CustomImageView extends AppCompatImageView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        _fragmentColumns.setCustomImageViewSizes(getWidth(), getHeight());
+        if (_isSetSizes) {
+            _fragmentColumns.setCustomImageViewSizes(getWidth(), getHeight());
+        }
     }
 
     /**
@@ -59,5 +67,25 @@ public class CustomImageView extends AppCompatImageView {
      */
     public void setParent(FragmentColumns fragmentColumns) {
         _fragmentColumns = fragmentColumns;
+    }
+
+    /**
+     * Method for setting image bitmap without updating image view sizes
+     *
+     * @param bmp - bitmap image
+     */
+    public void setImageComp(Bitmap bmp) {
+        _isSetSizes = false;
+        setImageBitmap(bmp);
+    }
+
+    /**
+     * Method for setting image bitmap with updating image view sizes
+     *
+     * @param bmp - bitmap image
+     */
+    public void setImageSimple(Bitmap bmp) {
+        _isSetSizes = true;
+        setImageBitmap(bmp);
     }
 }

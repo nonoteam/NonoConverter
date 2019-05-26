@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -70,7 +69,7 @@
 
             <SeekBar
                 android:id="@+id/seek_bar_rows"
-                android:layout_width="170dp"
+                android:layout_width="140dp"
                 android:layout_height="20dp"
                 android:max="85"
                 android:progress="0"
@@ -82,13 +81,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_add" />
 
+            <Switch
+                android:id="@+id/switch_invert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text=""
+                android:theme="@style/AppTheme.Switch.Invert"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <Button
                 android:id="@+id/button_remove"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
+                android:layout_marginBottom="4dp"
                 android:background="@null"
                 android:drawableStart="@drawable/ic_remove"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/switch_invert"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 

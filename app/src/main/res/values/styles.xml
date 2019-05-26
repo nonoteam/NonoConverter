@@ -28,9 +28,9 @@
 
     <style name="AppTheme.Button.Start"
         parent="Widget.AppCompat.Button.Colored">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/btn_background</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginLeft">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
@@ -87,6 +87,12 @@
     <style name="SeekBar.Color" parent="Widget.AppCompat.SeekBar">
         <item name="android:colorControlActivated">@color/colorWhite</item>
         <item name="android:colorControlNormal">@color/colorLightBlue</item>
+    </style>
+
+    <style name="AppTheme.Switch.Invert" parent="AppTheme">
+        <item name="colorControlActivated">@color/colorWhite</item>
+        <item name="colorSwitchThumbNormal">@color/colorPrimaryDark</item>
+        <item name="android:colorForeground">@color/colorLightBlue</item>
     </style>
 
 </resources>

@@ -4,7 +4,7 @@
     <string name="title_edit_image_activity">Editing</string>
     <string name="action_convert">Convert</string>
     <string name="action_open_crop">Crop</string>
-    <string name="action_open_columns">Size</string>
+    <string name="action_open_columns">Settings</string>
     <string name="edit_image_view_description">Convertible image</string>
     <string name="msg_process_image">Processing image…</string>
     <string name="action_change">Change</string>
@@ -33,23 +33,23 @@
     <string name="action_retry">RETRY</string>
 
     <string name="action_ok">OK</string>
-    <string name="title_dialog_convert">Conversion failed</string>
-    <string name="msg_convert">Conversion failed.\nYou can try to change the
-        columns count or crop the image.</string>
+    <string name="title_dialog_convert">Something went wrong…</string>
+    <string name="msg_convert">Oops, it looks like there are no solvable
+        crossword puzzles in this range.\nYou can change the crossword
+        size, crop the image or invert the colors and then try again.</string>
 
     <string name="action_load_image">Load Image</string>
     <string name="action_open_about">About</string>
     <string name="action_open_help">Help</string>
 
     <string name="msg_description">Android mobile application for converting
-        images to black-and-white nonogram\n
+        images to black-and-white nonogram. You can:\n
         - Select an image from the gallery or take a photo\n
-        - You can crop selected image\n
+        - Crop and rotate selected image\n
         - Select size of nonogram\n
-        - Application converts selected image to a nonogram, which has a single
-        logical solution\n
-        - Save nonogram and its thumbnail
-    </string>
+        - Save nonogram and its thumbnail\n
+        - Share nonogram and its thumbnail\nApplication converts selected image
+        to a nonogram, which has a single logical solution.</string>
     <string name="msg_version">Version %1$s</string>
     <string name="title_about_activity">About</string>
     <string name="msg_contact">If you have any questions,\nplease contact us:\n
@@ -99,15 +99,18 @@
         click on the icons at the bottom.\n\nYou can crop the image by selecting
         the desired rectangle. To fixate your choice, you need to click on the
         check mark in the upper right corner on the action bar</string>
-    <string name="help_columns">To set the size of the crossword, click on
-        the \'SIZE\' button in the lower right corner.\n\nYou can view an
-        approximate result. Also you can see current size and range of possible
-        sizes after converting above image. There is a slider that provides a
-        choice of the number of columns at the bottom of the screen. The number 
-        of rows is calculated automatically. There is the selected image for
-        conversion in the center of the screen, over of which a grid is drawn.
-        To fixate your choice, you need to click on the check mark in the upper
-        right corner on the action bar.</string>
+    <string name="help_columns">To set the size of the crossword or invert
+        colors in the crossword, click on the \'SETTINGS\' button in the lower
+        right corner.\n\nYou can view an approximate result. Also you can see
+        current size and range of possible sizes after converting above image.
+        There is a slider that provides a choice of the number of columns near
+        the image. The number of rows is calculated automatically. There is the
+        selected image for conversion in the center of the screen, over of
+        which a grid is drawn.\n\nAlso, there is a switch that allows you to
+        specify whether to invert the colors in a crossword puzzle near the
+        slider. If you change the switch value, the colors will be changed
+        according to the new value.\n\nTo fixate your choice, you need to click
+        on the check mark in the upper right corner on the action bar.</string>
     <string name="help_convert">After you have configured everything you need
         to click on \'Convert\' in the upper right corner on the action bar.
         After that, a pop-up window with a progress bar will appear.\n\nProgress
@@ -145,7 +148,8 @@
 
     <string name="action_rotate">Rotate</string>
     <string name="action_flip">Flip</string>
-    <string name="exact_columns_title">exact:</string>
+    <string name="action_switch">Invert nonogram</string>
+    <string name="exact_columns_title">current:</string>
     <string name="range_columns_title">range:</string>
 
     <string name="title_image_picker">Albums</string>
