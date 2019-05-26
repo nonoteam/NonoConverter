@@ -23,6 +23,7 @@ public class ImageConverter {
      * Method for converting image into nonogram field
      *
      * @param bmp - image
+     * @param inv - is it need to invert the black-and-white image
      * @param arrRows - array of possible rows
      * @param arrColumns - array of possible columns
      * @param exactIndex - index of exact sizes in arrays
@@ -31,6 +32,7 @@ public class ImageConverter {
      */
     public static Nonogram convertImage(
             Bitmap bmp,
+            boolean inv,
             final int[] arrRows,
             final int[] arrColumns,
             int exactIndex,
@@ -44,7 +46,7 @@ public class ImageConverter {
         for (int i : idxOrder) {
             rows = min(arrRows[i], bmp.getHeight());
             cols = min(arrColumns[i], bmp.getWidth());
-            bw = getBlackWhite(bmp, cols, rows);
+            bw = getBlackWhite(bmp, cols, rows, inv);
             nono = new Nonogram(bw);
             solver.setNonogram(nono);
             if (solver.solve()) {
@@ -64,9 +66,12 @@ public class ImageConverter {
      * @param bmp - color image
      * @param w - width of black-and-white image
      * @param h - height of black-and-white image
+     * @param inv - is it need to invert the black-and-white image
      * @return black-and-white image
      */
-    public static Bitmap getBlackWhite(Bitmap bmp, int w, int h) {
+    public static Bitmap getBlackWhite(Bitmap bmp, int w, int h, boolean inv) {
+        int threshType = Imgproc.THRESH_OTSU;
+        if (inv) threshType += Imgproc.THRESH_BINARY_INV;
         Mat imageMat = new Mat();
         Utils.bitmapToMat(bmp, imageMat);
         Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_RGB2GRAY);
@@ -76,7 +81,7 @@ public class ImageConverter {
                 0,
                 0,
                 Imgproc.INTER_AREA);
-        Imgproc.threshold(imageMat, imageMat, 0, 255, Imgproc.THRESH_OTSU);
+        Imgproc.threshold(imageMat, imageMat, 0, 255, threshType);
 
         Bitmap nbmp = Bitmap.createBitmap(w, h, bmp.getConfig());
         Utils.matToBitmap(imageMat, nbmp);
@@ -88,10 +93,11 @@ public class ImageConverter {
      * Method for getting black-and-white image from color image
      *
      * @param bmp - color image
+     * @param inv - is it need to invert the black-and-white image
      * @return black-and-white image
      */
-    public static Bitmap getBlackWhite(Bitmap bmp) {
-        return getBlackWhite(bmp, bmp.getWidth(), bmp.getHeight());
+    public static Bitmap getBlackWhite(Bitmap bmp, boolean inv) {
+        return getBlackWhite(bmp, bmp.getWidth(), bmp.getHeight(), inv);
     }
 
     /**

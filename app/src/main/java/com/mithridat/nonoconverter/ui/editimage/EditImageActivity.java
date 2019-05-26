@@ -698,6 +698,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         protected Nonogram doInBackground(Void... params) {
             try {
                 return ImageConverter.convertImage(_activity._bmpCurrentImage,
+                        _activity._isInvert,
                         _activity._arrRows,
                         _activity._arrColumns,
                         _activity._exactIndex,

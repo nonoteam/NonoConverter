@@ -252,7 +252,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     public void onResume() {
         super.onResume();
         _sInvert.setChecked(_isInvert);
-        _civColumns.setImageSimple(getBlackWhite(_bmpImageColumns));
+        _civColumns.setImageSimple(getBlackWhite(_bmpImageColumns, _isInvert));
     }
 
     @Override
@@ -273,7 +273,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        _civColumns.setImageComp(getBlackWhite(_bmpImageColumns));
+        _civColumns.setImageComp(getBlackWhite(_bmpImageColumns, isChecked));
     }
 
     /**
