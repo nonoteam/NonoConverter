@@ -215,6 +215,12 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        _isSaved = true;
+    }
+
+    @Override
     public void onProgressChanged(
             SeekBar seekBar,
             int progress,
@@ -236,7 +242,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      * @param width - width of the image
      * @param height - height of the image
      */
-    public void setCustomImageViewSizes(int width, int height) {
+    void setCustomImageViewSizes(int width, int height) {
         _imageViewWidth = width;
         _imageViewHeight = height;
         setSizes();
@@ -245,8 +251,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     /**
      * Recompute countRows, redraw sizes and grid
      */
-    private void updateScreenElements()
-    {
+    private void updateScreenElements() {
         _countRows = (int) (_countColumns * _coefBitmap);
         setTextViews();
         _panel.setGridSizes(_countRows, _countColumns);
