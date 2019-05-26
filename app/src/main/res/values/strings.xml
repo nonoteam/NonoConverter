@@ -99,15 +99,18 @@
         click on the icons at the bottom.\n\nYou can crop the image by selecting
         the desired rectangle. To fixate your choice, you need to click on the
         check mark in the upper right corner on the action bar</string>
-    <string name="help_columns">To set the size of the crossword, click on
-        the \'SETTINGS\' button in the lower right corner.\n\nYou can view an
-        approximate result. Also you can see current size and range of possible
-        sizes after converting above image. There is a slider that provides a
-        choice of the number of columns at the bottom of the screen. The number 
-        of rows is calculated automatically. There is the selected image for
-        conversion in the center of the screen, over of which a grid is drawn.
-        To fixate your choice, you need to click on the check mark in the upper
-        right corner on the action bar.</string>
+    <string name="help_columns">To set the size of the crossword or invert
+        colors in the crossword, click on the \'SETTINGS\' button in the lower
+        right corner.\n\nYou can view an approximate result. Also you can see
+        current size and range of possible sizes after converting above image.
+        There is a slider that provides a choice of the number of columns near
+        the image. The number of rows is calculated automatically. There is the
+        selected image for conversion in the center of the screen, over of
+        which a grid is drawn.\n\nAlso, there is a switch that allows you to
+        specify whether to invert the colors in a crossword puzzle near the
+        slider. If you change the switch value, the colors will be changed
+        according to the new value.\n\nTo fixate your choice, you need to click
+        on the check mark in the upper right corner on the action bar.</string>
     <string name="help_convert">After you have configured everything you need
         to click on \'Convert\' in the upper right corner on the action bar.
         After that, a pop-up window with a progress bar will appear.\n\nProgress
