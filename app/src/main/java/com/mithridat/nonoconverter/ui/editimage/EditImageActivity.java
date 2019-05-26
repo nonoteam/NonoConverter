@@ -216,6 +216,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     boolean _isCropped = false;
 
     /**
+     * Flag for checking if user want inverted nonogram
+     */
+    boolean _isInvert = false;
+
+    /**
      * Possible columns
      */
     int[] _arrColumns;
