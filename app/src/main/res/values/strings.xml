@@ -4,7 +4,7 @@
     <string name="title_edit_image_activity">Editing</string>
     <string name="action_convert">Convert</string>
     <string name="action_open_crop">Crop</string>
-    <string name="action_open_columns">Size</string>
+    <string name="action_open_columns">Settings</string>
     <string name="edit_image_view_description">Convertible image</string>
     <string name="msg_process_image">Processing image…</string>
     <string name="action_change">Change</string>
@@ -99,7 +99,7 @@
         the desired rectangle. To fixate your choice, you need to click on the
         check mark in the upper right corner on the action bar</string>
     <string name="help_columns">To set the size of the crossword, click on
-        the \'SIZE\' button in the lower right corner.\n\nYou can view an
+        the \'SETTINGS\' button in the lower right corner.\n\nYou can view an
         approximate result. Also you can see current size and range of possible
         sizes after converting above image. There is a slider that provides a
         choice of the number of columns at the bottom of the screen. The number 
@@ -144,6 +144,7 @@
 
     <string name="action_rotate">Rotate</string>
     <string name="action_flip">Flip</string>
+    <string name="action_switch">Invert nonogram</string>
     <string name="exact_columns_title">current:</string>
     <string name="range_columns_title">range:</string>
 

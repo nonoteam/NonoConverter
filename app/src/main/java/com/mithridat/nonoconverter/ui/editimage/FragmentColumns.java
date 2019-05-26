@@ -9,7 +9,10 @@ import android.view.MenuItem;
 import android.view.View.OnClickListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
@@ -22,7 +25,7 @@ import static com.mithridat.nonoconverter.backend.ImageConverter.getBlackWhite;
 /**
  * Class for the columns fragment
  */
-public class FragmentColumns extends Fragment implements OnSeekBarChangeListener, OnClickListener {
+public class FragmentColumns extends Fragment implements OnSeekBarChangeListener, OnClickListener, OnCheckedChangeListener {
 
     /**
      * Tag for count of columns
@@ -35,9 +38,19 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     private static final String COUNT_ROWS_TAG = "countRowsFragment";
 
     /**
+     * Tag for the inversion
+     */
+    private static final String IS_INVERT_TAG = "isInvertFragment";
+
+    /**
      * Comma
      */
     private static final String COMMA = ", ";
+  
+    /**
+     * ImageVies for columns fragment
+     */
+    private CustomImageView _civColumns;
 
     /**
      * Bitmap for columns fragment
@@ -63,6 +76,11 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      * Grid drawer
      */
     private Panel _panel;
+
+    /**
+     * Switch for invertion
+     */
+    private Switch _sInvert;
 
     /**
      * Image width
@@ -115,6 +133,11 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     private boolean _isSaved;
 
     /**
+     * True if want invert
+     */
+    private boolean _isInvert = false;
+
+    /**
      * Proportional coefficient
      */
     private float _coefBitmap;
@@ -138,7 +161,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                 EditImageActivity editImageActivity =
                         (EditImageActivity)getActivity();
                 int old_columns = editImageActivity._columns;
-                editImageActivity._isSelectedColumns = true;
+                editImageActivity._isInvert = _sInvert.isChecked();
                 if (old_columns != _countColumns) {
                     editImageActivity.setSizes(_countRows, _countColumns);
                 }
@@ -172,6 +195,8 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         super.onSaveInstanceState(outState);
         outState.putInt(COUNT_COLUMNS_TAG, _countColumns);
         outState.putInt(COUNT_ROWS_TAG, _countRows);
+        outState.putByte(IS_INVERT_TAG,
+                _sInvert.isChecked() ? (byte) 1 : (byte) 0);
     }
 
     @Override
@@ -183,14 +208,12 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         View vColumnsFragment =
                 inflater.inflate(R.layout.fragment_columns, null);
         _panel = vColumnsFragment.findViewById(R.id.panel);
-        CustomImageView civColumns =
-                vColumnsFragment.findViewById(R.id.image_view_columns);
-        civColumns.setParent(this);
+        _civColumns = vColumnsFragment.findViewById(R.id.image_view_columns);
+        _civColumns.setParent(this);
         _sbColumns = vColumnsFragment.findViewById(R.id.seek_bar_rows);
         _sbColumns.setOnSeekBarChangeListener(this);
         _bmpImageColumns = ((EditImageActivity)getActivity())._bmpCurrentImage;
 
-        civColumns.setImageBitmap(getBlackWhite(_bmpImageColumns));
         _tvRowsAndColumns =
                 vColumnsFragment.findViewById(R.id.text_view_exact);
         _tvOutRowsAndColumns =
@@ -200,24 +223,36 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                 .setOnClickListener(this);
         vColumnsFragment.findViewById(R.id.button_remove)
                 .setOnClickListener(this);
-
+        _sInvert = vColumnsFragment.findViewById(R.id.switch_invert);
+        _isInvert = ((EditImageActivity)getActivity())._isInvert;
         _coefBitmap =
                 _bmpImageColumns.getHeight() * 1f / _bmpImageColumns.getWidth();
         if (savedInstanceState != null) {
-            _countColumns = savedInstanceState.getInt(COUNT_COLUMNS_TAG,
-                    0);
-            _countRows = savedInstanceState.getInt(COUNT_ROWS_TAG,
-                    0);
+            _countColumns =
+                    savedInstanceState.getInt(COUNT_COLUMNS_TAG, 0);
+            _countRows =
+                    savedInstanceState.getInt(COUNT_ROWS_TAG, 0);
+            _isInvert =
+                    savedInstanceState.getByte(IS_INVERT_TAG, (byte) 0) != 0;
             setTextViews();
             _isSaved = true;
         }
+        _sInvert.setOnCheckedChangeListener(this);
         return vColumnsFragment;
     }
-
+  
     @Override
     public void onPause() {
         super.onPause();
         _isSaved = true;
+        _isInvert = _sInvert.isChecked();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        _sInvert.setChecked(_isInvert);
+        _civColumns.setImageSimple(getBlackWhite(_bmpImageColumns));
     }
 
     @Override
@@ -235,6 +270,11 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {}
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        _civColumns.setImageComp(getBlackWhite(_bmpImageColumns));
+    }
 
     /**
      * Set sizes of drew image and compute current

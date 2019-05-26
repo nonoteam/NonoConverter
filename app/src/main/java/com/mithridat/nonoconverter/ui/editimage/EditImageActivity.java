@@ -66,14 +66,19 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final String FRAGMENT_CROP_TAG = "fragmentCrop";
 
     /**
-     * Tag for fragment columns
+     * Tag for the count of columns
      */
     private static final String COUNT_COLUMNS_TAG = "countColumns";
 
     /**
-     * Tag for fragment main
+     * Tag for the count of rows
      */
     private static final String COUNT_ROWS_TAG = "countRows";
+
+    /**
+     * Tag for the inversion
+     */
+    private static final String IS_INVERT_TAG = "isInvert";
 
     /**
      * Tag for _pdLoading progress
@@ -86,12 +91,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final String COUNT_PD_MAX = "countPDMax";
 
     /**
-     * Tag for fragment columns
-     */
-    private static final String IS_SELECTED_COLUMNS_TAG = "isSelectedColumns";
-
-    /**
-     * Tag for fragment main
+     * Tag for current image
      */
     private static final String BMP_CURRENT_IMAGE_TAG = "bmpCurrentImage";
 
@@ -171,11 +171,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     FragmentTransaction _fragmentTransaction;
 
     /**
-     * Flag for starting convert
-     */
-    boolean _isSelectedColumns = false;
-
-    /**
      * Rows count
      */
     int _rows = 0;
@@ -216,6 +211,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     boolean _isCropped = false;
 
     /**
+     * Flag for checking if user want inverted nonogram
+     */
+    boolean _isInvert = false;
+
+    /**
      * Possible columns
      */
     int[] _arrColumns;
@@ -253,8 +253,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             _rows =
                     savedInstanceState
                             .getInt(COUNT_ROWS_TAG, 0);
-            _isSelectedColumns = savedInstanceState
-                    .getByte(IS_SELECTED_COLUMNS_TAG, (byte) 0) != 0;
+            _isInvert =
+                    savedInstanceState.getByte(IS_INVERT_TAG, (byte) 0) != 0;
 
             _pathImage = savedInstanceState.getString(BMP_CURRENT_IMAGE_TAG);
             _uriCurrentImage = (Uri)savedInstanceState
@@ -349,8 +349,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             outState.putInt(COUNT_PD_PROGRESS, _pdLoading.getProgress());
             outState.putInt(COUNT_PD_MAX, _pdLoading.getMax());
         }
-        outState.putByte(IS_SELECTED_COLUMNS_TAG,
-                _isSelectedColumns ? (byte) 1 : (byte) 0);
+        outState.putByte(IS_INVERT_TAG, _isInvert ? (byte) 1 : (byte) 0);
 
         outState.putString(BMP_CURRENT_IMAGE_TAG, _pathImage);
         _uriCurrentImage = writeTempStateStoreBitmap(this,
@@ -412,7 +411,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         if (countFragments == 1) {
             _rows = 0;
             _columns = 0;
-            _isSelectedColumns = false;
+            _isInvert = false;
             ImageUpload.startImagePicker(this,
                     ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE);
             overridePendingTransition(R.anim.slide_in_right,
@@ -501,7 +500,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         int bmHeight = _bmpCurrentImage.getHeight();
         _columns = bmWidth < 90 ? bmWidth : 45;
         _rows = _columns * bmHeight / bmWidth;
-        return;
+        _isInvert = false;
     }
 
     /**
@@ -526,7 +525,10 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * @return the uri where the image was saved in, either the given uri or
      * new pointing to temp file.
      */
-    private Uri writeTempStateStoreBitmap(Context context, Bitmap bitmap, Uri uri) {
+    private Uri writeTempStateStoreBitmap(
+            Context context,
+            Bitmap bitmap,
+            Uri uri) {
         try {
             if (uri == null) {
                 uri =
