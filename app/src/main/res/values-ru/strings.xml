@@ -34,9 +34,11 @@
     <string name="action_retry">ПОВТОРИТЬ</string>
 
     <string name="action_ok">ОК</string>
-    <string name="title_dialog_convert">Конвертация не удалась</string>
-    <string name="msg_convert">Конвертация не удалась.\nВы можете попробовать
-        изменить размеры кроссворда или обрезать изображение.</string>
+    <string name="title_dialog_convert">Что-то пошло не так…</string>
+    <string name="msg_convert">Упс, похоже в данном диапазоне нету ни одного
+        кроссворда с единственным решением.\nВы можете изменить размеры
+        кроссворда, обрезать изображение или инвертировать цвета и затем
+        попробовать снова.</string>
 
     <string name="action_load_image">Загрузить Картинку</string>
     <string name="action_open_about">О приложении</string>

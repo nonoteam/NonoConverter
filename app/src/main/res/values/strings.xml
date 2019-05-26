@@ -33,9 +33,10 @@
     <string name="action_retry">RETRY</string>
 
     <string name="action_ok">OK</string>
-    <string name="title_dialog_convert">Conversion failed</string>
-    <string name="msg_convert">Conversion failed.\nYou can try to change the
-        columns count or crop the image.</string>
+    <string name="title_dialog_convert">Something went wrong…</string>
+    <string name="msg_convert">Oops, it looks like there are no solvable
+        crossword puzzles in this range.\nYou can change the crossword
+        size, crop the image or invert the colors and then try again.</string>
 
     <string name="action_load_image">Load Image</string>
     <string name="action_open_about">About</string>
