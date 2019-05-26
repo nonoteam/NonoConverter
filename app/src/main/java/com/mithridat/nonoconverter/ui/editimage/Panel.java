@@ -127,6 +127,16 @@ public class Panel extends View {
                     _startHeight + i,
                     _paint);
         }
+        canvas.drawLine(_startWidth + _width,
+                _startHeight,
+                _startWidth + _width,
+                _startHeight + _height,
+                _paint);
+        canvas.drawLine(_startWidth,
+                _startHeight + _height,
+                _startWidth + _width,
+                _startHeight + _height,
+                _paint);
     }
 }
 
