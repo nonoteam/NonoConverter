@@ -89,10 +89,10 @@
         <item name="android:colorControlNormal">@color/colorLightBlue</item>
     </style>
 
-    <style name="MySwitch" parent="Theme.AppCompat.Light">
-        <item name="colorControlActivated">#8FC7DD</item>
+    <style name="AppTheme.Switch.Invert" parent="AppTheme">
+        <item name="colorControlActivated">@color/colorWhite</item>
         <item name="colorSwitchThumbNormal">@color/colorPrimaryDark</item>
-        <item name="android:colorForeground">@android:color/darker_gray</item>
+        <item name="android:colorForeground">@color/colorLightBlue</item>
     </style>
 
 </resources>
