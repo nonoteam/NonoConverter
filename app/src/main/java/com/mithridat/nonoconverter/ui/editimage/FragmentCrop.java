@@ -1,6 +1,5 @@
 package com.mithridat.nonoconverter.ui.editimage;
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,16 +14,24 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import androidx.fragment.app.Fragment;
 
+/**
+ * Class for the fragment for cropping of the image
+ */
 public class FragmentCrop extends Fragment implements View.OnClickListener {
 
-    private CropImageView _myView;
+    /**
+     * Tag for saving state of the CropImageView
+     */
+    private static final String CROP_VIEW = "CROP_VIEW";
+
+    /**
+     * The instance of the CropImageView
+     */
+    private CropImageView _civCrop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        EditImageActivity editImageActivity =
-                (EditImageActivity)getActivity();
-        editImageActivity._rectCrop = null;
         super.onCreate(savedInstanceState);
     }
 
@@ -40,7 +47,7 @@ public class FragmentCrop extends Fragment implements View.OnClickListener {
             case R.id.menu_done:
                 EditImageActivity editImageActivity =
                         (EditImageActivity)getActivity();
-                editImageActivity._bmpCurrentImage = _myView.getCroppedImage();
+                editImageActivity._bmpCurrentImage = _civCrop.getCroppedImage();
                 editImageActivity._needSaveCropped = true;
                 editImageActivity._isCropped = true;
                 editImageActivity.getSupportFragmentManager().popBackStack();
@@ -63,14 +70,16 @@ public class FragmentCrop extends Fragment implements View.OnClickListener {
         viewCropFragment.findViewById(R.id.button_flip)
                 .setOnClickListener(this);
 
-        _myView  = (CropImageView)viewCropFragment
-                .findViewById(R.id.crop_image_view);
+        _civCrop =
+                (CropImageView) viewCropFragment
+                        .findViewById(R.id.crop_image_view);
         EditImageActivity editImageActivity = (EditImageActivity)getActivity();
-        _myView.setImageBitmap(ImageUpload.getBitmapFromPath(
-                editImageActivity._pathImage));
-        if (editImageActivity._rectCrop != null) {
-            _myView.setCropRect(editImageActivity._rectCrop);
+        if (savedInstanceState != null) {
+            _civCrop.onRestoreInstanceState(
+                    savedInstanceState.getParcelable(CROP_VIEW));
         }
+        _civCrop.setImageBitmap(ImageUpload.getBitmapFromPath(
+                editImageActivity._pathImage));
 
         return viewCropFragment;
     }
@@ -79,24 +88,21 @@ public class FragmentCrop extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.button_rotate:
-                _myView.rotateImage(90);
+                _civCrop.rotateImage(90);
                 break;
             case R.id.button_flip:
-                _myView.flipImageHorizontally();
+                _civCrop.flipImageHorizontally();
                 break;
             default:
                 break;
         }
     }
 
-    /**
-     * Get crop area
-     *
-     * @return current crop area
-     */
-    Rect getCropRect() {
-        if (_myView != null) return _myView.getCropRect();
-        return null;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(CROP_VIEW, _civCrop.onSaveInstanceState());
     }
+
 }
 
