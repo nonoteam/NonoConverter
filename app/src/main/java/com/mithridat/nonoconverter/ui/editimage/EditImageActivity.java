@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -111,11 +110,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final String BMP_IS_CROPPED_TAG = "bmpIsCropped";
 
     /**
-     * Tag for crop area rect
-     */
-    private static final String RECT = "RECT";
-
-    /**
      * Id of the main fragment
      */
     private static final int FRAGMENT_MAIN = 1;
@@ -196,11 +190,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     String _pathImage = null;
 
     /**
-     * Rect of cropping area
-     */
-    Rect _rectCrop = null;
-
-    /**
      * Flag for checking if we need to rewrite bitmap to file
      */
     boolean _needSaveCropped = false;
@@ -273,7 +262,6 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             else {
                 setImageFromPath(_pathImage);
             }
-            _rectCrop = (Rect) savedInstanceState.getParcelable(RECT);
         } else if (_bmpCurrentImage == null) {
             _pathImage =
                     getIntent()
@@ -352,15 +340,12 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         outState.putByte(IS_INVERT_TAG, _isInvert ? (byte) 1 : (byte) 0);
 
         outState.putString(BMP_CURRENT_IMAGE_TAG, _pathImage);
-        _uriCurrentImage = writeTempStateStoreBitmap(this,
-                _bmpCurrentImage,
-                _uriCurrentImage);
+        _uriCurrentImage =
+                writeTempStateStoreBitmap(this,
+                        _bmpCurrentImage,
+                        _uriCurrentImage);
         outState.putParcelable(CROP_LOADED_IMAGE, _uriCurrentImage);
         outState.putByte(BMP_IS_CROPPED_TAG, _isCropped ? (byte) 1 : (byte) 0);
-        _rectCrop = _fragmentCrop.getCropRect();
-        if (_rectCrop != null) {
-            outState.putParcelable(RECT, _fragmentCrop.getCropRect());
-        }
     }
 
     @Override
