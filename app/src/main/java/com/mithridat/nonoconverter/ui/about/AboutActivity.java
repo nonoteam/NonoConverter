@@ -1,9 +1,15 @@
 package com.mithridat.nonoconverter.ui.about;
 
-import android.widget.TextView;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,7 +21,7 @@ import com.mithridat.nonoconverter.R;
  * Class for the about activity. This is a screen that gives the user
  * information about the application
  */
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends AppCompatActivity implements OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +34,8 @@ public class AboutActivity extends AppCompatActivity {
         TextView tvVersion = (TextView) findViewById(R.id.text_view_version);
         tvVersion.setText(getString(R.string.msg_version,
                 BuildConfig.VERSION_NAME));
+
+        findViewById(R.id.button_send_email).setOnClickListener(this);
     }
 
     @Override
@@ -60,5 +68,43 @@ public class AboutActivity extends AppCompatActivity {
                 R.anim.slide_out_right);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_send_email:
+                String uriText =
+                        "mailto:"
+                                + getString(R.string.msg_email)
+                                + "?subject="
+                                + Uri.encode(getString(R.string.app_name))
+                                + "&body="
+                                + Uri.encode(getBodyForEmail(this));
+                Intent i = new Intent(Intent.ACTION_SENDTO);
+                i.setData(Uri.parse(uriText));
+                startActivity(Intent.createChooser(i,
+                        getString(R.string.msg_send_email)));
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Method for getting body for email
+     *
+     * @param ctx - the instance of the Context
+     * @return body as string
+     */
+    private static String getBodyForEmail(Context ctx) {
+        return ctx.getString(R.string.msg_toemail,
+                BuildConfig.VERSION_NAME,
+                Build.VERSION.RELEASE,
+                Build.VERSION.SDK_INT,
+                Build.MANUFACTURER,
+                Build.DEVICE,
+                Build.MODEL,
+                Build.PRODUCT);
+    }
+    
 }
 
