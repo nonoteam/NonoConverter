@@ -50,6 +50,7 @@ public class FragmentCrop extends Fragment implements View.OnClickListener {
                 editImageActivity._bmpCurrentImage = _civCrop.getCroppedImage();
                 editImageActivity._needSaveCropped = true;
                 editImageActivity._isCropped = true;
+                editImageActivity._cropState = _civCrop.onSaveInstanceState();
                 editImageActivity.getSupportFragmentManager().popBackStack();
                 editImageActivity.resetConvertParams();
                 return true;
@@ -77,6 +78,8 @@ public class FragmentCrop extends Fragment implements View.OnClickListener {
         if (savedInstanceState != null) {
             _civCrop.onRestoreInstanceState(
                     savedInstanceState.getParcelable(CROP_VIEW));
+        } else if (editImageActivity._cropState != null) {
+            _civCrop.onRestoreInstanceState(editImageActivity._cropState);
         }
         _civCrop.setImageBitmap(ImageUpload.getBitmapFromPath(
                 editImageActivity._pathImage));

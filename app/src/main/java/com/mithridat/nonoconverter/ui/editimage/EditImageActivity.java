@@ -9,17 +9,16 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
-
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.Utils.AsyncTaskPublish;
@@ -110,6 +109,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final String BMP_IS_CROPPED_TAG = "bmpIsCropped";
 
     /**
+     * Tag for crop state
+     */
+    private static final String CROP_STATE = "CROP_STATE";
+
+    /**
      * Id of the main fragment
      */
     private static final int FRAGMENT_MAIN = 1;
@@ -190,6 +194,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     String _pathImage = null;
 
     /**
+     * State of crop
+     */
+    Parcelable _cropState = null;
+
+    /**
      * Flag for checking if we need to rewrite bitmap to file
      */
     boolean _needSaveCropped = false;
@@ -262,6 +271,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             else {
                 setImageFromPath(_pathImage);
             }
+            _cropState =
+                    (Parcelable) savedInstanceState.getParcelable(CROP_STATE);
         } else if (_bmpCurrentImage == null) {
             _pathImage =
                     getIntent()
@@ -346,6 +357,9 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
                         _uriCurrentImage);
         outState.putParcelable(CROP_LOADED_IMAGE, _uriCurrentImage);
         outState.putByte(BMP_IS_CROPPED_TAG, _isCropped ? (byte) 1 : (byte) 0);
+        if (_cropState != null) {
+            outState.putParcelable(CROP_STATE, _cropState);
+        }
     }
 
     @Override
@@ -397,6 +411,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             _rows = 0;
             _columns = 0;
             _isInvert = false;
+            _cropState = null;
             ImageUpload.startImagePicker(this,
                     ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE);
             overridePendingTransition(R.anim.slide_in_right,
