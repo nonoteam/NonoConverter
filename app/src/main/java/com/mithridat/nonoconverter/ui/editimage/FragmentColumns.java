@@ -1,5 +1,7 @@
 package com.mithridat.nonoconverter.ui.editimage;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
+import androidx.core.widget.TextViewCompat;
 import androidx.fragment.app.Fragment;
 
 import com.mithridat.nonoconverter.R;
@@ -43,10 +46,10 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     private static final String IS_INVERT_TAG = "isInvertFragment";
 
     /**
-     * Comma
+     * Empty string
      */
-    private static final String COMMA = ", ";
-  
+    private static final String EMPTY_STRING = "";
+
     /**
      * ImageVies for columns fragment
      */
@@ -62,10 +65,6 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      */
     private TextView _tvRowsAndColumns;
 
-    /**
-     * TextView for current number of columns and rows count
-     */
-    private TextView _tvOutRowsAndColumns;
 
     /**
      * Seekbar for changing columns count
@@ -159,7 +158,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         switch (item.getItemId()) {
             case R.id.menu_done:
                 EditImageActivity editImageActivity =
-                        (EditImageActivity)getActivity();
+                        (EditImageActivity) getActivity();
                 int old_columns = editImageActivity._columns;
                 editImageActivity._isInvert = _sInvert.isChecked();
                 if (old_columns != _countColumns) {
@@ -174,7 +173,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.button_add:
                 if (_countColumns < _sbColumns.getMax() + 5) {
                     _sbColumns.setProgress(_sbColumns.getProgress() + 1);
@@ -212,19 +211,19 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         _civColumns.setParent(this);
         _sbColumns = vColumnsFragment.findViewById(R.id.seek_bar_rows);
         _sbColumns.setOnSeekBarChangeListener(this);
-        _bmpImageColumns = ((EditImageActivity)getActivity())._bmpCurrentImage;
+        _bmpImageColumns = ((EditImageActivity) getActivity())._bmpCurrentImage;
 
         _tvRowsAndColumns =
-                vColumnsFragment.findViewById(R.id.text_view_exact);
-        _tvOutRowsAndColumns =
-                vColumnsFragment.findViewById(R.id.text_view_range);
+                vColumnsFragment.findViewById(R.id.text_view_exact_and_range);
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(_tvRowsAndColumns,
+                TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
 
         vColumnsFragment.findViewById(R.id.button_add)
                 .setOnClickListener(this);
         vColumnsFragment.findViewById(R.id.button_remove)
                 .setOnClickListener(this);
         _sInvert = vColumnsFragment.findViewById(R.id.switch_invert);
-        _isInvert = ((EditImageActivity)getActivity())._isInvert;
+        _isInvert = ((EditImageActivity) getActivity())._isInvert;
         _coefBitmap =
                 _bmpImageColumns.getHeight() * 1f / _bmpImageColumns.getWidth();
         if (savedInstanceState != null) {
@@ -234,13 +233,13 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                     savedInstanceState.getInt(COUNT_ROWS_TAG, 0);
             _isInvert =
                     savedInstanceState.getByte(IS_INVERT_TAG, (byte) 0) != 0;
-            setTextViews();
+            setOutTextViewRowsAndColumnsText();
             _isSaved = true;
         }
         _sInvert.setOnCheckedChangeListener(this);
         return vColumnsFragment;
     }
-  
+
     @Override
     public void onPause() {
         super.onPause();
@@ -266,10 +265,12 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {}
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {}
+    public void onStopTrackingTouch(SeekBar seekBar) {
+    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -279,7 +280,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     /**
      * Set sizes of drew image and compute current
      *
-     * @param width - width of the image
+     * @param width  - width of the image
      * @param height - height of the image
      */
     void setCustomImageViewSizes(int width, int height) {
@@ -293,56 +294,73 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      */
     private void updateScreenElements() {
         _countRows = (int) (_countColumns * _coefBitmap);
-        setTextViews();
+        setOutTextViewRowsAndColumnsText();
         _panel.setGridSizes(_countRows, _countColumns);
         _panel.invalidate();
     }
 
     /**
-     * Set columns and rows count to the _tvRowsAndColumns
-     */
-    private void setTextViews() {
-        setTextViewRowsAndColumnsText();
-        setOutTextViewRowsAndColumnsText();
-    }
-
-    /**
-     * Set columns and rows count to the _tvRowsAndColumns
-     */
-    private void setTextViewRowsAndColumnsText() {
-        _tvRowsAndColumns.setText(String.format("%s%s%s",
-                String.valueOf(_countColumns),
-                COMMA,
-                String.valueOf(_countRows)));
-    }
-
-    /**
-     * Set columns and rows count to the _tvOutRowsAndColumns
+     * Set text to the _tvRowsAndColumns
      */
     private void setOutTextViewRowsAndColumnsText() {
         int remainder = Math.round(_countColumns / 10f);
         int bmWidth = _bmpImageColumns.getWidth();
+        String text = constructString(getContext(), remainder, bmWidth);
+        _tvRowsAndColumns.setText(text);
+    }
+
+    /**
+     * Constructs string for text view
+     *
+     * @param context   - context
+     * @param remainder - half of range
+     * @param width     - width of image
+     * @return string with converting params
+     */
+    private String constructString(Context context, int remainder, int width) {
+        String stringArg1, stringArg4, stringArg5, stringArg6;
+        int orientation = getResources().getConfiguration().orientation;
+        if (context == null)
+            return EMPTY_STRING;
+
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            stringArg1 = EMPTY_STRING;
+            stringArg4 = "\n";
+        } else {
+            stringArg1 = getString(R.string.title_exact_columns);
+            stringArg4 = getString(R.string.title_range_columns);
+        }
+
         if (remainder == 0) {
-            _tvOutRowsAndColumns.setText(String.format("%s%s%s",
-                    String.valueOf(_countColumns),
-                    COMMA,
-                    String.valueOf(_countRows)));
+            stringArg5 = String.valueOf(_countColumns);
+            stringArg6 = String.valueOf(_countRows);
+
         } else {
             int maxColumns = (_countColumns + remainder) > 90
                     ? 90 : (_countColumns + remainder);
-            maxColumns = maxColumns > bmWidth ? bmWidth : maxColumns;
+            maxColumns = maxColumns > width ? width : maxColumns;
             int minColumns = (_countColumns - remainder) < 5
                     ? 5 : (_countColumns - remainder);
             int maxRowsRound = (int) (maxColumns * _coefBitmap);
-            _tvOutRowsAndColumns.setText(String.format("%s%s%s%s%s%s%s",
-                    String.valueOf(minColumns),
-                    "\u00F7",
-                    String.valueOf(maxColumns),
-                    COMMA,
-                    String.valueOf((int) (minColumns * _coefBitmap)),
-                    "\u00F7",
-                    String.valueOf(maxRowsRound)));
+
+            stringArg5 =
+                    String.valueOf(minColumns)
+                            + "\u00F7"
+                            + String.valueOf(maxColumns);
+
+            stringArg6 =
+                    String.valueOf((int) (minColumns * _coefBitmap))
+                            + "\u00F7"
+                            + String.valueOf(maxRowsRound);
         }
+
+        return context.getString(R.string.title_columns_frame,
+                stringArg1,
+                _countColumns,
+                _countRows,
+                stringArg4,
+                stringArg5,
+                stringArg6);
     }
 
     /**
@@ -362,7 +380,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      */
     private void computeSizes() {
         float propCoefficient;
-        if(_isScreenWidth) {
+        if (_isScreenWidth) {
             _width = _imageViewWidth;
             propCoefficient = _width / _bmpImageColumns.getWidth();
             _height = _bmpImageColumns.getHeight() * propCoefficient;
@@ -385,19 +403,19 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         computeSizes();
         int bmWidth = _bmpImageColumns.getWidth();
         if (bmWidth < 90) {
-            _sbColumns.setMax(bmWidth-5);
+            _sbColumns.setMax(bmWidth - 5);
         } else {
             _sbColumns.setMax(85);
         }
         if (!_isSaved) {
-            _countColumns = ((EditImageActivity)getActivity())._columns;
+            _countColumns = ((EditImageActivity) getActivity())._columns;
             if (bmWidth < 90) {
                 if (_countColumns > bmWidth) {
                     _countColumns = bmWidth;
                 }
             }
             _countRows = (int) (_countColumns * _coefBitmap);
-            setTextViews();
+            setOutTextViewRowsAndColumnsText();
         }
         _panel.setLengths(_startWidth,
                 _startHeight,
