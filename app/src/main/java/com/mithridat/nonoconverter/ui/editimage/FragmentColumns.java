@@ -317,8 +317,8 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
             stringID = R.string.title_columns_frame_portrait;
         }
 
-        int maxColumns = (_countColumns + remainder) > 90
-                ? 90 : (_countColumns + remainder);
+        int maxColumns = (_countColumns + remainder) > EditImageActivity.MAX_SIZE
+                ? EditImageActivity.MAX_SIZE : (_countColumns + remainder);
         maxColumns = maxColumns > width ? width : maxColumns;
         int minColumns = (_countColumns - remainder) < EditImageActivity.MIN_SIZE
                 ? EditImageActivity.MIN_SIZE : (_countColumns - remainder);
@@ -372,14 +372,15 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         _isScreenWidth = isScreenWidth();
         computeSizes();
         int bmWidth = _bmpImageColumns.getWidth();
-        if (bmWidth < 90) {
+        if (bmWidth < EditImageActivity.MAX_SIZE) {
             _sbColumns.setMax(bmWidth - EditImageActivity.MIN_SIZE);
         } else {
-            _sbColumns.setMax(90 - EditImageActivity.MIN_SIZE);
+            _sbColumns.setMax(
+                    EditImageActivity.MAX_SIZE - EditImageActivity.MIN_SIZE);
         }
         if (!_isSaved) {
             _countColumns = ((EditImageActivity) getActivity())._columns;
-            if (bmWidth < 90) {
+            if (bmWidth < EditImageActivity.MAX_SIZE) {
                 if (_countColumns > bmWidth) {
                     _countColumns = bmWidth;
                 }
