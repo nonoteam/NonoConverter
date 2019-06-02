@@ -176,12 +176,12 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.button_add:
-                if (_countColumns < _sbColumns.getMax() + 5) {
+                if (_countColumns < _sbColumns.getMax() + EditImageActivity.MIN_SIZE) {
                     _sbColumns.setProgress(_sbColumns.getProgress() + 1);
                 }
                 break;
             case R.id.button_remove:
-                if (_countColumns > 5) {
+                if (_countColumns > EditImageActivity.MIN_SIZE) {
                     _sbColumns.setProgress(_sbColumns.getProgress() - 1);
                 }
                 break;
@@ -261,7 +261,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
             int progress,
             boolean fromUser) {
         if (_width == 0) return;
-        _countColumns = (progress + 5);
+        _countColumns = (progress + EditImageActivity.MIN_SIZE);
         updateScreenElements();
     }
 
@@ -331,8 +331,8 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
             int maxColumns = (_countColumns + remainder) > 90
                     ? 90 : (_countColumns + remainder);
             maxColumns = maxColumns > bmWidth ? bmWidth : maxColumns;
-            int minColumns = (_countColumns - remainder) < 5
-                    ? 5 : (_countColumns - remainder);
+            int minColumns = (_countColumns - remainder) < EditImageActivity.MIN_SIZE
+                    ? EditImageActivity.MIN_SIZE : (_countColumns - remainder);
             int maxRowsRound = (int) (maxColumns * _coefBitmap);
             _tvOutRowsAndColumns.setText(String.format("%s%s%s%s%s%s%s",
                     String.valueOf(minColumns),
@@ -385,9 +385,9 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         computeSizes();
         int bmWidth = _bmpImageColumns.getWidth();
         if (bmWidth < 90) {
-            _sbColumns.setMax(bmWidth-5);
+            _sbColumns.setMax(bmWidth-EditImageActivity.MIN_SIZE);
         } else {
-            _sbColumns.setMax(85);
+            _sbColumns.setMax(90 - EditImageActivity.MIN_SIZE);
         }
         if (!_isSaved) {
             _countColumns = ((EditImageActivity)getActivity())._columns;
@@ -405,6 +405,6 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                 _height,
                 _countRows,
                 _countColumns);
-        _sbColumns.setProgress(_countColumns - 5);
+        _sbColumns.setProgress(_countColumns - EditImageActivity.MIN_SIZE);
     }
 }

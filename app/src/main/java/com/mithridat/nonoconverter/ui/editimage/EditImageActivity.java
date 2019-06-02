@@ -129,6 +129,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final int FRAGMENT_CROP = 3;
 
     /**
+     * Minimal size of column
+     */
+    static final int MIN_SIZE = 15;
+
+    /**
      * Progress dialog for showing processing of the converting
      */
     ProgressDialog _pdLoading;
@@ -637,7 +642,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         double coefBitmap = bmHeight * 1.0 / bmWidth;
         int remainder = Math.round(_columns / 10f);
         int minColumns =
-                (_columns - remainder) < 5 ? 5 : (_columns - remainder);
+                (_columns - remainder) < MIN_SIZE ? MIN_SIZE : (_columns - remainder);
         int maxColumns =
                 (_columns + remainder) > 90 ? 90 : (_columns + remainder);
         maxColumns = maxColumns > bmWidth ? bmWidth : maxColumns;
