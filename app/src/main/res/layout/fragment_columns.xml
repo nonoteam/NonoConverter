@@ -77,15 +77,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/button_add"
+                android:id="@+id/button_remove"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginBottom="16dp"
                 android:background="@null"
-                android:drawableStart="@drawable/ic_add"
+                android:drawableStart="@drawable/ic_remove"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/seek_bar_rows" />
+                app:layout_constraintTop_toTopOf="@+id/seek_bar_rows"/>
 
             <SeekBar
                 android:id="@+id/seek_bar_rows"
@@ -99,19 +99,20 @@
                 android:theme="@style/SeekBar.Color"
                 android:thumb="@drawable/custom_sb_thumb"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_remove"
-                app:layout_constraintStart_toEndOf="@+id/button_add" />
+                app:layout_constraintEnd_toStartOf="@+id/button_add"
+                app:layout_constraintStart_toEndOf="@+id/button_remove" />
 
             <Button
-                android:id="@+id/button_remove"
+                android:id="@+id/button_add"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginBottom="16dp"
                 android:background="@null"
-                android:drawableStart="@drawable/ic_remove"
+                android:drawableStart="@drawable/ic_add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/seek_bar_rows"/>
+                app:layout_constraintTop_toTopOf="@+id/seek_bar_rows" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
