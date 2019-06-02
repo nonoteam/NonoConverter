@@ -87,7 +87,18 @@
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:text="@string/msg_contact"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textAlignment="center"/>
+
+                <Button
+                    android:id="@+id/button_send_email"
+                    android:text="@string/msg_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textAllCaps="false"
+                    android:background="@drawable/btn_ripple_effect_transparent"
+                    android:textColor="@color/colorBlue"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

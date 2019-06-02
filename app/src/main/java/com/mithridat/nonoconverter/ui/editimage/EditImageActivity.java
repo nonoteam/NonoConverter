@@ -6,21 +6,19 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
-
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.mithridat.nonoconverter.R;
 import com.mithridat.nonoconverter.Utils.AsyncTaskPublish;
@@ -111,9 +109,9 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final String BMP_IS_CROPPED_TAG = "bmpIsCropped";
 
     /**
-     * Tag for crop area rect
+     * Tag for crop state
      */
-    private static final String RECT = "RECT";
+    private static final String CROP_STATE = "CROP_STATE";
 
     /**
      * Id of the main fragment
@@ -129,6 +127,21 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
      * Id of the crop fragment
      */
     private static final int FRAGMENT_CROP = 3;
+
+    /**
+     * Minimal size of column
+     */
+    static final int MIN_SIZE = 15;
+
+    /**
+     * Maximal size of column
+     */
+    static final int MAX_SIZE = 90;
+
+    /**
+     * Default size of column
+     */
+    static final int DEFAULT_SIZE = 45;
 
     /**
      * Progress dialog for showing processing of the converting
@@ -196,9 +209,9 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     String _pathImage = null;
 
     /**
-     * Rect of cropping area
+     * State of crop
      */
-    Rect _rectCrop = null;
+    Parcelable _cropState = null;
 
     /**
      * Flag for checking if we need to rewrite bitmap to file
@@ -273,7 +286,8 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             else {
                 setImageFromPath(_pathImage);
             }
-            _rectCrop = (Rect) savedInstanceState.getParcelable(RECT);
+            _cropState =
+                    (Parcelable) savedInstanceState.getParcelable(CROP_STATE);
         } else if (_bmpCurrentImage == null) {
             _pathImage =
                     getIntent()
@@ -326,7 +340,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         if (_columns == 0) {
             int bmWidth = _bmpCurrentImage.getWidth();
             int bmHeight = _bmpCurrentImage.getHeight();
-            _columns = bmWidth < 90 ? bmWidth : 45;
+            _columns = bmWidth < MAX_SIZE ? bmWidth : DEFAULT_SIZE;
             _rows = _columns * bmHeight / bmWidth;
         }
     }
@@ -352,14 +366,14 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         outState.putByte(IS_INVERT_TAG, _isInvert ? (byte) 1 : (byte) 0);
 
         outState.putString(BMP_CURRENT_IMAGE_TAG, _pathImage);
-        _uriCurrentImage = writeTempStateStoreBitmap(this,
-                _bmpCurrentImage,
-                _uriCurrentImage);
+        _uriCurrentImage =
+                writeTempStateStoreBitmap(this,
+                        _bmpCurrentImage,
+                        _uriCurrentImage);
         outState.putParcelable(CROP_LOADED_IMAGE, _uriCurrentImage);
         outState.putByte(BMP_IS_CROPPED_TAG, _isCropped ? (byte) 1 : (byte) 0);
-        _rectCrop = _fragmentCrop.getCropRect();
-        if (_rectCrop != null) {
-            outState.putParcelable(RECT, _fragmentCrop.getCropRect());
+        if (_cropState != null) {
+            outState.putParcelable(CROP_STATE, _cropState);
         }
     }
 
@@ -412,6 +426,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
             _rows = 0;
             _columns = 0;
             _isInvert = false;
+            _cropState = null;
             ImageUpload.startImagePicker(this,
                     ActivitiesConstants.RC_PICK_IMAGE_EDIT_IMAGE);
             overridePendingTransition(R.anim.slide_in_right,
@@ -498,7 +513,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     void resetConvertParams() {
         int bmWidth = _bmpCurrentImage.getWidth();
         int bmHeight = _bmpCurrentImage.getHeight();
-        _columns = bmWidth < 90 ? bmWidth : 45;
+        _columns = bmWidth < MAX_SIZE ? bmWidth : DEFAULT_SIZE;
         _rows = _columns * bmHeight / bmWidth;
         _isInvert = false;
     }
@@ -637,9 +652,9 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         double coefBitmap = bmHeight * 1.0 / bmWidth;
         int remainder = Math.round(_columns / 10f);
         int minColumns =
-                (_columns - remainder) < 5 ? 5 : (_columns - remainder);
+                (_columns - remainder) < MIN_SIZE ? MIN_SIZE : (_columns - remainder);
         int maxColumns =
-                (_columns + remainder) > 90 ? 90 : (_columns + remainder);
+                (_columns + remainder) > MAX_SIZE ? MAX_SIZE : (_columns + remainder);
         maxColumns = maxColumns > bmWidth ? bmWidth : maxColumns;
         int length = maxColumns - minColumns + 1;
         _exactIndex = _columns - minColumns;

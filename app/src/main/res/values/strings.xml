@@ -52,8 +52,13 @@
         to a nonogram, which has a single logical solution.</string>
     <string name="msg_version">Version %1$s</string>
     <string name="title_about_activity">About</string>
-    <string name="msg_contact">If you have any questions,\nplease contact us:\n
-        nonoconverter@gmail.com</string>
+    <string name="msg_contact">If you have any questions, suggestions or
+        complaints, please contact us:
+    </string>
+    <string name="msg_email">nonoconverter@gmail.com</string>
+    <string name="msg_send_email">Send email via</string>
+    <string name="msg_toemail">\n\nApp version: %1$s\nAndroid: %2$s
+        (%3$d)\nDevice: %4$s / %5$s / %6$s / %7$s\n</string>
 
     <string name="title_help">Help</string>
     <string name="title_help_info">Information</string>
@@ -149,8 +154,10 @@
     <string name="action_rotate">Rotate</string>
     <string name="action_flip">Flip</string>
     <string name="action_switch">Invert nonogram</string>
-    <string name="exact_columns_title">current:</string>
-    <string name="range_columns_title">range:</string>
+    <string name="title_columns_frame_portrait">current: %1$d, %2$d
+        range: %3$d\u00F7%4$d, %5$d\u00F7%6$d</string>
+    <string name="title_columns_frame_landscape">%1$d, %2$d\n
+        %3$d\u00F7%4$d, %5$d\u00F7%6$d</string>
 
     <string name="title_image_picker">Albums</string>
 </resources>

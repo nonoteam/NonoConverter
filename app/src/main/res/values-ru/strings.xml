@@ -55,8 +55,12 @@
         решение.</string>
     <string name="msg_version">Версия %1$s</string>
     <string name="title_about_activity">О приложении</string>
-    <string name="msg_contact">Если у Вас имеются вопросы,\nпожалуйста,
-        свяжитесь нами:\nnonoconverter@gmail.com</string>
+    <string name="msg_contact">Если у Вас имеются вопросы, предложения или
+        замечания, пожалуйста, свяжитесь с нами:</string>
+    <string name="msg_email">nonoconverter@gmail.com</string>
+    <string name="msg_send_email">Отправить письмо через</string>
+    <string name="msg_toemail">\n\nApp version: %1$s\nAndroid: %2$s
+        (%3$d)\nDevice: %4$s / %5$s / %6$s / %7$s\n</string>
 
     <string name="title_help">Справка</string>
     <string name="title_help_info">Информация</string>
@@ -154,8 +158,10 @@
     <string name="action_rotate">Повернуть</string>
     <string name="action_flip">Отразить</string>
     <string name="action_switch">Инвертировать кроссворд</string>
-    <string name="exact_columns_title">текущий:</string>
-    <string name="range_columns_title">диапазон:</string>
+    <string name="title_columns_frame_portrait">текущий: %1$d, %2$d
+        диапазон: %3$d\u00F7%4$d, %5$d\u00F7%6$d</string>
+    <string name="title_columns_frame_landscape">%1$d, %2$d\n
+        %3$d\u00F7%4$d, %5$d\u00F7%6$d</string>
 
     <string name="title_image_picker">Альбомы</string>
 </resources>
