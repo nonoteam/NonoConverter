@@ -1,6 +1,5 @@
 package com.mithridat.nonoconverter.ui.editimage;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -46,11 +45,6 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     private static final String IS_INVERT_TAG = "isInvertFragment";
 
     /**
-     * Empty string
-     */
-    private static final String EMPTY_STRING = "";
-
-    /**
      * ImageVies for columns fragment
      */
     private CustomImageView _civColumns;
@@ -64,7 +58,6 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      * TextView for current number of columns and rows count
      */
     private TextView _tvRowsAndColumns;
-
 
     /**
      * Seekbar for changing columns count
@@ -265,12 +258,10 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-    }
+    public void onStartTrackingTouch(SeekBar seekBar) { }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-    }
+    public void onStopTrackingTouch(SeekBar seekBar) { }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -305,23 +296,21 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     private void setOutTextViewRowsAndColumnsText() {
         int remainder = Math.round(_countColumns / 10f);
         int bmWidth = _bmpImageColumns.getWidth();
-        String text = constructString(getContext(), remainder, bmWidth);
+        String text = constructString(remainder, bmWidth);
         _tvRowsAndColumns.setText(text);
     }
 
     /**
      * Constructs string for text view
      *
-     * @param context   - context
      * @param remainder - half of range
      * @param width     - width of image
      * @return string with converting params
      */
-    private String constructString(Context context, int remainder, int width) {
+    private String constructString(int remainder, int width) {
         int orientation = getResources().getConfiguration().orientation;
         int stringID;
-        if (context == null)
-            return EMPTY_STRING;
+
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             stringID = R.string.title_columns_frame_landscape;
         } else {
@@ -335,7 +324,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                 ? 5 : (_countColumns - remainder);
         int maxRowsRound = (int) (maxColumns * _coefBitmap);
 
-        return context.getString(stringID,
+        return getString(stringID,
                 _countColumns,
                 _countRows,
                 minColumns,
