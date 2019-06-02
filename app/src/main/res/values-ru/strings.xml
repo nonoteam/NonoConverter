@@ -158,8 +158,10 @@
     <string name="action_rotate">Повернуть</string>
     <string name="action_flip">Отразить</string>
     <string name="action_switch">Инвертировать кроссворд</string>
-    <string name="exact_columns_title">текущий:</string>
-    <string name="range_columns_title">диапазон:</string>
+    <string name="title_columns_frame_portrait">текущий: %1$d, %2$d
+        диапазон: %3$d\u00F7%4$d, %5$d\u00F7%6$d</string>
+    <string name="title_columns_frame_landscape">%1$d, %2$d\n
+        %3$d\u00F7%4$d, %5$d\u00F7%6$d</string>
 
     <string name="title_image_picker">Альбомы</string>
 </resources>
