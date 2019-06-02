@@ -139,6 +139,11 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     static final int MAX_SIZE = 90;
 
     /**
+     * Default size of column
+     */
+    static final int DEFAULT_SIZE = 45;
+
+    /**
      * Progress dialog for showing processing of the converting
      */
     ProgressDialog _pdLoading;
@@ -335,7 +340,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         if (_columns == 0) {
             int bmWidth = _bmpCurrentImage.getWidth();
             int bmHeight = _bmpCurrentImage.getHeight();
-            _columns = bmWidth < MAX_SIZE ? bmWidth : 45;
+            _columns = bmWidth < MAX_SIZE ? bmWidth : DEFAULT_SIZE;
             _rows = _columns * bmHeight / bmWidth;
         }
     }
@@ -508,7 +513,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     void resetConvertParams() {
         int bmWidth = _bmpCurrentImage.getWidth();
         int bmHeight = _bmpCurrentImage.getHeight();
-        _columns = bmWidth < MAX_SIZE ? bmWidth : 45;
+        _columns = bmWidth < MAX_SIZE ? bmWidth : DEFAULT_SIZE;
         _rows = _columns * bmHeight / bmWidth;
         _isInvert = false;
     }
