@@ -23,6 +23,8 @@ import androidx.fragment.app.Fragment;
 import com.mithridat.nonoconverter.R;
 
 import static com.mithridat.nonoconverter.backend.ImageConverter.getBlackWhite;
+import static com.mithridat.nonoconverter.ui.editimage.EditImageActivity.MAX_SIZE;
+import static com.mithridat.nonoconverter.ui.editimage.EditImageActivity.MIN_SIZE;
 
 /**
  * Class for the columns fragment
@@ -168,12 +170,12 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_add:
-                if (_countColumns < _sbColumns.getMax() + 5) {
+                if (_countColumns < _sbColumns.getMax() + MIN_SIZE) {
                     _sbColumns.setProgress(_sbColumns.getProgress() + 1);
                 }
                 break;
             case R.id.button_remove:
-                if (_countColumns > 5) {
+                if (_countColumns > MIN_SIZE) {
                     _sbColumns.setProgress(_sbColumns.getProgress() - 1);
                 }
                 break;
@@ -253,7 +255,7 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
             int progress,
             boolean fromUser) {
         if (_width == 0) return;
-        _countColumns = (progress + 5);
+        _countColumns = (progress + MIN_SIZE);
         updateScreenElements();
     }
 
@@ -317,11 +319,11 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
             stringID = R.string.title_columns_frame_portrait;
         }
 
-        int maxColumns = (_countColumns + remainder) > 90
-                ? 90 : (_countColumns + remainder);
+        int maxColumns = (_countColumns + remainder) > MAX_SIZE
+                ? MAX_SIZE : (_countColumns + remainder);
         maxColumns = maxColumns > width ? width : maxColumns;
-        int minColumns = (_countColumns - remainder) < 5
-                ? 5 : (_countColumns - remainder);
+        int minColumns = (_countColumns - remainder) < MIN_SIZE
+                ? MIN_SIZE : (_countColumns - remainder);
         int maxRowsRound = (int) (maxColumns * _coefBitmap);
 
         return getString(stringID,
@@ -372,14 +374,14 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         _isScreenWidth = isScreenWidth();
         computeSizes();
         int bmWidth = _bmpImageColumns.getWidth();
-        if (bmWidth < 90) {
-            _sbColumns.setMax(bmWidth - 5);
+        if (bmWidth < MAX_SIZE) {
+            _sbColumns.setMax(bmWidth - MIN_SIZE);
         } else {
-            _sbColumns.setMax(85);
+            _sbColumns.setMax(MAX_SIZE - MIN_SIZE);
         }
         if (!_isSaved) {
             _countColumns = ((EditImageActivity) getActivity())._columns;
-            if (bmWidth < 90) {
+            if (bmWidth < MAX_SIZE) {
                 if (_countColumns > bmWidth) {
                     _countColumns = bmWidth;
                 }
@@ -393,6 +395,6 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
                 _height,
                 _countRows,
                 _countColumns);
-        _sbColumns.setProgress(_countColumns - 5);
+        _sbColumns.setProgress(_countColumns - MIN_SIZE);
     }
 }

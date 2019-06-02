@@ -129,6 +129,21 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     private static final int FRAGMENT_CROP = 3;
 
     /**
+     * Minimal size of column
+     */
+    static final int MIN_SIZE = 15;
+
+    /**
+     * Maximal size of column
+     */
+    static final int MAX_SIZE = 90;
+
+    /**
+     * Default size of column
+     */
+    static final int DEFAULT_SIZE = 45;
+
+    /**
      * Progress dialog for showing processing of the converting
      */
     ProgressDialog _pdLoading;
@@ -325,7 +340,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         if (_columns == 0) {
             int bmWidth = _bmpCurrentImage.getWidth();
             int bmHeight = _bmpCurrentImage.getHeight();
-            _columns = bmWidth < 90 ? bmWidth : 45;
+            _columns = bmWidth < MAX_SIZE ? bmWidth : DEFAULT_SIZE;
             _rows = _columns * bmHeight / bmWidth;
         }
     }
@@ -498,7 +513,7 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
     void resetConvertParams() {
         int bmWidth = _bmpCurrentImage.getWidth();
         int bmHeight = _bmpCurrentImage.getHeight();
-        _columns = bmWidth < 90 ? bmWidth : 45;
+        _columns = bmWidth < MAX_SIZE ? bmWidth : DEFAULT_SIZE;
         _rows = _columns * bmHeight / bmWidth;
         _isInvert = false;
     }
@@ -637,9 +652,9 @@ public class EditImageActivity extends AppCompatActivity implements OnClickListe
         double coefBitmap = bmHeight * 1.0 / bmWidth;
         int remainder = Math.round(_columns / 10f);
         int minColumns =
-                (_columns - remainder) < 5 ? 5 : (_columns - remainder);
+                (_columns - remainder) < MIN_SIZE ? MIN_SIZE : (_columns - remainder);
         int maxColumns =
-                (_columns + remainder) > 90 ? 90 : (_columns + remainder);
+                (_columns + remainder) > MAX_SIZE ? MAX_SIZE : (_columns + remainder);
         maxColumns = maxColumns > bmWidth ? bmWidth : maxColumns;
         int length = maxColumns - minColumns + 1;
         _exactIndex = _columns - minColumns;
