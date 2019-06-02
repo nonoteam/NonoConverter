@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:textAllCaps="false"
-                    android:background="@color/colorTransparent"
+                    android:background="@drawable/btn_ripple_effect_transparent"
                     android:textColor="@color/colorBlue"/>
             </LinearLayout>
         </ScrollView>
