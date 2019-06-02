@@ -318,49 +318,30 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
      * @return string with converting params
      */
     private String constructString(Context context, int remainder, int width) {
-        String stringArg1, stringArg4, stringArg5, stringArg6;
         int orientation = getResources().getConfiguration().orientation;
+        int stringID;
         if (context == null)
             return EMPTY_STRING;
-
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            stringArg1 = EMPTY_STRING;
-            stringArg4 = "\n";
+            stringID = R.string.title_columns_frame_landscape;
         } else {
-            stringArg1 = getString(R.string.title_exact_columns);
-            stringArg4 = getString(R.string.title_range_columns);
+            stringID = R.string.title_columns_frame_portrait;
         }
 
-        if (remainder == 0) {
-            stringArg5 = String.valueOf(_countColumns);
-            stringArg6 = String.valueOf(_countRows);
+        int maxColumns = (_countColumns + remainder) > 90
+                ? 90 : (_countColumns + remainder);
+        maxColumns = maxColumns > width ? width : maxColumns;
+        int minColumns = (_countColumns - remainder) < 5
+                ? 5 : (_countColumns - remainder);
+        int maxRowsRound = (int) (maxColumns * _coefBitmap);
 
-        } else {
-            int maxColumns = (_countColumns + remainder) > 90
-                    ? 90 : (_countColumns + remainder);
-            maxColumns = maxColumns > width ? width : maxColumns;
-            int minColumns = (_countColumns - remainder) < 5
-                    ? 5 : (_countColumns - remainder);
-            int maxRowsRound = (int) (maxColumns * _coefBitmap);
-
-            stringArg5 =
-                    String.valueOf(minColumns)
-                            + "\u00F7"
-                            + String.valueOf(maxColumns);
-
-            stringArg6 =
-                    String.valueOf((int) (minColumns * _coefBitmap))
-                            + "\u00F7"
-                            + String.valueOf(maxRowsRound);
-        }
-
-        return context.getString(R.string.title_columns_frame,
-                stringArg1,
+        return context.getString(stringID,
                 _countColumns,
                 _countRows,
-                stringArg4,
-                stringArg5,
-                stringArg6);
+                minColumns,
+                maxColumns,
+                (int) (minColumns * _coefBitmap),
+                maxRowsRound);
     }
 
     /**
