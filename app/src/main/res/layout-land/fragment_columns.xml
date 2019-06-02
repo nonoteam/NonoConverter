@@ -88,7 +88,6 @@
                 android:drawableStart="@drawable/ic_remove"
                 app:layout_constraintBottom_toTopOf="@+id/switch_invert"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.51"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <Switch
