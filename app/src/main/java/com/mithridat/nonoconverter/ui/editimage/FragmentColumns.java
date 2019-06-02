@@ -320,8 +320,8 @@ public class FragmentColumns extends Fragment implements OnSeekBarChangeListener
         int maxColumns = (_countColumns + remainder) > 90
                 ? 90 : (_countColumns + remainder);
         maxColumns = maxColumns > width ? width : maxColumns;
-        int minColumns = (_countColumns - remainder) < 5
-                ? 5 : (_countColumns - remainder);
+        int minColumns = (_countColumns - remainder) < EditImageActivity.MIN_SIZE
+                ? EditImageActivity.MIN_SIZE : (_countColumns - remainder);
         int maxRowsRound = (int) (maxColumns * _coefBitmap);
 
         return getString(stringID,
